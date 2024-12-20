@@ -11,6 +11,7 @@
     "start": "nodemon ./server/app.js"
   },
   "dependencies": {
+    "body-parser": "^1.20.3",
     "express": "^4.21.2",
     "mysql": "^2.18.1",
     "mysql2": "^3.11.5",
