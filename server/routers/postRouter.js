@@ -9,12 +9,26 @@ import GetDateInfo from '../modules/dateInfo.js'
 const router = express.Router();
 router.use(bodyParser.json());
 
-console.log(`\x1b[34m |!|  POST ROUTER READY   |!| \x1b[0m`);
+console.log(`\x1b[34m |!|    POST ROUTER READY     |!| \x1b[0m`);
 
 // ADD POST
 router.post('/add', async(req, res) => {
     try{
         const data = req.body;
+
+        const user = await ACCOUNTS_TAB.findOne({
+            where: {
+                key: data.key
+            }
+        })
+
+        if(!user){
+            res.json({
+                status: 404,
+                err: 'User undefined'
+            })
+            return
+        }
 
         const newPost = await POSTS_TAB.create({
             title: data.title,

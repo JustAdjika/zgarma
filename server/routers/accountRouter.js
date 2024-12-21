@@ -3,10 +3,12 @@ import bodyParser from 'body-parser';
 
 import ACCOUNTS_TAB from '../database/accounts.js';
 
+import GetDateInfo from '../modules/dateInfo.js'
+
 const router = express.Router();
 router.use(bodyParser.json());
 
-console.log(`\x1b[34m |!| ACCOUNT ROUTER READY |!|\x1b[0m`);
+console.log(`\x1b[34m |!|   ACCOUNT ROUTER READY   |!|\x1b[0m`);
 
 // TEST ADD
 router.post('/testAdd', async(req, res) => {
@@ -22,7 +24,7 @@ router.post('/testAdd', async(req, res) => {
             nickname: `${data.discord}'s discord`,
             steamid: `${data.discord}'s discordid`
         },
-        date: 'today'
+        date: GetDateInfo.date
     });
 
     res.end('Req end');
