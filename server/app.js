@@ -20,6 +20,11 @@ import postRouter from './routers/postRouter.js'
 import bodyParser from 'body-parser'
 import bugfixRouter from './routers/bugfixRouter.js'
 import bugticketRouter from './routers/bugticketRouter.js'
+import eventRouter from './routers/eventRouter.js'
+import eventEditRouter from './routers/eventEditRouter.js'
+import eventSquadRouter from './routers/eventSquadRouter.js'
+import eventVehRouter from './routers/eventVehRouter.js'
+import eventRequestRouter from './routers/eventRequestRouter.js'
 
 // CONFIG
 const app = express()
@@ -36,3 +41,8 @@ app.use('/api/developer/account', accountRouter)
 app.use('/api/developer/post', postRouter)
 app.use('/api/developer/bugfix/notes', bugfixRouter)
 app.use('/api/developer/bugfix/tickets', bugticketRouter)
+app.use('/api/developer/event', eventRouter)
+app.use('/api/developer/event/edit', eventEditRouter)
+app.use('/api/developer/event/edit/vehicle', eventVehRouter)
+app.use('/api/developer/event/edit/squad', eventSquadRouter)
+app.use('/api/developer/event/request', eventRequestRouter)
