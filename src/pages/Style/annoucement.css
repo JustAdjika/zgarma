@@ -1,0 +1,313 @@
+@font-face {
+    font-family: 'My Open Sans';
+    src: url('../../assets/Fonts/OpenSans-Light.ttf');
+    font-style: normal;
+}
+
+@font-face{
+    font-family: 'Outist';
+    src: url('../../assets/Fonts/outist.ttf');
+    font-style: normal;
+}
+
+body {
+    font-family: 'My Open Sans';
+    font-weight: lighter;
+}
+
+.div-main-annoucement {
+    margin: 0px;
+    padding: 0px;
+    background-color: #0B0B0B;
+    color: white;
+}
+
+.container-vote {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.background-banner {
+    height: 600px;
+    background-image: url('/src/assets/banner.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+    display: grid;
+    place-items: center;
+}
+
+.title-bunner {
+    font-size: 150pt;
+    color: white;
+    font-family: "Outist";
+}
+
+
+
+.container-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 50px;
+}
+
+.left-side-info {
+    width: 1000px;
+    padding-left: 80px;
+}
+
+.right-side-info {
+    width: 600px;
+    padding-right: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.container-center {
+    display: flex;
+    margin-left: 40px;
+    height: 210px;
+}
+
+.container-options {
+    display: flex;
+    flex-direction: column;
+    margin-left: 35px;
+}
+
+#input-Lside-first {
+    border-radius: 5px;
+    width: 415px;
+    height: 20px;
+    background-color: #989898;
+    color: rgba( 0, 0 , 0, 0.58);
+    font-family: "My Open Sans";
+    font-size: 10pt;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    margin-left: 40px;
+    padding-left: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#input-Lside-second {
+    border-radius: 5px;
+    background-color: #989898;
+    color: rgba( 0, 0 , 0, 0.58);
+    font-family: "My Open Sans";
+    width: 430px;
+    height: 200px;
+    padding: 10px;
+    padding-left: 15px;
+    resize: none; 
+    overflow-y: scroll; 
+    overflow-x: hidden;
+    font-size: 10pt; 
+    text-align: left; 
+    vertical-align: top; 
+    box-sizing: border-box;
+}
+
+
+/* .annoucement-textarea::-webkit-scrollbar-thumb {
+    background: red; 
+    border-radius: 5px; 
+} 
+   */
+
+textarea, input {
+    border: none;
+    outline: none;
+}
+
+.annoucement-textarea {
+    border: none;
+    outline: none;
+    padding: 5px;
+}
+
+/* Фон скроллбара */
+.annoucement-textarea::-webkit-scrollbar-track {
+    background: #989898; /* Цвет фона */
+    border-radius: 5px;
+}
+
+/* Полоска скроллбара */
+.annoucement-textarea::-webkit-scrollbar-thumb {
+    background: #2E2E2E; /* Цвет полоски */
+    border-radius: 5px;
+    border-right: inset 2px #989898;
+    border-top: solid 3px #989898;
+    border-bottom: solid 3px #989898;
+    width: 4px;
+}
+
+/* Сам скроллбар */
+.annoucement-textarea::-webkit-scrollbar {
+    width: 5px;
+}
+
+
+#input-Rside-fitst {
+    border-radius: 5px;
+    background-color: rgb(83, 83, 83);
+    color: white;
+    width: 200px;
+    height: 20px;
+    border: none;
+    margin-top: 20px;
+    padding: 5px;
+}
+
+#input-Rside-second {
+    border-radius: 5px;
+    background-color: rgb(83, 83, 83);
+    color: white;
+    width: 200px;
+    height: 20px;
+    border: none;
+    margin-top: 20px;
+    padding: 5px;
+}
+
+
+#send-but-ann {
+    background-color: #353535; 
+    color: white;
+    font-family: "My Open Sans";
+    width: 430px;
+    margin-top: 20px;
+    margin-left: 40px;
+    margin-bottom: 30px;
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 5px; 
+    font-size: 16px; 
+    cursor: pointer; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+    transition: all 0.3s ease; 
+}
+
+#send-but-ann:hover {
+    background-color: #474747; 
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+#send-but-ann:active {
+    background-color: #555555;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+    transform: translateY(2px); 
+}
+
+#add-var-ANN {
+    background-color: #35353500;
+    width: 295px; 
+    color: white;
+    padding: 7px 20px; 
+    border: 4px solid #4B4B4B; 
+    box-sizing: border-box;
+    border-radius: 5px; 
+    font-size: 16px; 
+    cursor: pointer; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+    transition: all 0.3s ease; 
+}
+
+#add-var-ANN:hover {
+    background-color: #474747; 
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+#add-var-ANN:active {
+    background-color: #555555; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+    transform: translateY(2px); 
+}
+
+.title-left-info {
+    margin-left: 40px;
+    font-family: 'Outist';
+    font-weight: lighter;
+    font-size: 45px;
+}
+
+.title-right-info {
+    padding-right: 50px;
+    font-family: 'Outist';
+    font-weight: lighter;
+    font-size: 45px;
+}
+
+.container-message-admin {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+
+
+/* Для ошибки */
+.error-message {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #f44336;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* Для удаления варианта голосования */
+#delete-but-vote {
+    border: none;
+    width: 20px;
+    height: 4px;
+    font-size: 17px;
+    color: white;
+    /* background-color: rgb(83, 83, 83); */
+    background-color: #d9d9d9;
+    border-radius: 7px;
+    margin-left: 10px;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+/* #delete-but-vote:hover {
+    background-color: #474747; 
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+#delete-but-vote:active {
+    background-color: #555555; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+    transform: translateY(2px); 
+} */
+
+
+/* Декоративные линии */
+.decorative-line-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.decorative-line-left {
+    width: 800px;
+    background-color: white;
+    height: 7px;
+    border-radius: 10px;
+}
+
+.decorative-line-right {
+    width: 450px;
+    background-color: white;
+    height: 7px;
+    margin-right: 20px;
+    border-radius: 10px;
+}
