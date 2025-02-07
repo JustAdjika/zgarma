@@ -40,10 +40,16 @@ router.post('/add', async(req, res) => {
             team1: data.team1,
             team2: data.type == 'PVE' ? null : data.team2,
             imgPath: null,
-            slotsTeam1: null,
-            slotsTeam2: null,
-            vehTeam1: null,
-            vehTeam2: null,
+            slotsTeam1: [{
+                title: "Командир Стороны",
+                player: null
+            }],
+            slotsTeam2: [{
+                title: "Командир Стороны",
+                player: null
+            }],
+            vehTeam1: [],
+            vehTeam2: [],
         })
 
         res.json({

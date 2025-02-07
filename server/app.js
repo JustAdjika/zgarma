@@ -1,5 +1,6 @@
 // DEPENDENCIES
 import express from 'express'
+import fileUpload from 'express-fileupload'
 
 // MODULES
 import sequelize from './database/pool.js'
@@ -30,6 +31,8 @@ import eventRequestRouter from './routers/eventRequestRouter.js'
 const app = express()
 app.use(bodyParser.json())
 sequelize.sync()
+
+app.use(fileUpload())
 
 app.listen(3000, () => {
     console.log('\x1b[35m |!-------- API STARTED -------!| \x1b[0m')
