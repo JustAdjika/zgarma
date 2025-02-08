@@ -13,6 +13,14 @@ function Annoucement() {
     const [option, setOption] = useState("");
     const [options, setOptions] = useState([]);
 
+    //Пользователь ДОЛБАЁБик
+    const currentUser = {
+        key: "myKey",
+        steam: "blablabla",
+        discord: "blablabla2",
+        id: 1
+      } 
+
     // Создание Голосования
     const [optionVote, setOptionVote] = useState([]);
 
@@ -216,6 +224,8 @@ useEffect(  () => {
                                 date={vote.date}
                                 options={[vote.option1, vote.option2, vote.option3, vote.option4].filter(Boolean)}
                                 voteIndex={vote.id}
+                                currentUser={currentUser}
+                                votes={vote.votes}
                             />
                         ))}
                     </div>

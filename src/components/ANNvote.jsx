@@ -1,8 +1,8 @@
-import { React, useState } from "react"; // Импортируем useState
+import { React, useEffect, useState } from "react"; // Импортируем useState
 import axios from "axios";
 import './Style/ANNvote.css';
 
-function AnnVote({ title, content, date, options, voteIndex }) {
+function AnnVote({ title, content, date, options, voteIndex, currentUser, votes }) {
     // Актуальная дата для голосования
     const currentDate = new Date();
     const formattedDate = currentDate.toLocaleDateString("ru-RU");
@@ -10,6 +10,16 @@ function AnnVote({ title, content, date, options, voteIndex }) {
     // Состояние для хранения выбранного чекбокса
     const [selectedOption, setSelectedOption] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
+
+    useEffect( () => {
+        console.log(votes);
+        
+        JSON.parse(votes).forEach(element => {
+            if(element.userId == currentUser.id) {
+                setSelectedOption(element.option -1)
+            }
+        });
+    },[]);
 
     // Функция для обработки выбора radio
     const handleCheckboxChange = async (index) => {
