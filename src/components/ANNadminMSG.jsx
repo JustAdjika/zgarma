@@ -1,7 +1,7 @@
 import React from "react";
 import './Style/ANNadminMSG.css';
 
-function ANNadminMSG({ title, message, options }) {
+function ANNadminMSG({ title, content, options }) {
 
     //Актуальная дата для объявления
     const currentDate = new Date();
@@ -21,7 +21,7 @@ function ANNadminMSG({ title, message, options }) {
                     <div className="ANN-container">
                         <div className="title-ANN">{ title }</div>
                     </div>
-                    <div className="message">{ message }</div>
+                    <div className="message">{ content }</div>
                 </div>
             </div>
         </div>

@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AnnVote from "../components/ANNvote.jsx";
 import ANNadminMSG from '../components/ANNadminMSG.jsx';
+import axios from "axios";
 import './Style/annoucement.css';
+import { data } from "react-router-dom";
 
 function Annoucement() {
     // Создание Объявления
@@ -53,7 +55,7 @@ function Annoucement() {
     };
 
     // Функция для отправки объявления и голосования
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (options.length > 0) {
             for (let option of options) {
                 if (!option.value.trim()) {
@@ -86,13 +88,54 @@ function Annoucement() {
                 setTitle("");
                 setMessage("");
                 setOptions([]);
+
             } else {
                 // Устанавливаем ошибку
                 setErrorMessage("Пожалуйста, заполните заголовок и текст сообщения для объявления.");
                 setTimeout(() => setErrorMessage(""), 5000); // Скрывает через 5 сек
             }
         }
+
+        const resPost = await axios.post('http://localhost:3000/api/developer/post/add', {
+            title: title,
+            content: message,
+            option1: options?.[0]?.value || null,  
+            option2: options?.[1]?.value || null,
+            option3: options?.[2]?.value || null,
+            option4: options?.[3]?.value || null,
+            key: "MyKey"
+        });
+        if(resPost.data.status !== 200) {
+            setErrorMessage(resVote.data.err);
+            setTimeout(() => setErrorMessage(""), 5000); // Скрывает через 5 сек
+            return;  // Прерываем выполнение функции
+        };
+        window.location.reload();
     };
+
+
+//=======================================================================================================================================
+//=======================================================================================================================================
+//Бэк
+
+//GET запрос на получения инфы из поста
+useEffect(  () => {
+    const GetPosts = async () => {
+        const resPosts = await axios.get('http://localhost:3000/api/developer/post/data/all'); //Заносим в respons  
+        const posts = resPosts.data.container;
+        console.log(posts);
+
+        posts.forEach(e => {
+            if(e.option1 === null) {
+                setAnnouncements(prev => [...prev, e]); 
+            }
+            else {
+                setOptionVote(prev => [...prev, e]); 
+            };
+        });
+    }
+    GetPosts();
+},[]);
 
     return (
         <div className="div-main-annoucement">
@@ -153,8 +196,7 @@ function Annoucement() {
                             <ANNadminMSG
                                 key={index}
                                 title={announcement.title}
-                                message={announcement.message}
-                                options={announcement.options.join(", ")}
+                                content={announcement.content}
                             />
                         ))}
                     </div>
@@ -170,9 +212,10 @@ function Annoucement() {
                             <AnnVote
                                 key={index}
                                 title={vote.title}
-                                message={vote.message}
-                                options={vote.options}
-                                voteIndex = {index}
+                                content={vote.content}
+                                date={vote.date}
+                                options={[vote.option1, vote.option2, vote.option3, vote.option4].filter(Boolean)}
+                                voteIndex={vote.id}
                             />
                         ))}
                     </div>
