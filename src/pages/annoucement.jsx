@@ -16,7 +16,7 @@ const Announcement = () => {
 
     // Пользователь
     const [currentUser, setCurrentUser] = useState({})
-    const [currentUsername, setCurrentUsername] = useState("Loading...")
+    const [currentUsername, setCurrentUsername] = useState("Не вошел в аккаунт")
     const [currentUserID, setCurrentUserID] = useState(-1)
 
     // Создание Голосования
@@ -121,12 +121,14 @@ useEffect( () => {
     }
     GetPosts();
 
-    setCurrentUser(JSON.parse(Cookies.get("userData")))
+    if(Cookies.get("userData")){
+        setCurrentUser(JSON.parse(Cookies.get("userData")))
+    }
 },[]);
 
 useEffect(() => {
     if(currentUser?.discord) {
-        setCurrentUsername(JSON.parse(currentUser.discord).username)
+        setCurrentUsername(currentUser.discord.username)
     }
 }, [currentUser])
 

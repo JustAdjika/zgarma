@@ -2,6 +2,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv'
 import axios from 'axios';
+import crypto from 'crypto'
+import bcrypt from 'bcrypt'
 import { Sequelize } from 'sequelize';
 
 import ACCOUNTS_TAB from '../database/accounts.js';
@@ -134,8 +136,10 @@ router.get('/data/discord', async(req,res) => {
         })
 
         if(!foundUser) {
+            const newKey = crypto.randomBytes(32).toString('hex')
+            const hashedKey = await bcrypt.hash( newKey, 10 )
             const newUser = await ACCOUNTS_TAB.create({
-                key: "myKey 3",
+                key: hashedKey,
                 steam: null,
                 discord: userResponse.data,
                 date: GetDateInfo.all
