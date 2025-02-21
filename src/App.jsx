@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ArmaZgMain from './pages/armaZgMain.jsx';
-import Annoucement from './pages/annoucement.jsx';
+import Announcement from './pages/annoucement.jsx';
 import './App.css'
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
       <Router> 
         <Routes>
           <Route path='/main' element={<ArmaZgMain />} />
-          <Route path='/annoucement' element={<Annoucement />} />
+          <Route path='/announcement' element={<Announcement />} />
         </Routes>
       </Router>
     </div>

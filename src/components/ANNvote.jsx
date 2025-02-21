@@ -12,7 +12,6 @@ function AnnVote({ title, content, date, options, voteIndex, currentUser, votes 
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect( () => {
-        console.log(votes);
         
         JSON.parse(votes).forEach(element => {
             if(element.userId == currentUser.id) {
@@ -25,7 +24,7 @@ function AnnVote({ title, content, date, options, voteIndex, currentUser, votes 
     const handleCheckboxChange = async (index) => {
         setSelectedOption(index); // Устанавливаем выбранный индекс
         const resVote = await axios.put('http://localhost:3000/api/developer/post/vote/add', {
-            key: "MyKey",
+            key: "myKey 2",
             option: index + 1,
             postId: voteIndex
         });
@@ -42,7 +41,7 @@ function AnnVote({ title, content, date, options, voteIndex, currentUser, votes 
                 <div className="time-ANNvote">{date}</div>
                 <div className="author-div2">{title}</div>
             </div>
-            <div className="title-message-vote" style={{ marginBottom: '5px', textAlign: 'right' }}>
+            <div className="title-message-vote" style={{ marginBottom: '5px', textAlign: 'right', width: '430px', wordWrap: 'break-word' }}>
                 {content}
             </div>
             <div className="text-info-ANN-vote">
@@ -65,7 +64,7 @@ function AnnVote({ title, content, date, options, voteIndex, currentUser, votes 
                                         </div>
                                     </div>
                                 </div>
-                                {option} {/* Текст варианта голосования */}
+                                <span>{option}</span> {/* Текст варианта голосования */}
                             </label>
                         </div>
                     ))}

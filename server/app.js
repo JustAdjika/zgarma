@@ -1,6 +1,7 @@
 // DEPENDENCIES
 import express from 'express'
 import fileUpload from 'express-fileupload'
+import cors from 'cors'
 
 // MODULES
 import sequelize from './database/pool.js'
@@ -30,6 +31,7 @@ import eventRequestRouter from './routers/eventRequestRouter.js'
 // CONFIG
 const app = express()
 app.use(bodyParser.json())
+app.use(cors())
 sequelize.sync()
 
 app.use(fileUpload())

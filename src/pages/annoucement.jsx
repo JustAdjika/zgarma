@@ -5,7 +5,7 @@ import axios from "axios";
 import './Style/annoucement.css';
 import { data } from "react-router-dom";
 
-function Annoucement() {
+const Announcement = () => {
     // Создание Объявления
     const [announcements, setAnnouncements] = useState([]);
     const [title, setTitle] = useState("");
@@ -15,10 +15,10 @@ function Annoucement() {
 
     //Пользователь ДОЛБАЁБик
     const currentUser = {
-        key: "myKey",
+        key: "myKey 2",
         steam: "blablabla",
         discord: "blablabla2",
-        id: 1
+        id: 2
       } 
 
     // Создание Голосования
@@ -72,35 +72,13 @@ function Annoucement() {
                     return;  // Прерываем выполнение функции
                 }
             }
-            // Создание голосования
-            const newVote = {
-                title,
-                message,
-                options: options.map(option => option.value), // Только значения
-            };
-            setOptionVote([...optionVote, newVote]);
-            // Очистить форму
-            setTitle("");
-            setMessage("");
-            setOptions([]);
         } else {
             // Создание объявления
-            if (title.trim() && message.trim()) {
-                const newAnnouncement = {
-                    title,
-                    message,
-                    options: [],
-                };
-                setAnnouncements([...announcements, newAnnouncement]);
-                // Очистить форму
-                setTitle("");
-                setMessage("");
-                setOptions([]);
-
-            } else {
+            if (!title.trim() && !message.trim()) {
                 // Устанавливаем ошибку
                 setErrorMessage("Пожалуйста, заполните заголовок и текст сообщения для объявления.");
                 setTimeout(() => setErrorMessage(""), 5000); // Скрывает через 5 сек
+                return
             }
         }
 
@@ -111,14 +89,16 @@ function Annoucement() {
             option2: options?.[1]?.value || null,
             option3: options?.[2]?.value || null,
             option4: options?.[3]?.value || null,
-            key: "MyKey"
+            key: "MyKey 2"
         });
         if(resPost.data.status !== 200) {
-            setErrorMessage(resVote.data.err);
+            console.log(resPost.data.err)
+            setErrorMessage(resPost.data.err);
             setTimeout(() => setErrorMessage(""), 5000); // Скрывает через 5 сек
             return;  // Прерываем выполнение функции
         };
-        window.location.reload();
+
+        window.location.reload()
     };
 
 
@@ -131,7 +111,6 @@ useEffect(  () => {
     const GetPosts = async () => {
         const resPosts = await axios.get('http://localhost:3000/api/developer/post/data/all'); //Заносим в respons  
         const posts = resPosts.data.container;
-        console.log(posts);
 
         posts.forEach(e => {
             if(e.option1 === null) {
@@ -203,6 +182,7 @@ useEffect(  () => {
                         {announcements.map((announcement, index) => (
                             <ANNadminMSG
                                 key={index}
+                                date={announcement.date}
                                 title={announcement.title}
                                 content={announcement.content}
                             />
@@ -242,4 +222,4 @@ useEffect(  () => {
     );
 }
 
-export default Annoucement;
+export default Announcement;

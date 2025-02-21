@@ -63,6 +63,8 @@ body {
     margin-bottom: 20px;
     text-align: right;
     font-family: 'My Open Sans';
+    width: 330px;
+    word-wrap: break-word;
 }
 
 
@@ -94,6 +96,11 @@ body {
     font-size: 18px;
     color: #fff;
     cursor: pointer;
+}
+.custom-radio>span {
+    width: 300px;
+    /* overflow: hidden; */
+    word-wrap: break-word;
 }
 
 .check-box-vote {

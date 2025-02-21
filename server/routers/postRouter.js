@@ -79,7 +79,7 @@ router.get('/data/all', async(req, res) => {
 });
 
 // ADD VOTE 
-router.post('/vote/add', async(req, res) => {
+router.put('/vote/add', async(req, res) => {
     try{
         const data = req.body;
 

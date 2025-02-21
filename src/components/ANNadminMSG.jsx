@@ -1,18 +1,12 @@
 import React from "react";
 import './Style/ANNadminMSG.css';
 
-function ANNadminMSG({ title, content, options }) {
-
-    //Актуальная дата для объявления
-    const currentDate = new Date();
-    const formattedDate = currentDate.toLocaleDateString("ru-Ru");
-
-
+function ANNadminMSG({ title, content, date, options }) {
     return (
         <div className="main-ANN-div">
             <div className="container-dop-info">
                 <div className="author-div">Администранция ZG</div>
-                <div className="time-ANN-div">{ formattedDate }</div>
+                <div className="time-ANN-div">{ date }</div>
             </div>
             <div className="message-line"></div>
             <div className="decorative-container">
