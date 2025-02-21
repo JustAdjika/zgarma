@@ -3,9 +3,6 @@ import axios from "axios";
 import './Style/ANNvote.css';
 
 function AnnVote({ title, content, date, options, voteIndex, currentUser, votes }) {
-    // Актуальная дата для голосования
-    const currentDate = new Date();
-    const formattedDate = currentDate.toLocaleDateString("ru-RU");
 
     // Состояние для хранения выбранного чекбокса
     const [selectedOption, setSelectedOption] = useState(null);
@@ -24,7 +21,7 @@ function AnnVote({ title, content, date, options, voteIndex, currentUser, votes 
     const handleCheckboxChange = async (index) => {
         setSelectedOption(index); // Устанавливаем выбранный индекс
         const resVote = await axios.put('http://localhost:3000/api/developer/post/vote/add', {
-            key: "myKey 2",
+            key: currentUser.key,
             option: index + 1,
             postId: voteIndex
         });

@@ -1,5 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv'
+import axios from 'axios';
+import { Sequelize } from 'sequelize';
 
 import ACCOUNTS_TAB from '../database/accounts.js';
 
@@ -7,6 +10,11 @@ import GetDateInfo from '../modules/dateInfo.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
+dotenv.config()
+
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URI = process.env.REDIRECT_URI;
 
 console.log(`\x1b[34m |!|   ACCOUNT ROUTER READY   |!|\x1b[0m`);
 
@@ -91,5 +99,68 @@ router.get('/data/key', async(req,res) => {
         });
     };
 });
+
+
+// DISCORD CALLBACK
+router.get('/data/discord', async(req,res) => {
+    const code = req.query.code
+
+    if(!code) return res.json({
+        status: 400,
+        err: 'Discord auth code undefined'
+    })
+
+    try {
+        const tokenResponse = await axios.post("https://discord.com/api/oauth2/token", new URLSearchParams({
+            client_id: CLIENT_ID,
+            client_secret: CLIENT_SECRET,
+            grant_type: "authorization_code",
+            code,
+            redirect_uri: REDIRECT_URI,
+        }), { headers: { "Content-Type": "application/x-www-form-urlencoded" } });
+
+
+        const accessToken = tokenResponse.data.access_token;
+
+        const userResponse = await axios.get("https://discord.com/api/users/@me", {
+            headers: { Authorization: `Bearer ${accessToken}` }
+        });
+
+        const foundUser = await ACCOUNTS_TAB.findOne({
+            where: Sequelize.where(
+                Sequelize.json("discord.id"),
+                userResponse.data.id
+            )
+        })
+
+        if(!foundUser) {
+            const newUser = await ACCOUNTS_TAB.create({
+                key: "myKey 3",
+                steam: null,
+                discord: userResponse.data,
+                date: GetDateInfo.all
+            })
+            res.json({
+                status: 200,
+                container: newUser
+            })
+        }else{
+            res.json({
+                status: 200,
+                container: foundUser
+            })
+        }
+    } catch (e) {
+        console.error(`\x1b[31mApi developer error: account/data/discord - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: account/data/discord - ${e}`
+        });
+    }
+});
+
+
+
+
 
 export default router;

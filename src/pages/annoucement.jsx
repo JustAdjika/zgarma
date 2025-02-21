@@ -4,6 +4,7 @@ import ANNadminMSG from '../components/ANNadminMSG.jsx';
 import axios from "axios";
 import './Style/annoucement.css';
 import { data } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Announcement = () => {
     // Создание Объявления
@@ -13,13 +14,10 @@ const Announcement = () => {
     const [option, setOption] = useState("");
     const [options, setOptions] = useState([]);
 
-    //Пользователь ДОЛБАЁБик
-    const currentUser = {
-        key: "myKey 2",
-        steam: "blablabla",
-        discord: "blablabla2",
-        id: 2
-      } 
+    // Пользователь
+    const [currentUser, setCurrentUser] = useState({})
+    const [currentUsername, setCurrentUsername] = useState("Loading...")
+    const [currentUserID, setCurrentUserID] = useState(-1)
 
     // Создание Голосования
     const [optionVote, setOptionVote] = useState([]);
@@ -89,7 +87,7 @@ const Announcement = () => {
             option2: options?.[1]?.value || null,
             option3: options?.[2]?.value || null,
             option4: options?.[3]?.value || null,
-            key: "MyKey 2"
+            key: currentUser.key
         });
         if(resPost.data.status !== 200) {
             console.log(resPost.data.err)
@@ -107,7 +105,7 @@ const Announcement = () => {
 //Бэк
 
 //GET запрос на получения инфы из поста
-useEffect(  () => {
+useEffect( () => {
     const GetPosts = async () => {
         const resPosts = await axios.get('http://localhost:3000/api/developer/post/data/all'); //Заносим в respons  
         const posts = resPosts.data.container;
@@ -122,10 +120,27 @@ useEffect(  () => {
         });
     }
     GetPosts();
+
+    setCurrentUser(JSON.parse(Cookies.get("userData")))
 },[]);
+
+useEffect(() => {
+    if(currentUser?.discord) {
+        setCurrentUsername(JSON.parse(currentUser.discord).username)
+    }
+}, [currentUser])
+
+
+
+const CLIENT_ID = "1342587047600328896";
+const REDIRECT_URI = "http://localhost:5173/auth/discord/callback";
+const DISCORD_AUTH_URL = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify%20email`;
+
 
     return (
         <div className="div-main-annoucement">
+            <a href={DISCORD_AUTH_URL}>Register</a>
+            <span>DISCORD USERNAME: {currentUsername}</span>
             {/* Div с картинкой */}
             <div className="background-banner">
                 <div className="title-bunner"> ZG ARMA 3</div>
