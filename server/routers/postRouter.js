@@ -5,6 +5,7 @@ import POSTS_TAB from '../database/posts.js';
 import ACCOUNTS_TAB from '../database/accounts.js';
 
 import GetDateInfo from '../modules/dateInfo.js'
+import PermissionsCheck from '../modules/permissions.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -12,7 +13,7 @@ router.use(bodyParser.json());
 console.log(`\x1b[34m |!|    POST ROUTER READY     |!| \x1b[0m`);
 
 // ADD POST
-router.post('/add', async(req, res) => {
+router.post('/add', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body;
 
@@ -82,6 +83,13 @@ router.get('/data/all', async(req, res) => {
 router.put('/vote/add', async(req, res) => {
     try{
         const data = req.body;
+
+        if(!data.key) {
+            return res.json({
+                status: 404,
+                err: 'You are not registered'
+            })
+        } 
 
         const user = await ACCOUNTS_TAB.findOne({
             where: {

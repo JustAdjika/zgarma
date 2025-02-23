@@ -53,16 +53,29 @@ function AnnVote({ title, content, date, options, voteIndex, currentUser, votes 
                                 onChange={() => handleCheckboxChange(index)}
                                 className="check-box-vote"
                             />
-                            <label htmlFor={`option-${voteIndex}-${index}`} className="custom-radio" data-number={index + 1}>
-                                <div className="decorative-square">
-                                    <div className="container-box">
-                                        <div className="vote-index" style={{ backgroundColor: selectedOption === index ? "#616161" : "#1A1A1A" }}>
-                                            {index + 1}
+                            { currentUser.id ? 
+                                <label htmlFor={`option-${voteIndex}-${index}`} className="custom-radio" data-number={index + 1}>
+                                    <div className="decorative-square">
+                                        <div className="container-box">
+                                            <div className="vote-index" style={{ backgroundColor: selectedOption === index ? "#616161" : "#1A1A1A" }}>
+                                                {index + 1}
+                                            </div>
                                         </div>
                                     </div>
+                                    <span>{option}</span> {/* Текст варианта голосования */}
+                                </label>
+                            :
+                                <div className="custom-radio" data-number={index + 1}>
+                                    <div className="decorative-square" style={{ backgroundColor: '#C0392B'}}>
+                                        <div className="container-box">
+                                            <div className="vote-index" style={{ backgroundColor: selectedOption === index ? "#616161" : "#1A1A1A" }}>
+                                                {index + 1}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span>{option}</span> {/* Текст варианта голосования */}
                                 </div>
-                                <span>{option}</span> {/* Текст варианта голосования */}
-                            </label>
+                            }
                         </div>
                     ))}
                 </div>

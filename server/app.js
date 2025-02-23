@@ -15,6 +15,7 @@ import EVENTS_TAB from './database/events.js'
 import NOTICES_TAB from './database/notices.js'
 import FAQ_TAB from './database/faq.js'
 import EVENT_REQUESTS_TAB from './database/eventRequests.js'
+import ADMINS_TAB from './database/adminList.js'
 
 // ROUTERS
 import accountRouter from './routers/accountRouter.js'
@@ -27,6 +28,7 @@ import eventEditRouter from './routers/eventEditRouter.js'
 import eventSquadRouter from './routers/eventSquadRouter.js'
 import eventVehRouter from './routers/eventVehRouter.js'
 import eventRequestRouter from './routers/eventRequestRouter.js'
+import adminList from './routers/adminListRouter.js'
 
 // CONFIG
 const app = express()
@@ -51,3 +53,4 @@ app.use('/api/developer/event/edit', eventEditRouter)
 app.use('/api/developer/event/edit/vehicle', eventVehRouter)
 app.use('/api/developer/event/edit/squad', eventSquadRouter)
 app.use('/api/developer/event/request', eventRequestRouter)
+app.use('/api/developer/adminlist/remote', adminList)
