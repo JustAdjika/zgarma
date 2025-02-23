@@ -2,21 +2,106 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv'
 import axios from 'axios';
-import crypto from 'crypto'
-import bcrypt from 'bcrypt'
+import crypto from 'crypto';
+import bcrypt from 'bcrypt';
+import passport from 'passport';
+import session from 'express-session';
+import { Strategy as SteamStrategy } from 'passport-steam';
+import cookieParser from 'cookie-parser';
+
 import { Sequelize } from 'sequelize';
 
 import ACCOUNTS_TAB from '../database/accounts.js';
 
-import GetDateInfo from '../modules/dateInfo.js'
+import GetDateInfo from '../modules/dateInfo.js';
 
 const router = express.Router();
 router.use(bodyParser.json());
+router.use(cookieParser())
 dotenv.config()
 
+
+
+// GENERAL DOTENV
+const BASIC_URL = process.env.BASIC_URL
+const SESSION_SECRET = process.env.SESSION_SECRET
+
+// DISCORD DOTENV
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
+
+// STEAM DOTENV
+const STEAM_API_KEY = process.env.STEAM_API_KEY
+
+
+
+// STEAM AUTH 
+
+router.use(
+    session({
+        secret: SESSION_SECRET, // Замени на случайную строку
+        resave: false,
+        saveUninitialized: true,
+        cookie: { secure: false }, // Используй true, если у тебя HTTPS
+    })
+);
+
+router.use(passport.initialize());
+router.use(passport.session());
+
+passport.use(
+    new SteamStrategy(
+        {
+            returnURL: `${BASIC_URL}/api/developer/account/auth/steam/callback`,
+            realm: BASIC_URL,
+            apiKey: STEAM_API_KEY
+        },
+        (identifier, profile, done) => {  // <-- добавил колбэк
+            return done(null, profile);
+        }
+    )
+)
+
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((obj, done) => done(null, obj));
+
+
+router.get("/auth/steam", passport.authenticate("steam"));
+
+router.get(
+    "/auth/steam/callback", 
+    passport.authenticate("steam", { failureRedirect: "/announcement" }),
+    async(req, res) => {
+        const userData = req.user._json
+
+        const foundAccount = await ACCOUNTS_TAB.findOne({
+            where: {
+                key: JSON.parse(req.cookies.userData).key
+            }
+        })
+
+        if(!foundAccount) {
+            return res.end("Ошибка аутентификации")
+        }
+
+        await foundAccount.update({
+            steam: userData
+        })
+
+        let parsedData = foundAccount.dataValues
+        parsedData.discord = JSON.parse(parsedData.discord)
+
+        res.cookie("userData", JSON.stringify(parsedData), {
+            httpOnly: false, // Куки доступны только серверу (защита от XSS)
+            secure: false, // Установи `true`, если используешь HTTPS
+            maxAge: 60 * 24 * 60 * 60 * 1000, // 60 дней
+        });
+
+        res.redirect("http://localhost:5173/announcement")
+    }
+)
+
 
 console.log(`\x1b[34m |!|   ACCOUNT ROUTER READY   |!|\x1b[0m`);
 
@@ -144,14 +229,17 @@ router.get('/data/discord', async(req,res) => {
                 discord: userResponse.data,
                 date: GetDateInfo.all
             })
+
             res.json({
                 status: 200,
                 container: newUser
             })
         }else{
+            let parsedData = foundUser.dataValues
+            parsedData.discord = JSON.parse(parsedData.discord)
             res.json({
                 status: 200,
-                container: foundUser
+                container: parsedData
             })
         }
     } catch (e) {

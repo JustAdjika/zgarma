@@ -1,41 +1,31 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
+
 import AnnVote from "../components/ANNvote.jsx";
 import ANNadminMSG from '../components/ANNadminMSG.jsx';
-import axios from "axios";
+import Terminal from '../components/terminal.jsx'
+
 import './Style/annoucement.css';
-import { data } from "react-router-dom";
-import Cookies from "js-cookie";
+
 
 const Announcement = () => {
     // Создание Объявления
     const [announcements, setAnnouncements] = useState([]);
     const [title, setTitle] = useState("");
     const [message, setMessage] = useState("");
-    const [option, setOption] = useState("");
     const [options, setOptions] = useState([]);
 
     // Пользователь
     const [currentUser, setCurrentUser] = useState({})
     const [currentUsername, setCurrentUsername] = useState("Не вошел в аккаунт")
-    const [currentUserID, setCurrentUserID] = useState(-1)
+    const [currentSteamUsername, setCurrentSteamUsername] = useState("Не привязан стим")
 
     // Создание Голосования
     const [optionVote, setOptionVote] = useState([]);
 
     // Состояние для ошибки
     const [errorMessage, setErrorMessage] = useState("");
-
-    // Функция для Объявления
-    const handleAddOption = () => {
-        if (option.trim()) {
-            setOptions([...options, { id: Date.now(), value: option }]);
-            setOption(""); 
-        } else {
-            // Показываем ошибку, если вариант пустой
-            setErrorMessage("Вариант не может быть пустым.");
-            setTimeout(() => setErrorMessage(""), 5000);
-        }
-    };
 
     // Функция для добавления варианта голосования
     const handleAddOptionVote = () => {
@@ -104,45 +94,64 @@ const Announcement = () => {
 //=======================================================================================================================================
 //Бэк
 
-//GET запрос на получения инфы из поста
-useEffect( () => {
-    const GetPosts = async () => {
-        const resPosts = await axios.get('http://localhost:3000/api/developer/post/data/all'); //Заносим в respons  
-        const posts = resPosts.data.container;
+    //GET запрос на получения инфы из поста
+    useEffect( () => {
+        const GetPosts = async () => {
+            const resPosts = await axios.get('http://localhost:3000/api/developer/post/data/all'); //Заносим в respons  
+            const posts = resPosts.data.container;
 
-        posts.forEach(e => {
-            if(e.option1 === null) {
-                setAnnouncements(prev => [...prev, e]); 
+            posts.forEach(e => {
+                if(e.option1 === null) {
+                    setAnnouncements(prev => [...prev, e]); 
+                }
+                else {
+                    setOptionVote(prev => [...prev, e]); 
+                };
+            });
+        }
+        GetPosts();
+
+        if(Cookies.get("userData")){
+            setCurrentUser(JSON.parse(Cookies.get("userData")))
+        }
+    },[]);
+
+    useEffect(() => {
+        if(currentUser.id) {
+            setCurrentUsername(currentUser.discord.username)
+
+            if(currentUser.steam) {
+                setCurrentSteamUsername(currentUser.steam.personaname)
             }
-            else {
-                setOptionVote(prev => [...prev, e]); 
-            };
-        });
+        }
+    }, [currentUser])
+
+
+
+    const CLIENT_ID = "1342587047600328896";
+    const REDIRECT_URI = "http://localhost:5173/auth/discord/callback";
+    const DISCORD_AUTH_URL = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify%20email`;
+
+    const STEAM_AUTH_URL = `http://localhost:3000/api/developer/account/auth/steam`
+
+    const [isTerminalOpen, setIsTerminalOpen] = useState(false)
+
+    const handleLogOut = () => {
+        Cookies.remove("userData")
+        window.location.reload()
     }
-    GetPosts();
-
-    if(Cookies.get("userData")){
-        setCurrentUser(JSON.parse(Cookies.get("userData")))
-    }
-},[]);
-
-useEffect(() => {
-    if(currentUser?.discord) {
-        setCurrentUsername(currentUser.discord.username)
-    }
-}, [currentUser])
-
-
-
-const CLIENT_ID = "1342587047600328896";
-const REDIRECT_URI = "http://localhost:5173/auth/discord/callback";
-const DISCORD_AUTH_URL = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify%20email`;
-
 
     return (
         <div className="div-main-annoucement">
-            <a href={DISCORD_AUTH_URL}>Register</a>
+            { currentUser.id == null ? <a href={DISCORD_AUTH_URL}>Register</a> : null }
             <span>DISCORD USERNAME: {currentUsername}</span>
+            <br />
+            { currentUser.id ? currentUser.steam == null ? <a href={STEAM_AUTH_URL}>Link Steam</a> : null : null }
+            <span>STEAM USERNAME: {currentSteamUsername}</span>
+            <br />
+            { Cookies.get("userData") ? <button onClick={ handleLogOut }>Log out</button> : null }
+            <button onClick={ () => { setIsTerminalOpen(!isTerminalOpen) } }>Терминал { isTerminalOpen ? 'Открыт' : 'Закрыт' }</button>
+            {isTerminalOpen ? <Terminal setErrorMessage = {setErrorMessage} /> : null}
             {/* Div с картинкой */}
             <div className="background-banner">
                 <div className="title-bunner"> ZG ARMA 3</div>

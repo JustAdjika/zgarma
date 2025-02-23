@@ -13,9 +13,12 @@ const DiscordCallback = () => {
     if (code) {
       axios.get(`http://localhost:3000/api/developer/account/data/discord?code=${code}`)
         .then((response) => {
-            console.log(response.data.container)
-            Cookies.set('userData', JSON.stringify(response.data.container), { expires: 60 })
-            navigate("/announcement"); // Перенаправление после входа
+          let tempUserData = response.data.container
+
+          tempUserData.steam = JSON.parse(tempUserData.steam)
+          Cookies.set('userData', JSON.stringify(tempUserData), { expires: 60 })
+
+          navigate("/announcement"); // Перенаправление после входа
         })
         .catch((err) => console.error("Ошибка авторизации", err));
     }
