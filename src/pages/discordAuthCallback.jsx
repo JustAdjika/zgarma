@@ -9,9 +9,10 @@ const DiscordCallback = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
+    const host = "http://localhost:3000"
 
     if (code) {
-      axios.get(`http://localhost:3000/api/developer/account/data/discord?code=${code}`)
+      axios.get(`${host}/api/developer/account/data/discord?code=${code}`)
         .then((response) => {
           let tempUserData = response.data.container
 

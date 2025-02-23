@@ -10,6 +10,8 @@ import './Style/annoucement.css';
 
 
 const Announcement = () => {
+    const host = "http://localhost:3000"
+
     // Создание Объявления
     const [announcements, setAnnouncements] = useState([]);
     const [title, setTitle] = useState("");
@@ -71,7 +73,7 @@ const Announcement = () => {
             }
         }
 
-        const resPost = await axios.post('http://localhost:3000/api/developer/post/add', {
+        const resPost = await axios.post(`${host}/api/developer/post/add`, {
             title: title,
             content: message,
             option1: options?.[0]?.value || null,  
@@ -98,7 +100,7 @@ const Announcement = () => {
     //GET запрос на получения инфы из поста
     useEffect( () => {
         const GetPosts = async () => {
-            const resPosts = await axios.get('http://localhost:3000/api/developer/post/data/all'); //Заносим в respons  
+            const resPosts = await axios.get(`${host}/api/developer/post/data/all`); //Заносим в respons  
             const posts = resPosts.data.container;
 
             posts.forEach(e => {
@@ -119,7 +121,7 @@ const Announcement = () => {
 
     useEffect(() => {
         const permsCheck = async () => {
-            const res = await axios.get(`http://localhost:3000/api/developer/adminlist/remote/isAdmin?id=${currentUser.id}`)
+            const res = await axios.get(`${host}/api/developer/adminlist/remote/isAdmin?id=${currentUser.id}`)
             setIsAdmin(res.data.container)
             console.log(res.data.container)
         }
@@ -231,6 +233,7 @@ const Announcement = () => {
                 <div className="right-side-info">
                     <div className="title-right-info">ГОЛОСОВАНИЯ</div>
                     <div className="decorative-line-right"></div>
+                    <p style={{ marginRight: "30px", display: currentUser.id ? 'none' : 'flex' }}>Чтобы проголосовать, войдите в аккаунт</p>
                     {/* Div с голосованием */}
                     <div className="container-vote">
                         {/* Рендерим компоненты голосования с данными */}

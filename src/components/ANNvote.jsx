@@ -8,6 +8,8 @@ function AnnVote({ title, content, date, options, voteIndex, currentUser, votes 
     const [selectedOption, setSelectedOption] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
 
+    const host = "http://localhost:3000"
+
     useEffect( () => {
         
         JSON.parse(votes).forEach(element => {
@@ -20,7 +22,7 @@ function AnnVote({ title, content, date, options, voteIndex, currentUser, votes 
     // Функция для обработки выбора radio
     const handleCheckboxChange = async (index) => {
         setSelectedOption(index); // Устанавливаем выбранный индекс
-        const resVote = await axios.put('http://localhost:3000/api/developer/post/vote/add', {
+        const resVote = await axios.put(`${host}/api/developer/post/vote/add`, {
             key: currentUser.key,
             option: index + 1,
             postId: voteIndex
