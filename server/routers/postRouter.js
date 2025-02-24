@@ -6,6 +6,7 @@ import ACCOUNTS_TAB from '../database/accounts.js';
 
 import GetDateInfo from '../modules/dateInfo.js'
 import PermissionsCheck from '../modules/permissions.js'
+import axios from 'axios';
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -41,6 +42,8 @@ router.post('/add', PermissionsCheck, async(req, res) => {
             option4: data.option4,
             votes: [],
         });
+
+        axios.post('http://localhost:3000/api/developer/bot/post', newPost)
 
         res.json({
             status: 200

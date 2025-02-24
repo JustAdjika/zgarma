@@ -29,6 +29,7 @@ import eventSquadRouter from './routers/eventSquadRouter.js'
 import eventVehRouter from './routers/eventVehRouter.js'
 import eventRequestRouter from './routers/eventRequestRouter.js'
 import adminList from './routers/adminListRouter.js'
+import discordBot from './routers/discordBot.js'
 
 // CONFIG
 const app = express()
@@ -54,3 +55,4 @@ app.use('/api/developer/event/edit/vehicle', eventVehRouter)
 app.use('/api/developer/event/edit/squad', eventSquadRouter)
 app.use('/api/developer/event/request', eventRequestRouter)
 app.use('/api/developer/adminlist/remote', adminList)
+app.use('/api/developer/bot', discordBot)

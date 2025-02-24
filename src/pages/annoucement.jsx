@@ -119,11 +119,27 @@ const Announcement = () => {
         }
     },[]);
 
+    const [inDiscord, setInDiscord] = useState(false)
+
     useEffect(() => {
         const permsCheck = async () => {
             const res = await axios.get(`${host}/api/developer/adminlist/remote/isAdmin?id=${currentUser.id}`)
             setIsAdmin(res.data.container)
             console.log(res.data.container)
+        }
+
+        const discordChannelCheck = async () => {
+            const res = await axios.get(`${host}/api/developer/bot/members/data/all`)
+
+            if(JSON.parse(res.data.container)) {
+                const resParsed = JSON.parse(res.data.container)
+
+                resParsed.forEach(element => {
+                    if(currentUser.discord.id == element.id) {
+                        setInDiscord(true)
+                    }
+                })
+            }
         }
 
         if(currentUser.id) {
@@ -133,7 +149,10 @@ const Announcement = () => {
                 setCurrentSteamUsername(currentUser.steam.personaname)
             }
             permsCheck()
+            discordChannelCheck()
         }
+
+        
     }, [currentUser])
 
 
@@ -162,6 +181,7 @@ const Announcement = () => {
                 <br />
                 { Cookies.get("userData") ? <button onClick={ handleLogOut }>Log out</button> : null }
                 <button style={{ display: isAdmin && currentUser.id ? 'inline-block' : 'none' }} onClick={ () => { setIsTerminalOpen(!isTerminalOpen) } }>Терминал { isTerminalOpen ? 'Открыт' : 'Закрыт' }</button>
+                { inDiscord ? null : <p>Зайдите на наш дискорд сервер!</p> }
             </nav>
             {isTerminalOpen ? <Terminal setErrorMessage = {setErrorMessage} /> : null}
             {/* Div с картинкой */}
