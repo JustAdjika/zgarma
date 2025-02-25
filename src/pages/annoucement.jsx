@@ -125,16 +125,13 @@ const Announcement = () => {
         const permsCheck = async () => {
             const res = await axios.get(`${host}/api/developer/adminlist/remote/isAdmin?id=${currentUser.id}`)
             setIsAdmin(res.data.container)
-            console.log(res.data.container)
         }
 
         const discordChannelCheck = async () => {
             const res = await axios.get(`${host}/api/developer/bot/members/data/all`)
-
-            if(JSON.parse(res.data.container)) {
-                const resParsed = JSON.parse(res.data.container)
-
-                resParsed.forEach(element => {
+            console.log(res.data.container)
+            if(res.data.container) {
+                res.data.container.forEach(element => {
                     if(currentUser.discord.id == element.id) {
                         setInDiscord(true)
                     }

@@ -148,7 +148,6 @@ client.on('messageCreate', async(message) => {
 // Получить всех участников дискорда
 router.get('/members/data/all', async(req, res) => {
     try {
-
         const guild = await client.guilds.fetch(serverid)
         const members = await guild.members.fetch()
 
