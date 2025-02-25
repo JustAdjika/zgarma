@@ -278,7 +278,7 @@ router.post('/imgupload', async(req,res) => {
 
         const file = req.files.file
         const newFileName = uuidv4() + path.extname(file.name);
-        const uploadPath = __dirname + "/../files/" + newFileName
+        const uploadPath = __dirname + "/../files/eventImages/" + newFileName
 
         file.mv(uploadPath, (err) => {
             if(err) {
@@ -302,6 +302,89 @@ router.post('/imgupload', async(req,res) => {
         res.json({
             status: 500,
             err: `Api developer error: event/edit/imgupload - ${e}`
+        });
+    }
+})
+
+
+
+
+// MODS UPLOAD
+router.post('/modsupload', async(req,res) => {
+    try {
+        const userKey = req.body.key
+        const eventId = Number(req.body.eventId)
+
+        const user = await ACCOUNTS_TAB.findOne({
+            where: {
+                key: userKey
+            }
+        })
+
+        if(!user){
+            res.json({
+                status: 404,
+                err: 'User undefined'
+            })
+            return
+        }
+
+        const currentEvent = await EVENTS_TAB.findOne({
+            where: {
+                id: eventId
+            }
+        })
+
+        if(!currentEvent){
+            res.json({
+                status: 404,
+                err: 'Current event undefined'
+            })
+            return
+        }
+
+        if(!req.files || !req.files.file) {
+            res.json({
+                status: 400,
+                err: 'File is not uploaded'
+            })
+            return
+        }
+
+        if(Array.isArray(req.files.file)) {
+            res.json({
+                status: 400,
+                err: 'More than one file has been uploaded'
+            })
+            return
+        }
+
+        const file = req.files.file
+        const newFileName = uuidv4() + path.extname(file.name);
+        const uploadPath = __dirname + "/../files/eventModPacks/" + newFileName
+
+        file.mv(uploadPath, (err) => {
+            if(err) {
+                res.json({
+                    status: 500,
+                    err
+                })
+                return 
+            }
+        })
+
+        await currentEvent.update({
+            modsPath: uploadPath
+        })
+
+        res.json({
+            status: 200
+        })
+    } catch(e) {
+        console.error(`\x1b[31mApi developer error: event/edit/modsupload - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: event/edit/modsupload - ${e}`
         });
     }
 })

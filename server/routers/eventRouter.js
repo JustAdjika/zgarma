@@ -9,6 +9,11 @@ import GetDateInfo from '../modules/dateInfo.js'
 const router = express.Router();
 router.use(bodyParser.json());
 
+router.use((req, res, next) => {
+    res.setHeader("Content-Security-Policy", "default-src 'self' blob:; worker-src 'self' blob:;");
+    next();
+});
+
 console.log(`\x1b[34m |!|    EVENT ROUTER READY    |!|\x1b[0m`);
 
 router.post('/add', async(req, res) => {
@@ -87,6 +92,42 @@ router.get('/data/all', async(req, res) => {
             err: `Api developer error: event/add - ${e}`
         });
     };
+})
+
+
+// Скачивание модпака с сервера
+router.get('/data/download/modpack/:eventId', async (req, res) => {
+    try {
+        const eventId = req.params.eventId
+
+        const currentEvent = await EVENTS_TAB.findOne({
+            where: {
+                id: eventId
+            }
+        })
+
+        if(!currentEvent){
+            res.json({
+                status: 404,
+                err: 'Current event undefined'
+            })
+            return
+        }
+
+        const filePath = currentEvent.dataValues.modsPath
+        res.download(filePath, (err) => {
+            if (err) {
+                console.error("Ошибка при скачивании:", err);
+                res.status(500).send("Ошибка при скачивании файла.");
+            }
+        });
+    } catch(e) {
+        console.error(`\x1b[31mApi developer error: /data/download/modpack/ - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: /data/download/modpack/ - ${e}`
+        });
+    }
 })
 
 export default router;

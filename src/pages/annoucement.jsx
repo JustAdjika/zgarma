@@ -83,7 +83,6 @@ const Announcement = () => {
             key: currentUser.key
         });
         if(resPost.data.status !== 200) {
-            console.log(resPost.data.err)
             setErrorMessage(resPost.data.err);
             setTimeout(() => setErrorMessage(""), 5000); // Скрывает через 5 сек
             return;  // Прерываем выполнение функции
@@ -129,7 +128,6 @@ const Announcement = () => {
 
         const discordChannelCheck = async () => {
             const res = await axios.get(`${host}/api/developer/bot/members/data/all`)
-            console.log(res.data.container)
             if(res.data.container) {
                 res.data.container.forEach(element => {
                     if(currentUser.discord.id == element.id) {

@@ -37,6 +37,9 @@ const EVENTS_TAB = sequelize.define('events', {
     imgPath: {
         type: DataTypes.STRING
     },
+    modsPath: {
+        type: DataTypes.STRING
+    },
     slotsTeam1: {
         type: DataTypes.JSON
     },
