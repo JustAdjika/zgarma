@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import axios from 'axios'
 
 import BUG_FIXES_TAB from '../database/bugFixes.js';
 import ACCOUNTS_TAB from '../database/accounts.js';
@@ -61,6 +62,15 @@ router.post('/add', async(req,res) => {
             content: data.content,
             date: GetDateInfo.date
         })
+
+        const botData = {
+            title: data.title,
+            content: data.content,
+            date: GetDateInfo.date,
+            id: container.id
+        }
+
+        axios.post('http://localhost:3000/api/developer/bot/patchnote', botData)
 
         res.json({
             status: 200

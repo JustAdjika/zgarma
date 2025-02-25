@@ -198,10 +198,66 @@ router.post('/post', async(req, res) => {
 
         await channel.send({ embeds: [embed] });
     }catch(e){
-        console.error(`\x1b[31mApi developer error: bot/members/data/all - ${e} \x1b[31m`);
+        console.error(`\x1b[31mApi developer error: bot/post - ${e} \x1b[31m`);
         res.json({
             status: 500,
-            err: `Api developer error: bot/members/data/all - ${e}`
+            err: `Api developer error: bot/post - ${e}`
+        });
+    };
+})
+
+
+
+// Отправка нового патчноута
+router.post('/patchnote', async(req, res) => {
+    try {
+        const data = req.body
+        const channel = await client.channels.fetch('1343952216901423205')
+
+        const embed = new EmbedBuilder()
+            .setTitle(`Ченджлог #${data.id} за ${data.date} - ${data.title}`)
+            .setDescription(data.content)
+            .setColor(0xecc011) // Синий цвет
+            .setFooter({ text: 'Системный Администратор ZG' });
+
+        await channel.send({ embeds: [embed] });
+    }catch(e){
+        console.error(`\x1b[31mApi developer error: bot/patchnote - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: bot/patchnote - ${e}`
+        });
+    };
+})
+
+
+
+// Отправка нового баг тикета
+router.post('/bugtickets', async(req, res) => {
+    try {
+        const data = req.body
+        const channel = await client.channels.fetch('1343949638025216133')
+
+        const embed = new EmbedBuilder()
+            .setTitle(`Баг тикет`)
+            .setDescription(`**${data.title}**`)
+            .setColor(0xecc011) // Синий цвет
+            .addFields(
+                { name: 'Описание', value: `${data.content}`, inline: false },
+                { name: 'Дата', value: `${data.date}`, inline: false },
+                { name: 'Автор', value: `${data.author}`, inline: false },
+                { name: 'Статус', value: `${data.status}`, inline: true },
+                { name: 'Пользователь уже обращался', value: `${ data.isRepeat ? 'Да' : 'Нет' }`, inline: true },
+            )
+            .setTimestamp()
+            .setFooter({ text: 'Система ZG ARMA 3 WEBSITE' });
+
+        await channel.send({ embeds: [embed] });
+    }catch(e){
+        console.error(`\x1b[31mApi developer error: bot/bugtickets - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: bot/bugtickets - ${e}`
         });
     };
 })

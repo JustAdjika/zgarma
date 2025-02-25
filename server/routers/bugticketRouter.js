@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import axios from 'axios'
 
 import BUG_TICKETS_TAB from '../database/bugTickets.js';
 import ACCOUNTS_TAB from '../database/accounts.js';
@@ -64,6 +65,19 @@ router.post('/add', async(req,res) => {
             author: user.id,
             isRepeat: data.isRepeat
         })
+
+        const username = JSON.parse(user.discord).username
+
+        const botData = {
+            title: data.title,
+            content: data.content,
+            date: GetDateInfo.date,
+            status: 'NOT CHECKED',
+            author: username,
+            isRepeat: data.isRepeat
+        }
+
+        axios.post('http://localhost:3000/api/developer/bot/bugtickets', botData)
 
         res.json({
             status: 200
