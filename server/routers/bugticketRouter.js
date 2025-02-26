@@ -74,7 +74,8 @@ router.post('/add', async(req,res) => {
             date: GetDateInfo.date,
             status: 'NOT CHECKED',
             author: username,
-            isRepeat: data.isRepeat
+            isRepeat: data.isRepeat,
+            id: container.id
         }
 
         axios.post('http://localhost:3000/api/developer/bot/bugtickets', botData)

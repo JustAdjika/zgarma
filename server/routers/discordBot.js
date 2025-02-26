@@ -1,12 +1,13 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { Client, GatewayIntentBits, EmbedBuilder } from 'discord.js'
+import { Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 import dotenv from 'dotenv'
 
 import ACCOUNTS_TAB from '../database/accounts.js';
+import BUG_TICKETS_TAB from '../database/bugTickets.js'
+import ADMINS_TAB from '../database/adminList.js';
 
 import GetDateInfo from '../modules/dateInfo.js'
-import ADMINS_TAB from '../database/adminList.js';
 
 dotenv.config()
 const router = express.Router();
@@ -145,6 +146,8 @@ client.on('messageCreate', async(message) => {
 })
 
 
+
+
 // Получить всех участников дискорда
 router.get('/members/data/all', async(req, res) => {
     try {
@@ -238,6 +241,26 @@ router.post('/bugtickets', async(req, res) => {
         const data = req.body
         const channel = await client.channels.fetch('1343949638025216133')
 
+        // const buttons = new ActionRowBuilder()
+        //     .addComponents(
+        //         new ButtonBuilder()
+        //             .setCustomId('CHECKED')
+        //             .setLabel('Исправляется')
+        //             .setStyle(ButtonStyle.Primary),
+        //         new ButtonBuilder()
+        //             .setCustomId('NOT FOUND')
+        //             .setLabel('Не обнаружен')
+        //             .setStyle(ButtonStyle.Primary),
+        //         new ButtonBuilder()
+        //             .setCustomId('FAIL')
+        //             .setLabel('Не решен')
+        //             .setStyle(ButtonStyle.Danger),
+        //         new ButtonBuilder()
+        //             .setCustomId('PRE_COMPLETE')
+        //             .setLabel('Решен')
+        //             .setStyle(ButtonStyle.Success)
+        //     )
+
         const embed = new EmbedBuilder()
             .setTitle(`Баг тикет`)
             .setDescription(`**${data.title}**`)
@@ -246,13 +269,14 @@ router.post('/bugtickets', async(req, res) => {
                 { name: 'Описание', value: `${data.content}`, inline: false },
                 { name: 'Дата', value: `${data.date}`, inline: false },
                 { name: 'Автор', value: `${data.author}`, inline: false },
-                { name: 'Статус', value: `${data.status}`, inline: true },
+                { name: 'ID тикета', value: `${data.id}`, inline: false },
+                // { name: 'Статус', value: `${data.status}`, inline: true },
                 { name: 'Пользователь уже обращался', value: `${ data.isRepeat ? 'Да' : 'Нет' }`, inline: true },
             )
             .setTimestamp()
             .setFooter({ text: 'Система ZG ARMA 3 WEBSITE' });
 
-        await channel.send({ embeds: [embed] });
+        await channel.send({ embeds: [embed], content: '<@&1343515117819789382>' });
     }catch(e){
         console.error(`\x1b[31mApi developer error: bot/bugtickets - ${e} \x1b[31m`);
         res.json({
@@ -267,3 +291,102 @@ router.post('/bugtickets', async(req, res) => {
 client.login(token)
 
 export default router;
+
+
+
+
+
+// Кнопки баг тикетов
+// client.on('interactionCreate', async (interaction) => {
+//     try {
+//         if (!interaction.isButton()) return;
+
+//         let newStatus
+//         let updateComponents = null;
+
+//         if(interaction.customId === 'PRE_COMPLETE') {
+//             const confirmRow = new ActionRowBuilder().addComponents(
+//                 new ButtonBuilder()
+//                     .setCustomId('COMPLETE')
+//                     .setLabel('✅ Подтвердить')
+//                     .setStyle(ButtonStyle.Success),
+//                 new ButtonBuilder()
+//                     .setCustomId('CANCEL_COMPLETE')
+//                     .setLabel('❌ Отмена')
+//                     .setStyle(ButtonStyle.Danger)
+//             );
+
+//             return await interaction.update({ components: [confirmRow] });
+//         }else{
+//             switch(interaction.customId) {
+//                 case 'COMPLETE': newStatus = '🟢 Решен'; break;
+//                 case 'CHECKED': newStatus = '🔵 Исправляется'; break;
+//                 case 'NOT FOUND': newStatus = '🟠 Не обнаружен'; break;
+//                 case 'FAIL': newStatus = '🔴 Не решен'; break;
+//                 case 'CANCEL_COMPLETE': 
+//                     const buttons = new ActionRowBuilder()
+//                         .addComponents(
+//                             new ButtonBuilder()
+//                                 .setCustomId('CHECKED')
+//                                 .setLabel('Исправляется')
+//                                 .setStyle(ButtonStyle.Primary),
+//                             new ButtonBuilder()
+//                                 .setCustomId('NOT FOUND')
+//                                 .setLabel('Не обнаружен')
+//                                 .setStyle(ButtonStyle.Primary),
+//                             new ButtonBuilder()
+//                                 .setCustomId('FAIL')
+//                                 .setLabel('Не решен')
+//                                 .setStyle(ButtonStyle.Danger),
+//                             new ButtonBuilder()
+//                                 .setCustomId('PRE_COMPLETE')
+//                                 .setLabel('Решен')
+//                                 .setStyle(ButtonStyle.Success)
+//                         );
+                    
+//                     return await interaction.update({ components: [buttons] });
+//             }
+//         }
+
+//         if (newStatus) {
+//             const oldEmbed = interaction.message.embeds[0];
+
+//             if (!oldEmbed) {
+//                 return console.error('Ошибка: эмбед отсутствует');
+//             }
+
+//             const updatedFields = oldEmbed.fields.map(field =>
+//                 field.name === 'Статус'
+//                     ? { name: field.name, value: newStatus, inline: field.inline ?? false }
+//                     : field
+//             );
+
+//             const updatedEmbed = EmbedBuilder.from(oldEmbed).setFields(updatedFields);
+
+//             if (interaction.customId === 'COMPLETE') {
+//                 await interaction.update({ embeds: [updatedEmbed] });
+//                 await interaction.message.edit({ components: [] });
+//             } else {
+//                 await interaction.update({ embeds: [updatedEmbed], components: updateComponents ?? interaction.message.components });
+//             }
+
+//             // Обновление базы данных
+//             const ticketField = oldEmbed.fields.find(field => field.name === 'ID тикета');
+//             const ticketid = ticketField ? ticketField.value : null;
+
+//             if (!ticketid) {
+//                 return console.error('Ошибка: ID тикета не найден');
+//             }
+
+//             const foundTicket = await BUG_TICKETS_TAB.findOne({ where: { id: ticketid } });
+
+//             if (!foundTicket) {
+//                 return console.error('Ошибка: тикет не найден');
+//             }
+
+//             await foundTicket.update({ status: interaction.customId });
+//         }
+//     } catch (e) {
+//         console.error(`\x1b[31mBot interaction error - ${e} \x1b[31m`);
+//     }
+// });
