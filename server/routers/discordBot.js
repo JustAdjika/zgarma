@@ -8,6 +8,7 @@ import BUG_TICKETS_TAB from '../database/bugTickets.js'
 import ADMINS_TAB from '../database/adminList.js';
 
 import GetDateInfo from '../modules/dateInfo.js'
+import BotPermissionsCheck from '../modules/botPerms.js'
 
 dotenv.config()
 const router = express.Router();
@@ -176,7 +177,7 @@ router.get('/members/data/all', async(req, res) => {
 
 
 // Отправка нового поста
-router.post('/post', async(req, res) => {
+router.post('/post', BotPermissionsCheck, async(req, res) => {
     try {
         const data = req.body
         const channel = await client.channels.fetch('1343553783824650240')
@@ -212,7 +213,7 @@ router.post('/post', async(req, res) => {
 
 
 // Отправка нового патчноута
-router.post('/patchnote', async(req, res) => {
+router.post('/patchnote', BotPermissionsCheck, async(req, res) => {
     try {
         const data = req.body
         const channel = await client.channels.fetch('1343952216901423205')
@@ -236,7 +237,7 @@ router.post('/patchnote', async(req, res) => {
 
 
 // Отправка нового баг тикета
-router.post('/bugtickets', async(req, res) => {
+router.post('/bugtickets', BotPermissionsCheck, async(req, res) => {
     try {
         const data = req.body
         const channel = await client.channels.fetch('1343949638025216133')

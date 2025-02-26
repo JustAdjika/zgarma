@@ -6,9 +6,12 @@ import BUG_FIXES_TAB from '../database/bugFixes.js';
 import ACCOUNTS_TAB from '../database/accounts.js';
 
 import GetDateInfo from '../modules/dateInfo.js'
+import PermissionsCheck from '../modules/permissions.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
+
+const botKey = process.env.BOT_ACCESS_KEY
 
 console.log(`\x1b[34m |!|   BUG_FIX ROUTER READY   |!|\x1b[0m`);
 
@@ -39,7 +42,7 @@ router.get('/data/all', async(req,res) => {
 });
 
 // ADD NEW PATCH NOTE
-router.post('/add', async(req,res) => {
+router.post('/add', PermissionsCheck, async(req,res) => {
     try{
         const data = req.body
 
@@ -67,7 +70,8 @@ router.post('/add', async(req,res) => {
             title: data.title,
             content: data.content,
             date: GetDateInfo.date,
-            id: container.id
+            id: container.id,
+            botKey: botKey
         }
 
         axios.post('http://localhost:3000/api/developer/bot/patchnote', botData)

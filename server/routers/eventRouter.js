@@ -5,6 +5,7 @@ import EVENTS_TAB from '../database/events.js';
 import ACCOUNTS_TAB from '../database/accounts.js';
 
 import GetDateInfo from '../modules/dateInfo.js'
+import PermissionsCheck from '../modules/permissions.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -16,7 +17,9 @@ router.use((req, res, next) => {
 
 console.log(`\x1b[34m |!|    EVENT ROUTER READY    |!|\x1b[0m`);
 
-router.post('/add', async(req, res) => {
+
+// ADD NEW EVENT
+router.post('/add', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 
@@ -69,6 +72,8 @@ router.post('/add', async(req, res) => {
     };
 })
 
+
+// GET ALL EVENTS
 router.get('/data/all', async(req, res) => {
     try{
         const container = await EVENTS_TAB.findAll()

@@ -4,6 +4,8 @@ import bodyParser from 'body-parser';
 import ACCOUNTS_TAB from '../database/accounts.js';
 import EVENTS_TAB from '../database/events.js';
 
+import PermissionsCheck from '../modules/permissions.js'
+
 const router = express.Router();
 router.use(bodyParser.json());
 
@@ -11,7 +13,7 @@ console.log(`\x1b[34m |!|   EVENT_S ROUTER READY   |!|\x1b[0m`);
 
 
 // ADD NEW SQUAD
-router.post('/add', async(req, res) => {
+router.post('/add', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 
@@ -96,7 +98,7 @@ router.post('/add', async(req, res) => {
 
 
 // DELETE SQUAD
-router.delete('/delete', async(req, res) => {
+router.delete('/delete', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 
@@ -180,7 +182,7 @@ router.delete('/delete', async(req, res) => {
 
 
 // ADD NEW SLOT TO SQUAD
-router.post('/slots/add', async(req, res) => {
+router.post('/slots/add', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 
@@ -274,7 +276,7 @@ router.post('/slots/add', async(req, res) => {
 
 
 // DELETE SQUAD SLOT
-router.delete('/slots/delete', async(req, res) => {
+router.delete('/slots/delete', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 
@@ -370,7 +372,7 @@ router.delete('/slots/delete', async(req, res) => {
 
 
 // CHANGE SQUAD NAME
-router.patch('/rename', async(req, res) => {
+router.patch('/rename', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 
@@ -453,7 +455,7 @@ router.patch('/rename', async(req, res) => {
 
 
 // CHANGE SLOT NAME
-router.patch('/slots/rename', async(req, res) => {
+router.patch('/slots/rename', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 

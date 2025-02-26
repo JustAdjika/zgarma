@@ -8,6 +8,8 @@ import { v4 as uuidv4 } from 'uuid'
 import EVENTS_TAB from '../database/events.js';
 import ACCOUNTS_TAB from '../database/accounts.js';
 
+import PermissionsCheck from '../modules/permissions.js'
+
 const router = express.Router();
 router.use(bodyParser.json());
 
@@ -19,7 +21,7 @@ console.log(`\x1b[34m |!|   EVENT_E ROUTER READY   |!|\x1b[0m`);
 
 
 // EDIT INFO
-router.patch('/info', async(req, res) => {
+router.patch('/info', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 
@@ -70,7 +72,7 @@ router.patch('/info', async(req, res) => {
 
 
 // OPEN EVENT
-router.post('/status/open', async(req, res) => {
+router.post('/status/open', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 
@@ -120,7 +122,7 @@ router.post('/status/open', async(req, res) => {
 
 
 // DELETE EVENT
-router.delete('/delete', async(req, res) => {
+router.delete('/delete', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 
@@ -169,7 +171,7 @@ router.delete('/delete', async(req, res) => {
 
 
 // PVP/PVE SELECT
-router.patch('/type', async(req, res) => {
+router.patch('/type', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 
@@ -227,7 +229,7 @@ router.patch('/type', async(req, res) => {
 
 
 // IMAGE UPLOAD
-router.post('/imgupload', async(req,res) => {
+router.post('/imgupload', PermissionsCheck, async(req,res) => {
     try {
         const userKey = req.body.key
         const eventId = Number(req.body.eventId)
@@ -310,7 +312,7 @@ router.post('/imgupload', async(req,res) => {
 
 
 // MODS UPLOAD
-router.post('/modsupload', async(req,res) => {
+router.post('/modsupload', PermissionsCheck, async(req,res) => {
     try {
         const userKey = req.body.key
         const eventId = Number(req.body.eventId)

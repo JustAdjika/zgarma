@@ -4,6 +4,8 @@ import bodyParser from 'body-parser';
 import ACCOUNTS_TAB from '../database/accounts.js';
 import EVENTS_TAB from '../database/events.js';
 
+import PermissionsCheck from '../modules/permissions.js'
+
 const router = express.Router();
 router.use(bodyParser.json());
 
@@ -11,7 +13,7 @@ console.log(`\x1b[34m |!|   EVENT_V ROUTER READY   |!|\x1b[0m`);
 
 
 // ADD NEW VEHICLE SLOT
-router.post('/add', async(req, res) => {
+router.post('/add', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 
@@ -89,7 +91,7 @@ router.post('/add', async(req, res) => {
 
 
 // VEHICLE SLOT EDIT
-router.patch('/', async(req, res) => {
+router.patch('/', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 
@@ -177,7 +179,7 @@ router.patch('/', async(req, res) => {
 
 
 // VEHICLE SLOT DELETE
-router.delete('/delete', async(req, res) => {
+router.delete('/delete', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 

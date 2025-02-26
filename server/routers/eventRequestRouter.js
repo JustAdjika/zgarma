@@ -7,6 +7,7 @@ import EVENT_REQUESTS_TAB from '../database/eventRequests.js';
 import NOTICES_TAB from '../database/notices.js'
 
 import GetDateInfo from '../modules/dateInfo.js'
+import PermissionsCheck from '../modules/permissions.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -15,7 +16,7 @@ console.log(`\x1b[34m |!|   EVENT_R ROUTER READY   |!|\x1b[0m`);
 
 
 // GET ALL REQUESTS
-router.post('/data/all', async(req, res) => {
+router.post('/data/all', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 
@@ -173,7 +174,7 @@ router.post('/add', async(req, res) => {
 
 
 // CANCEL REQUEST
-router.post('/cancel', async(req, res) => {
+router.post('/cancel', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 
@@ -248,7 +249,7 @@ router.post('/cancel', async(req, res) => {
 
 
 // ACCEPT REQUEST
-router.post('/accept', async(req, res) => {
+router.post('/accept', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 

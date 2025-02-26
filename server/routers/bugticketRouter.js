@@ -6,14 +6,17 @@ import BUG_TICKETS_TAB from '../database/bugTickets.js';
 import ACCOUNTS_TAB from '../database/accounts.js';
 
 import GetDateInfo from '../modules/dateInfo.js'
+import PermissionsCheck from '../modules/permissions.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
 
+const botKey = process.env.BOT_ACCESS_KEY
+
 console.log(`\x1b[34m |!| BUG_TICKETS ROUTER READY |!|\x1b[0m`);
 
 // GET ALL TICKETS
-router.get('/data/all', async(req,res) => {
+router.get('/data/all', PermissionsCheck, async(req,res) => {
     try{
         const container = await BUG_TICKETS_TAB.findAll()
 
@@ -75,7 +78,8 @@ router.post('/add', async(req,res) => {
             status: 'NOT CHECKED',
             author: username,
             isRepeat: data.isRepeat,
-            id: container.id
+            id: container.id,
+            botKey: botKey
         }
 
         axios.post('http://localhost:3000/api/developer/bot/bugtickets', botData)
@@ -93,7 +97,7 @@ router.post('/add', async(req,res) => {
 });
 
 // CHANGE TICKET STATUS
-router.patch('/status/set', async(req,res) => {
+router.patch('/status/set', PermissionsCheck, async(req,res) => {
     try{
         const data = req.body
 

@@ -105,26 +105,6 @@ router.get(
 
 console.log(`\x1b[34m |!|   ACCOUNT ROUTER READY   |!|\x1b[0m`);
 
-// TEST ADD
-router.post('/testAdd', async(req, res) => {
-    const data = req.body;
-
-    const newField = await ACCOUNTS_TAB.create({
-        key: 'myKey',
-        steam: {
-            nickname: `${data.steam}'s steam`,
-            steamid: `${data.steam}'s steamid`
-        },
-        discord: {
-            nickname: `${data.discord}'s discord`,
-            steamid: `${data.discord}'s discordid`
-        },
-        date: GetDateInfo.date
-    });
-
-    res.end('Req end');
-});
-
 // GET USER BY ID
 router.get('/data/id', async(req,res) => {
     try{
