@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'My Open Sans';
+    src: url('../../assets/Fonts/OpenSans-Light.ttf');
+    font-style: normal;
+}
+
+@font-face{
+    font-family: 'Outist';
+    src: url('../../assets/Fonts/outist.ttf');
+    font-style: normal;
+}

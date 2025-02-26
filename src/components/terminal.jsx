@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import './Style/terminal.css';
+import '../pages/Style/fonts.css'
 
 const Terminal = ({ setErrorMessage }) => {
     const [stringArr, setStringArr] = useState([])

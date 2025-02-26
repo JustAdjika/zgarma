@@ -1,5 +1,6 @@
 import React from "react";
 import './Style/ANNadminMSG.css';
+import '../pages/Style/fonts.css'
 
 function ANNadminMSG({ title, content, date, options }) {
     return (

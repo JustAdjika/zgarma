@@ -7,6 +7,7 @@ import ANNadminMSG from '../components/ANNadminMSG.jsx';
 import Terminal from '../components/terminal.jsx'
 
 import './Style/annoucement.css';
+import './Style/fonts.css'
 
 
 const Announcement = () => {

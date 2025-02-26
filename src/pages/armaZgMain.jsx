@@ -1,5 +1,6 @@
 import React from "react";
 import './Style/armaZgMain.css';
+import './Style/fonts.css'
 
 function ArmaZgMain() {
     return (

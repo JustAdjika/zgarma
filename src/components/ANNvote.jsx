@@ -1,6 +1,7 @@
 import { React, useEffect, useState } from "react"; // Импортируем useState
 import axios from "axios";
 import './Style/ANNvote.css';
+import '../pages/Style/fonts.css'
 
 function AnnVote({ title, content, date, options, voteIndex, currentUser, votes }) {
 

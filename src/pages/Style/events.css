@@ -1,0 +1,54 @@
+.event-main-container {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 80px;
+    padding-top: 50px;
+}
+.event-ready-title-container {
+    display: flex;
+    flex-direction: column;
+}
+.event-ready-title-up-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    width: 800px;
+}
+.event-title-decorative-line {
+    width: 800px;
+    height: 3px;
+    border-radius: 10px;
+    background-color: #D9D9D9;
+}
+.event-ready-title-up-container>h1{
+    color: #D9D9D9;
+    font-family: 'My Open Sans';
+    font-weight: lighter;
+    font-size: 30pt;
+    margin: 8px;
+    padding: 0px;
+    padding-left: 20px;
+}
+.event-button-create-game {
+    width: 250px;
+    height: 40px;
+    border-radius: 3px;
+    background-color: #066DA7;
+    color: #D9D9D9;
+    border: none;
+    outline: none;
+    margin-bottom: 13px;
+    font-size: 15pt;
+    font-family: "My Open Sans";
+    font-weight: lighter;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.event-button-create-game:hover {
+    background-color: #045a8b;
+}
+.event-ready-output-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 100px;
+}
