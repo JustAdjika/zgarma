@@ -10,6 +10,8 @@ lerna-debug.log*
 node_modules
 server/files/eventImages/*
 server/files/eventModPacks/*
+server/files/faqImages/*
+
 dist
 dist-ssr
 *.local

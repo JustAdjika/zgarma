@@ -30,6 +30,7 @@ import eventVehRouter from './routers/eventVehRouter.js'
 import eventRequestRouter from './routers/eventRequestRouter.js'
 import adminList from './routers/adminListRouter.js'
 import discordBot from './routers/discordBot.js'
+import faqRouter from './routers/faqRouter.js'
 
 // CONFIG
 const app = express()
@@ -46,7 +47,8 @@ app.listen(3000, () => {
 
 // USE ROUTER
 app.use('/api/developer/account', accountRouter)
-app.use('/api/developer/post', postRouter)
+app.use('/api/developer/post', postRouter),
+app.use('/api/developer/faq', faqRouter),
 app.use('/api/developer/bugfix/notes', bugfixRouter)
 app.use('/api/developer/bugfix/tickets', bugticketRouter)
 app.use('/api/developer/event', eventRouter)
