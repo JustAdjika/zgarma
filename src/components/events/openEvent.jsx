@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import './Style/openEvent.css'
 import '../../pages/Style/fonts.css'
@@ -10,6 +10,9 @@ const OpenEvent = ({eventData}) => {
     const handleHide = () => {
         setRotated((prev) => !prev)
     }
+
+    const vehicle1 = JSON.parse(eventData.vehTeam1)
+    const vehicle2 = JSON.parse(eventData.vehTeam2)
 
     return (
         <div className='openevent-main-container'>
@@ -35,14 +38,25 @@ const OpenEvent = ({eventData}) => {
                             <p className='openevent-info-redteam-title'>Красная команда</p>
                             <div className='openevent-team-decorative-line'/>
                             <p className='openevent-info-team-content'>{ eventData.team1 }</p>
-                            <div>DasdDSA</div>
+                            <div className='openevent-info-team-vehicle'>
+                                { vehicle1.map(element => (
+                                    <p>{ `${element.count}x ${element.title}` }</p>
+                                ))}
+                            </div>
                         </div>
                         <div className='openevent-team-info-container'>
                             <p className='openevent-info-blueteam-title'>Синяя команда</p>
                             <div className='openevent-team-decorative-line' style={{ backgroundColor: '#066DA7' }}/>
                             <p className='openevent-info-team-content'>{ eventData.team2 }</p>
+                            <div className='openevent-info-team-vehicle'>
+                                { vehicle2.map(element => (
+                                    <p>{ `${element.count}x ${element.title}` }</p>
+                                ))}
+                            </div>
                         </div>
                     </div>
+                    <button className='openevent-button-register'>Информация и слоты</button>
+                    <button className='openevent-button-close-game'>Закончить игру</button>
                 </div>
             </div>
             <div className='openevent-hide-info-container' style={{ display: rotated ? 'flex' : 'none' }}>
