@@ -1,0 +1,149 @@
+.openevent-main-container {
+    width: 650px;
+    margin-left: 40px;
+    margin-bottom: 100px;
+}
+.openevent-header-container {
+    display: flex;
+}
+.openevent-title {
+    width: 500px;
+    margin: 0px;
+    margin-right: 40px;
+    padding: 0px;
+    padding-left: 10px;
+    font-family: 'My Open Sans';
+    font-weight:500;
+    font-size: 25pt;
+    color: #D9D9D9;
+    overflow: hidden;
+}
+.openevent-type {
+    background-color: #7B370D;
+    font-family: 'Outist';
+    width: 100px;
+    height: 40px;
+    border-radius: 5px;
+    color: #D9D9D9;
+    font-size: 26pt;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+}
+.openevent-center-container {
+    display: flex;
+    padding-top: 8px;
+}
+.openevent-button-requests-open {
+    height: 35px;
+    width: 250px;
+    background-color: #30762D;
+    color: black;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    font-family: 'My Open Sans';
+    font-size: 13pt;
+    margin-left: 40px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.openevent-button-requests-open:hover {
+    background-color: #255f23;
+}
+.openevent-button-info-more {
+    cursor: pointer;
+}
+.openevent-info-container {
+    display: flex;
+}
+.openevent-info-decorative-line {
+    min-height: 100%;
+    border-left: inset 2px white;
+    border-bottom: inset 2px white;
+    border-radius: 1px;
+    width: 15px;
+}
+.openevent-more-info-container {
+    width: 590px;
+    word-wrap: break-word;
+    margin-left: 30px;
+    color: #D9D9D9;
+    font-family: 'My Open Sans';
+    font-weight: lighter;
+    display: flex;
+    flex-direction: column;
+}
+.openevent-info-date {
+    font-size: 18pt;
+    margin: 0px;
+}
+.openevent-info-metar {
+    font-size: 15pt;
+    margin: 0px;
+    margin-top: 10px;
+}
+.openevent-info-description-title {
+    margin: 0px;
+    font-weight: lighter;
+    font-size: 18pt;
+    margin-top: 40px;
+}
+.openevent-info-description {
+    padding-left: 15px;
+}
+.openevent-info-team-title {
+    margin: 0px;
+    font-weight: lighter;
+    font-size: 18pt;
+    margin-top: 40px;
+}
+.openevent-team-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+.openevent-team-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 275px;
+}
+.openevent-info-redteam-title {
+    color: #C0392B;
+    font-size: 15pt;
+    margin: 0px;
+    margin-bottom: 5px;
+}
+.openevent-team-decorative-line {
+    background-color: #C0392B;
+    width: 100%;
+    height: 5px;
+}
+.openevent-info-team-content {
+    text-align: center;
+}
+.openevent-info-blueteam-title {
+    color: #066DA7;
+    font-size: 15pt;
+    margin: 0px;
+    margin-bottom: 5px;
+}
+.openevent-info-team-content {
+    text-align: center;
+}
+.openevent-hide-info-team-content {
+    margin: 0px;
+    margin-top: 10px;
+    font-size: 15pt;
+}
+.openevent-mod-download-container {
+    color: #D9D9D9;
+    margin-left: 80px;
+    margin-top: 10px;
+}
+.openevent-button-mod-download {
+    color: #0B94E0;
+    text-decoration: none;
+}

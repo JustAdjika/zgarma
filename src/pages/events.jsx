@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 import './Style/events.css'
 import './Style/fonts.css'
 
 import ReadyEvent from '../components/events/readyEvent.jsx';
-import axios from 'axios';
+import OpenEvent from '../components/events/openEvent.jsx';
 
 const Events = () => {
     const host = 'http://localhost:3000'
@@ -45,7 +46,20 @@ const Events = () => {
                 </div>
             </div>
             <div className='event-open-container'>
-
+                <div className='event-open-title-container'>
+                    <div className='event-open-title-up-container'>
+                        <h1>Игры открытые для регистрации</h1>
+                    </div>
+                    <div className='event-title-decorative-line'></div>
+                </div>
+                <div className='event-open-output-container'>
+                    { events.map(event => (
+                        event.status == 'READY' ?
+                        null
+                        :
+                        <OpenEvent key={event.id || index} eventData={event} />
+                    )) }
+                </div>
             </div>
         </div>
     );

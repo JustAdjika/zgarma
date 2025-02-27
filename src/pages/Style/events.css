@@ -2,6 +2,7 @@
     display: flex;
     justify-content: space-between;
     padding-left: 80px;
+    padding-right: 80px;
     padding-top: 50px;
 }
 .event-ready-title-container {
@@ -48,6 +49,32 @@
     background-color: #045a8b;
 }
 .event-ready-output-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 100px;
+}
+
+.event-open-title-container {
+    display: flex;
+    flex-direction: column;
+}
+.event-open-title-up-container>h1{
+    color: #D9D9D9;
+    font-family: 'My Open Sans';
+    font-weight: lighter;
+    font-size: 30pt;
+    margin: 8px;
+    padding: 0px;
+    /* padding-left: 20px; */
+    text-align: right;
+}
+.event-open-title-up-container {
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    width: 800px;
+}
+.event-open-output-container {
     display: flex;
     flex-direction: column;
     margin-top: 100px;

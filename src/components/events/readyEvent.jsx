@@ -15,7 +15,7 @@ const ReadyEvent = ({eventData}) => {
         <div className='readyevent-main-container'>
             <div className='readyevent-header-container'>
                 <h2 className='readyevent-title'>{ eventData.title }</h2>
-                <div className='readyevent-type'>{ eventData.type }</div>
+                <div className='readyevent-type' style={{ backgroundColor: eventData.type == 'PVE' ? '#7B370D' : '#30762D' }}>{ eventData.type }</div>
             </div>
             <div className='readyevent-center-container'>
                 <img onClick={ handleHide } src={triangle} alt="" width={40} height={40} className='readyevent-button-info-more' style={{ transform: rotated ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.3s ease" }}/>
