@@ -275,7 +275,7 @@ router.post('/bugtickets', BotPermissionsCheck, async(req, res) => {
                 { name: 'Пользователь уже обращался', value: `${ data.isRepeat ? 'Да' : 'Нет' }`, inline: true },
             )
             .setTimestamp()
-            .setFooter({ text: 'Система ZG ARMA 3 WEBSITE' });
+            .setFooter({ text: 'Система ZG ARMA 3 WEBSITE ' });
 
         await channel.send({ embeds: [embed], content: '<@&1343515117819789382>' });
     }catch(e){
@@ -287,6 +287,36 @@ router.post('/bugtickets', BotPermissionsCheck, async(req, res) => {
     };
 })
 
+
+router.post('/eventAnnouncements/ready', BotPermissionsCheck, async(req, res) => {
+    try {
+        const data = req.body
+        const channel = await client.channels.fetch('1344865229246566522')
+
+        const embed = new EmbedBuilder()
+        .setTitle(`Анонсирована игра`)
+        .setDescription(`**${data.eventTitle}**`)
+        .setColor(0x066da7) // Синий цвет
+        .addFields(
+            { name: 'Тип игры', value: `${data.eventType}`, inline: false },
+            { name: 'Дата проведения', value: `${data.eventDate}`, inline: false },
+            { name: 'Красные', value: `${data.eventTeam1}`, inline: true },
+            { name: 'Синие', value: `${data.eventTeam2}`, inline: true },
+            { name: '', value: ``, inline: false },
+            { name: '', value: `*[Подробнее на странице сайта](http://localhost:5173/events)*`, inline: false },
+        )
+        .setTimestamp()
+        .setFooter({ text: 'ZG ARMA 3 | Администрация' });
+
+        await channel.send({ embeds: [embed] });
+    }catch(e){
+        console.error(`\x1b[31mApi developer error: eventAnnouncements/ready - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: eventAnnouncements/ready - ${e}`
+        });
+    };
+})
 
 
 client.login(token)

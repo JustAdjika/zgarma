@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import axios from 'axios';
 
 import EVENTS_TAB from '../database/events.js';
 import ACCOUNTS_TAB from '../database/accounts.js';
@@ -9,6 +10,9 @@ import PermissionsCheck from '../modules/permissions.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
+
+const host = process.env.BASIC_URL
+const botKey = process.env.BOT_ACCESS_KEY
 
 router.use((req, res, next) => {
     res.setHeader("Content-Security-Policy", "default-src 'self' blob:; worker-src 'self' blob:;");
@@ -74,6 +78,15 @@ router.post('/add', PermissionsCheck, async(req, res) => {
             }],
             vehTeam1: [],
             vehTeam2: [],
+        })
+
+        axios.post(`${host}/api/developer/bot/eventAnnouncements/ready`, {
+            eventDate: data.date,
+            eventTeam1: data.team1,
+            eventTeam2: data.team2,
+            eventType: data.type,
+            eventTitle: data.title,
+            botKey: botKey
         })
 
         res.json({
