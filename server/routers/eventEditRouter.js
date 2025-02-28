@@ -72,7 +72,7 @@ router.patch('/info', PermissionsCheck, async(req, res) => {
 
 
 // OPEN EVENT
-router.post('/status/open', PermissionsCheck, async(req, res) => {
+router.post('/status/:status', PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
 
@@ -104,9 +104,22 @@ router.post('/status/open', PermissionsCheck, async(req, res) => {
             return
         }
 
-        await currentEvent.update({
-            status: 'OPEN'
-        })
+
+        if(req.params.status == "open") {
+            await currentEvent.update({
+                status: 'OPEN'
+            })
+        } else if(req.params.status == "close") {
+            await currentEvent.update({
+                status: 'CLOSED'
+            })
+        } else {
+            res.json({
+                status: 404,
+                err: 'Bad request'
+            })
+            return
+        }
 
         res.json({
             status: 200

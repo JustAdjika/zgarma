@@ -54,6 +54,7 @@
 }
 .openevent-button-info-more {
     cursor: pointer;
+    z-index: 0;
 }
 .openevent-info-container {
     display: flex;

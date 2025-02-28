@@ -37,16 +37,32 @@ router.post('/add', PermissionsCheck, async(req, res) => {
             return
         }
 
+        if(data.title == '') {
+            res.json({
+                status: 400,
+                err: 'The title is incorrectly filled'
+            })
+            return
+        }
+
+        if(data.date == '..') {
+            res.json({
+                status: 400,
+                err: 'The date is incorrectly filled'
+            })
+            return
+        }
+
         const newEvent = EVENTS_TAB.create({
             status: 'READY',
             type: data.type,
-            date: GetDateInfo.date,
+            date: data.date,
             time: null,
             title: data.title,
             metar: data.metar,
             description: data.description,
             team1: data.team1,
-            team2: data.type == 'PVE' ? null : data.team2,
+            team2: data.team2,
             imgPath: null,
             slotsTeam1: [{
                 title: "Командир Стороны",

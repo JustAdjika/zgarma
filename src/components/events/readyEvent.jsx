@@ -24,7 +24,7 @@ const ReadyEvent = ({eventData}) => {
             <div className='readyevent-info-container' style={{ display: rotated ? 'none' : 'flex' }}>
                 <div className='readyevent-info-decorative-line'/>
                 <div className='readyevent-more-info-container'>
-                    <p className='readyevent-info-date'>Дата проведения { eventData.date }</p>
+                    <p className='readyevent-info-date'>Дата проведения { eventData.date } { eventData.time ? `(${eventData.time})` : null }</p>
                     <p className='readyevent-info-metar'>Погодные условия и рельеф: { eventData.metar }</p>
                     <h3 className='readyevent-info-description-title'>Описание миссии</h3>
                     <p className='readyevent-info-description'>{eventData.description}</p>
@@ -46,7 +46,7 @@ const ReadyEvent = ({eventData}) => {
             <div className='readyevent-hide-info-container' style={{ display: rotated ? 'flex' : 'none' }}>
                 <div className='readyevent-info-decorative-line'/>
                 <div className='readyevent-more-info-container'>
-                    <p className='readyevent-info-date'>Дата проведения { eventData.date }</p>
+                    <p className='readyevent-info-date'>Дата проведения { eventData.date } { eventData.time ? `(${eventData.time})` : null }</p>
                     <p className='readyevent-hide-info-team-content'>{ eventData.team1 }</p>
                     <p className='readyevent-hide-info-team-content'>{ eventData.team2 }</p>
                 </div>
