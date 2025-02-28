@@ -362,3 +362,57 @@
 .event-modal-eventremote-info-description::-webkit-scrollbar {
     width: 5px;
 }
+
+.event-modal-eventremote-td-info-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    color: #D9D9D9;
+}
+.event-modal-eventremote-td-input {
+    width: 23px;
+    text-align: center;
+    font-size: 20px;
+    background-color: #1A1A1A;
+    color: #D9D9D9;
+    font-family: 'My Open Sans';
+}
+.event-modal-eventremote-td-info-title {
+    font-size: 16pt;
+}
+.event-modal-eventremote-button-openEvent {
+    height: 35px;
+    width: 200px;
+    background-color: #30762D;
+    color: #D9D9D9;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    font-family: 'My Open Sans';
+    font-size: 16pt;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-bottom: 10px;
+    margin-top: 30px;
+}
+.event-modal-eventremote-button-openEvent:hover {
+    background-color: #255f23;
+}
+.event-modal-eventremote-button-deleteEvent {
+    color: #C0392B;
+    background-color: #1A1A1A;
+    border: none;
+    outline: none;
+    transition: 0.2s;
+    width: 200px;
+    font-family: 'My Open Sans';
+    font-size: 15pt;
+    text-align: left;
+    margin: 0px;
+    padding: 0px;
+    margin-top: 40px;
+    cursor: pointer;
+}
+.event-modal-eventremote-button-deleteEvent:hover {
+    color: #7a241a;
+}

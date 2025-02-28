@@ -17,19 +17,21 @@ const OpenEvent = ({eventData, setErrorMessage, host, eventListUpdate}) => {
     const vehicle2 = JSON.parse(eventData.vehTeam2)
 
     const handleCloseEvent = async () => {
-        const data = {
-            eventId: eventData.id,
-            key: JSON.parse(Cookies.get("userData")).key
-        }
-        
-        const res = await axios.post(`${host}/api/developer/event/edit/status/close`, data)
-
-        if(res.data.status == 200) {
-            eventListUpdate(prev => prev + 1)
-        } else {
-            setErrorMessage(res.data.err)
-            setTimeout(() => {setErrorMessage("")}, 3000)
-            console.log(res.data.err)
+        if(window.confirm('Вы уверены, что хотите закончить событие?')){
+            const data = {
+                eventId: eventData.id,
+                key: JSON.parse(Cookies.get("userData")).key
+            }
+            
+            const res = await axios.post(`${host}/api/developer/event/edit/status/close`, data)
+    
+            if(res.data.status == 200) {
+                eventListUpdate(prev => prev + 1)
+            } else {
+                setErrorMessage(res.data.err)
+                setTimeout(() => {setErrorMessage("")}, 3000)
+                console.log(res.data.err)
+            }
         }
     }
 

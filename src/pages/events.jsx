@@ -25,11 +25,22 @@ const Events = () => {
     const [eventRemoteDescription, setEventRemoteDescription] = useState("")
     const [eventRemoteIsImg, setEventRemoteIsImg] = useState(false)
     const [eventRemoteIsMod, setEventRemoteIsMod] = useState(false)
+    const [eventRemoteDate, setEventRemoteDate] = useState("")
+    const [eventRemoteTimeM, setEventRemoteTimeM] = useState("")
+    const [eventRemoteTimeH, setEventRemoteTimeH] = useState("")
 
     useEffect(() => {
         setEventRemoteTitle(modalRemoteEvent.title)
         setEventRemoteMetar(modalRemoteEvent.metar)
         setEventRemoteDescription(modalRemoteEvent.description)
+        setEventRemoteDate(modalRemoteEvent.date)
+        
+        if(modalRemoteEvent.time) {
+            const [hours, minutes] = modalRemoteEvent.time.split(":")
+            setEventRemoteTimeM(minutes)
+            setEventRemoteTimeH(hours)
+        }
+        
     }, [modalRemoteEvent])
 
     // EVENT CREATE MODAL
@@ -137,11 +148,53 @@ const Events = () => {
         }
     }
 
+
+    const handleOpenEvent = async () => {
+        if(window.confirm('Вы уверены, что хотите открыть событие?')){
+            const res = await axios.post(`${host}/api/developer/event/edit/status/open`, {
+                eventId: modalRemoteEvent.id,
+                key: JSON.parse(Cookies.get("userData")).key
+            })
+
+            if(res.data.status == 200) {
+                window.location.reload()
+            } else {
+                setErrorMessage(res.data.err)
+                setTimeout(() => {setErrorMessage("")}, 3000)
+                console.log(res.data.err)
+            }
+        }
+    }
+
+    const handleDeleteEvent = async () => {
+        if(window.confirm('Вы уверены, что хотите удалить событие?')){
+            console.log(JSON.parse(Cookies.get("userData")).key)
+            const res = await axios.delete(`${host}/api/developer/event/edit/delete`, {
+                data: {
+                    eventId: modalRemoteEvent.id,
+                    key: JSON.parse(Cookies.get("userData")).key
+                }
+            })
+
+            if(res.data.status == 200) {
+                window.location.reload()
+            } else {
+                setErrorMessage(res.data.err)
+                setTimeout(() => {setErrorMessage("")}, 3000)
+                console.log(res.data.err)
+            }
+        }
+    }
+
+
     return (
         <>
             <div onClick={ () => { setIsModalEventRemote(false) } } className='event-modal-eventremote-main' style={{ display: isModalEventRemote ? 'flex' : 'none' }}>
                 <div onClick={(e) => e.stopPropagation()} className='event-modal-eventremote-container'>
                     <div className='event-modal-eventremote-info-container'>
+
+
+
                         <input 
                             onBlur={() => { 
                                 axios.patch(`${host}/api/developer/event/edit/info`, { 
@@ -156,11 +209,38 @@ const Events = () => {
                             value={eventRemoteTitle}
                             maxLength={25}
                         />
-                        <input type="file" accept="image/*" className='event-modal-eventremote-inputfile' id='event-modal-eventremote-inputfile-img' onChange={eventRemoteImgChange} style={{ display: 'none' }}/>
+
+
+                        <input 
+                            type="file" 
+                            accept="image/*" 
+                            className='event-modal-eventremote-inputfile' 
+                            id='event-modal-eventremote-inputfile-img' 
+                            onChange={eventRemoteImgChange} 
+                            style={{ display: 'none' }}
+                        />
+
+
                         <div className='event-modal-eventremote-inputfile-container'>
-                            <label htmlFor="event-modal-eventremote-inputfile-img" className='event-modal-eventremote-inputfile-label'>Добавить изображение</label>
-                            <span style={{ display: eventRemoteIsImg ? 'flex' : 'none', marginLeft: '20px', fontSize: '15pt', color: '#D9D9D9' }}>Файл загружен</span>
+                        <label 
+                            htmlFor="event-modal-eventremote-inputfile-img" 
+                            className='event-modal-eventremote-inputfile-label'
+                        >
+                            Добавить изображение
+                        </label>
+                            <span 
+                                style={{ 
+                                    display: eventRemoteIsImg ? 'flex' : 'none', 
+                                    marginLeft: '20px', 
+                                    fontSize: '15pt', 
+                                    color: '#D9D9D9' 
+                                }}
+                            >
+                                Файл загружен
+                            </span>
                         </div>
+
+
                         <input 
                             onBlur={() => { 
                                 axios.patch(`${host}/api/developer/event/edit/info`, { 
@@ -175,6 +255,8 @@ const Events = () => {
                             value={eventRemoteMetar}
                             maxLength={40}
                         />
+
+
                         <textarea
                             onBlur={() => { 
                                 axios.patch(`${host}/api/developer/event/edit/info`, { 
@@ -188,14 +270,111 @@ const Events = () => {
                             onChange={(e) => { setEventRemoteDescription(e.target.value) }} 
                             value={eventRemoteDescription}
                         />
-                        <input type="file" className='event-modal-eventremote-inputfile' id='event-modal-eventremote-inputfile-mods' onChange={eventRemoteModChange} style={{ display: 'none' }}/>
+
+
+                        <input 
+                            type="file" 
+                            className='event-modal-eventremote-inputfile' 
+                            id='event-modal-eventremote-inputfile-mods' 
+                            onChange={eventRemoteModChange} 
+                            style={{ display: 'none' }}
+                        />
+
+
                         <div className='event-modal-eventremote-inputfile-container' style={{ marginTop: '40px' }}>
-                            <label htmlFor="event-modal-eventremote-inputfile-mods" className='event-modal-eventremote-inputfile-label'>Загрузить сборку модов</label>
-                            <span style={{ display: eventRemoteIsMod ? 'flex' : 'none', marginLeft: '20px', fontSize: '15pt', color: '#D9D9D9' }}>Файл загружен</span>
+                            <label 
+                                htmlFor="event-modal-eventremote-inputfile-mods" 
+                                className='event-modal-eventremote-inputfile-label'
+                            >
+                                Загрузить сборку модов
+                            </label>
+                            <span 
+                                style={{ 
+                                    display: eventRemoteIsMod ? 'flex' : 'none', 
+                                    marginLeft: '20px', 
+                                    fontSize: '15pt', 
+                                    color: '#D9D9D9' 
+                                }}
+                            >
+                                Файл загружен
+                            </span>
                         </div>
+
+
+                        <div className='event-modal-eventremote-td-info-container'>
+                            <div className='event-modal-eventremote-date-container'>
+                                <span className='event-modal-eventremote-td-info-title'>Дата проведения</span>
+                                <input 
+                                    className='event-modal-eventremote-td-input' 
+                                    maxLength={8}
+                                    style={{ 
+                                        width: '90px', 
+                                        marginLeft: '45px',
+                                        textAlign: 'left',
+                                    }} 
+                                    onChange={(e) => { setEventRemoteDate(e.target.value) }}
+                                    value={ eventRemoteDate }
+                                    placeholder='дд.мм.гг'
+                                    onBlur={() => { 
+                                        axios.patch(`${host}/api/developer/event/edit/info`, { 
+                                            key: JSON.parse(Cookies.get("userData")).key, 
+                                            eventId: modalRemoteEvent.id,  
+                                            date: eventRemoteDate
+                                        }) 
+                                    }} 
+                                />
+                            </div>
+                            <div className='event-modal-eventremote-time-container'>
+                                <span className='event-modal-eventremote-td-info-title'>Время проведения</span>
+                                <span style={{color: '#D9D9D9', marginLeft: '28px'}}>
+                                    <input 
+                                        className='event-modal-eventremote-td-input' 
+                                        maxLength={2} 
+                                        minLength={2} 
+                                        type="text" 
+                                        placeholder='--' 
+                                        value={eventRemoteTimeH}
+                                        onChange={(e) => { setEventRemoteTimeH(e.target.value) }}
+                                        onBlur={() => { 
+                                            axios.patch(`${host}/api/developer/event/edit/info`, { 
+                                                key: JSON.parse(Cookies.get("userData")).key, 
+                                                eventId: modalRemoteEvent.id,  
+                                                time: `${eventRemoteTimeH}:${eventRemoteTimeM}`
+                                            }) 
+                                        }} 
+                                    />
+                                    :
+                                    <input 
+                                        className='event-modal-eventremote-td-input' 
+                                        maxLength={2} 
+                                        minLength={2} 
+                                        type="text" 
+                                        placeholder='--' 
+                                        value={eventRemoteTimeM}
+                                        onChange={(e) => { setEventRemoteTimeM(e.target.value) }}
+                                        onBlur={() => { 
+                                            axios.patch(`${host}/api/developer/event/edit/info`, { 
+                                                key: JSON.parse(Cookies.get("userData")).key, 
+                                                eventId: modalRemoteEvent.id,  
+                                                time: `${eventRemoteTimeH}:${eventRemoteTimeM}`
+                                            }) 
+                                        }} 
+                                    />
+                                </span>
+                            </div>
+                        </div>
+
+                        
+                        <button className='event-modal-eventremote-button-openEvent' onClick={ handleOpenEvent }>
+                            Открыть миссию
+                        </button>
+                        <p style={{ color: '#ffffff50', width: '400px', margin: '0px' }}>Отменить действие будет нельзя, придется удалять миссию и создавать заново.</p>
+                        <button className='event-modal-eventremote-button-deleteEvent' onClick={ handleDeleteEvent }>
+                            Удалить миссию
+                        </button>
                     </div>
                     <div className='event-modal-eventremote-slots-container'>
-
+                            
                     </div>
                 </div>
             </div>
