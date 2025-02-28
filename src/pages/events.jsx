@@ -15,7 +15,22 @@ const Events = () => {
 
     // MODAL STATE
     const [isModalEventCreate, setIsModalEventCreate] = useState(false)
+    const [isModalEventRemote, setIsModalEventRemote] = useState(false)
+    const [modalRemoteEvent, setModalRemoteEvent] = useState({})
     const [errorMessage, setErrorMessage] = useState("");
+
+    // EVENT REMOTE MODAL
+    const [eventRemoteTitle, setEventRemoteTitle] = useState("")
+    const [eventRemoteMetar, setEventRemoteMetar] = useState("")
+    const [eventRemoteDescription, setEventRemoteDescription] = useState("")
+    const [eventRemoteIsImg, setEventRemoteIsImg] = useState(false)
+    const [eventRemoteIsMod, setEventRemoteIsMod] = useState(false)
+
+    useEffect(() => {
+        setEventRemoteTitle(modalRemoteEvent.title)
+        setEventRemoteMetar(modalRemoteEvent.metar)
+        setEventRemoteDescription(modalRemoteEvent.description)
+    }, [modalRemoteEvent])
 
     // EVENT CREATE MODAL
     const [eventCreateType, setEventCreateType] = useState('PVP')
@@ -47,6 +62,55 @@ const Events = () => {
         getEvents()
     }, [eventList])
 
+
+    const eventRemoteImgChange = async (e) => {
+        const file = e.target.files[0]
+
+        if(file) {
+            setEventRemoteIsImg(true)
+
+            const formData = new FormData()
+            formData.append("file", file)
+            formData.append("key", JSON.parse(Cookies.get("userData")).key)
+            formData.append("eventId", modalRemoteEvent.id)
+
+            const res = await axios.post(`${host}/api/developer/event/edit/imgupload`, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            })
+
+            if(res != 200) {
+                setErrorMessage(res.data.err)
+                setTimeout(() => {setErrorMessage("")}, 3000)
+                console.log(res.data.err)
+            }
+        }
+    }
+
+
+    const eventRemoteModChange = async (e) => {
+        const file = e.target.files[0]
+
+        if(file) {
+            setEventRemoteIsMod(true)
+
+            const formData = new FormData()
+            formData.append("file", file)
+            formData.append("key", JSON.parse(Cookies.get("userData")).key)
+            formData.append("eventId", modalRemoteEvent.id)
+
+            const res = await axios.post(`${host}/api/developer/event/edit/modsupload`, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            })
+
+            if(res != 200) {
+                setErrorMessage(res.data.err)
+                setTimeout(() => {setErrorMessage("")}, 3000)
+                console.log(res.data.err)
+            }
+        }
+    }
+
+
     const handleCreateEvent = async () => {
         const newEventData = {
             type: eventCreateType,
@@ -65,15 +129,6 @@ const Events = () => {
         if(res.data.status == 200) {
             setEventCreateStatus(true)
             setTimeout(() => { setEventCreateStatus(false) }, 5000)
-            // setEventCreateDay("")
-            // setEventCreateDescription("")
-            // setEventCreateMetar("")
-            // setEventCreateMonth("")
-            // setEventCreateTeamBlue("")
-            // setEventCreateTeamRed("")
-            // setEventCreateTitle("")
-            // setEventCreateType("PVP")
-            // setEventCreateYear("")
             window.location.reload()
         } else {
             setErrorMessage(res.data.err)
@@ -84,6 +139,66 @@ const Events = () => {
 
     return (
         <>
+            <div onClick={ () => { setIsModalEventRemote(false) } } className='event-modal-eventremote-main' style={{ display: isModalEventRemote ? 'flex' : 'none' }}>
+                <div onClick={(e) => e.stopPropagation()} className='event-modal-eventremote-container'>
+                    <div className='event-modal-eventremote-info-container'>
+                        <input 
+                            onBlur={() => { 
+                                axios.patch(`${host}/api/developer/event/edit/info`, { 
+                                    key: JSON.parse(Cookies.get("userData")).key, 
+                                    eventId: modalRemoteEvent.id,  
+                                    title: eventRemoteTitle 
+                                }) 
+                            }} 
+                            type="text" 
+                            className='event-modal-eventremote-info-title' 
+                            onChange={(e) => { setEventRemoteTitle(e.target.value) }} 
+                            value={eventRemoteTitle}
+                            maxLength={25}
+                        />
+                        <input type="file" accept="image/*" className='event-modal-eventremote-inputfile' id='event-modal-eventremote-inputfile-img' onChange={eventRemoteImgChange} style={{ display: 'none' }}/>
+                        <div className='event-modal-eventremote-inputfile-container'>
+                            <label htmlFor="event-modal-eventremote-inputfile-img" className='event-modal-eventremote-inputfile-label'>Добавить изображение</label>
+                            <span style={{ display: eventRemoteIsImg ? 'flex' : 'none', marginLeft: '20px', fontSize: '15pt', color: '#D9D9D9' }}>Файл загружен</span>
+                        </div>
+                        <input 
+                            onBlur={() => { 
+                                axios.patch(`${host}/api/developer/event/edit/info`, { 
+                                    key: JSON.parse(Cookies.get("userData")).key, 
+                                    eventId: modalRemoteEvent.id,  
+                                    metar: eventRemoteMetar
+                                }) 
+                            }} 
+                            type="text" 
+                            className='event-modal-eventremote-info-metar' 
+                            onChange={(e) => { setEventRemoteMetar(e.target.value) }} 
+                            value={eventRemoteMetar}
+                            maxLength={40}
+                        />
+                        <textarea
+                            onBlur={() => { 
+                                axios.patch(`${host}/api/developer/event/edit/info`, { 
+                                    key: JSON.parse(Cookies.get("userData")).key, 
+                                    eventId: modalRemoteEvent.id,  
+                                    description: eventRemoteDescription
+                                }) 
+                            }} 
+                            type="text" 
+                            className='event-modal-eventremote-info-description' 
+                            onChange={(e) => { setEventRemoteDescription(e.target.value) }} 
+                            value={eventRemoteDescription}
+                        />
+                        <input type="file" className='event-modal-eventremote-inputfile' id='event-modal-eventremote-inputfile-mods' onChange={eventRemoteModChange} style={{ display: 'none' }}/>
+                        <div className='event-modal-eventremote-inputfile-container' style={{ marginTop: '40px' }}>
+                            <label htmlFor="event-modal-eventremote-inputfile-mods" className='event-modal-eventremote-inputfile-label'>Загрузить сборку модов</label>
+                            <span style={{ display: eventRemoteIsMod ? 'flex' : 'none', marginLeft: '20px', fontSize: '15pt', color: '#D9D9D9' }}>Файл загружен</span>
+                        </div>
+                    </div>
+                    <div className='event-modal-eventremote-slots-container'>
+
+                    </div>
+                </div>
+            </div>
             <div onClick={ () => { setIsModalEventCreate(false) } } className='event-modal-eventcreate-main' style={{ display: isModalEventCreate ? 'flex' : 'none' }}>
                 <div onClick={(e) => e.stopPropagation()} className='event-modal-eventcreate-container'>
                     <input type="text" onChange={ (e) => { setEventCreateTitle(e.target.value) } } placeholder='Название миссии' maxLength={25} className='event-modal-eventcreate-title' />
@@ -129,7 +244,11 @@ const Events = () => {
                     <div className='event-ready-output-container'>
                         { events.reverse().map(event => (
                             event.status == 'READY' ?
-                            <ReadyEvent key={event.id || index} eventData={event} />
+                            <ReadyEvent 
+                                key={event.id || index} 
+                                eventData={event} 
+                                setIsModalEventRemote={setIsModalEventRemote} 
+                                setModalRemoteEvent={setModalRemoteEvent} />
                             :
                             null
                         )) }
