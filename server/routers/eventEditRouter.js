@@ -113,6 +113,16 @@ router.post('/status/:status', PermissionsCheck, async(req, res) => {
             await currentEvent.update({
                 status: 'OPEN'
             })
+
+            axios.post(`${host}/api/developer/bot/eventAnnouncements/open`, {
+                eventDate: currentEvent.dataValues.date,
+                eventTime: currentEvent.dataValues.time,
+                eventTeam1: currentEvent.dataValues.team1,
+                eventTeam2: currentEvent.dataValues.team2,
+                eventType: currentEvent.dataValues.type,
+                eventTitle: currentEvent.dataValues.title,
+                botKey: botKey
+            })
         } else if(req.params.status == "close") {
             await currentEvent.update({
                 status: 'CLOSED'

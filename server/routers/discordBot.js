@@ -340,10 +340,42 @@ router.post('/eventAnnouncements/close', BotPermissionsCheck, async(req, res) =>
 
         await channel.send({ embeds: [embed] });
     }catch(e){
-        console.error(`\x1b[31mApi developer error: eventAnnouncements/ready - ${e} \x1b[31m`);
+        console.error(`\x1b[31mApi developer error: eventAnnouncements/close - ${e} \x1b[31m`);
         res.json({
             status: 500,
-            err: `Api developer error: eventAnnouncements/ready - ${e}`
+            err: `Api developer error: eventAnnouncements/close - ${e}`
+        });
+    };
+})
+
+
+
+router.post('/eventAnnouncements/open', BotPermissionsCheck, async(req, res) => {
+    try {
+        const data = req.body
+        const channel = await client.channels.fetch('1344865229246566522')
+
+        const embed = new EmbedBuilder()
+        .setTitle(`Игра открыта для регистрации!`)
+        .setDescription(`**${data.eventTitle}**`)
+        .setColor(0x30762d) // Синий цвет
+        .addFields(
+            { name: 'Тип игры', value: `${data.eventType}`, inline: false },
+            { name: 'Дата проведения', value: `${data.eventDate} (${data.eventTime})`, inline: false },
+            { name: 'Красные', value: `${data.eventTeam1}`, inline: true },
+            { name: 'Синие', value: `${data.eventTeam2}`, inline: true },
+            { name: '', value: ``, inline: false },
+            { name: '', value: `*[Подробнее на странице сайта](http://localhost:5173/events)*`, inline: false },
+        )
+        .setTimestamp()
+        .setFooter({ text: 'ZG ARMA 3 | Администрация' });
+
+        await channel.send({ embeds: [embed] });
+    }catch(e){
+        console.error(`\x1b[31mApi developer error: eventAnnouncements/open - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: eventAnnouncements/open - ${e}`
         });
     };
 })
