@@ -4,6 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { v4 as uuidv4 } from 'uuid'
+import axios from 'axios';
 
 import EVENTS_TAB from '../database/events.js';
 import ACCOUNTS_TAB from '../database/accounts.js';
@@ -12,6 +13,9 @@ import PermissionsCheck from '../modules/permissions.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
+
+const host = process.env.BASIC_URL
+const botKey = process.env.BOT_ACCESS_KEY
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -112,6 +116,13 @@ router.post('/status/:status', PermissionsCheck, async(req, res) => {
         } else if(req.params.status == "close") {
             await currentEvent.update({
                 status: 'CLOSED'
+            })
+
+            axios.post(`${host}/api/developer/bot/eventAnnouncements/close`, {
+                eventTeam1: currentEvent.dataValues.team1,
+                eventTeam2: currentEvent.dataValues.team2,
+                eventTitle: currentEvent.dataValues.title,
+                botKey: botKey
             })
         } else {
             res.json({

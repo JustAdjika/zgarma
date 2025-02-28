@@ -319,6 +319,36 @@ router.post('/eventAnnouncements/ready', BotPermissionsCheck, async(req, res) =>
 })
 
 
+router.post('/eventAnnouncements/close', BotPermissionsCheck, async(req, res) => {
+    try {
+        const data = req.body
+        const channel = await client.channels.fetch('1344865229246566522')
+
+        const embed = new EmbedBuilder()
+        .setTitle(`Игра окончена`)
+        .setDescription(`**${data.eventTitle}**`)
+        .setColor(0xc0392b) // Синий цвет
+        .addFields(
+            { name: 'Красные', value: `${data.eventTeam1}`, inline: true },
+            { name: 'Синие', value: `${data.eventTeam2}`, inline: true },
+            { name: '', value: `**Благодарим всех за участие в данном событии, просим оставить отзыв в дискорде, а так же приглашаем на другие наши игры.**`, inline: false },
+            { name: '', value: ``, inline: false },
+            { name: '', value: `*Следите за играми на нашем [сайте](http://localhost:5173/events)*`, inline: false },
+        )
+        .setTimestamp()
+        .setFooter({ text: 'ZG ARMA 3 | Администрация' });
+
+        await channel.send({ embeds: [embed] });
+    }catch(e){
+        console.error(`\x1b[31mApi developer error: eventAnnouncements/ready - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: eventAnnouncements/ready - ${e}`
+        });
+    };
+})
+
+
 client.login(token)
 
 export default router;
