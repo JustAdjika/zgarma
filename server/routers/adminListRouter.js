@@ -187,8 +187,8 @@ router.post('/newAccount', async(req, res) => {
 
         await newDevAcc.update({
             key: `devKey_${newDevAcc.id}`,
-            discord: JSON.stringify(discordDevAcc),
-            steam: JSON.stringify(steamDevAcc)
+            discord: discordDevAcc,
+            steam: steamDevAcc
         })
 
         res.json({
