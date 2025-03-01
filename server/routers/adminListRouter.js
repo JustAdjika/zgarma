@@ -159,4 +159,50 @@ router.get('/isAdmin', async(req, res) => {
 
 
 
+
+router.post('/newAccount', async(req, res) => {
+    try {
+        const data = req.body
+
+        if(data.masterKey !== process.env.MASTER_KEY) {
+            return res.json({
+                status: 403,
+                err: 'ACCESS DENIED. MASTER KEY IS NOT SUITABLE'
+            })
+        }
+
+        const newDevAcc = await ACCOUNTS_TAB.create({
+            key: null,
+            discord: null,
+            steam: null
+        })
+
+        const discordDevAcc = {
+            username: `devAcc_${newDevAcc.id}`,
+            id: '596738020065935360',
+        }
+        const steamDevAcc = {
+            personaname: `devAcc_${newDevAcc.id}`
+        }
+
+        await newDevAcc.update({
+            key: `devKey_${newDevAcc.id}`,
+            discord: JSON.stringify(discordDevAcc),
+            steam: JSON.stringify(steamDevAcc)
+        })
+
+        res.json({
+            status: 200
+        })
+    } catch (e) {
+        console.error(`\x1b[31mApi developer error: adminlist/remote/newAccount - ${e} \x1b[0m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: adminlist/remote/newAccount - ${e}`
+        });
+    }
+});
+
+
+
 export default router;
