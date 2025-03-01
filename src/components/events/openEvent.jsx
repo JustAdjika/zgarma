@@ -39,7 +39,7 @@ const OpenEvent = ({eventData, setErrorMessage, host, eventListUpdate}) => {
         <div className='openevent-main-container'>
             <div className='openevent-header-container'>
                 <h2 className='openevent-title'>{ eventData.title }</h2>
-                <div className='openevent-type'>{ eventData.type }</div>
+                <div className='openevent-type' style={{ backgroundColor: eventData.type == "PVP" ? '#30762D' : "#7B370D"}}>{ eventData.type }</div>
             </div>
             <div className='openevent-center-container'>
                 <img onClick={ handleHide } src={triangle} alt="" width={40} height={40} className='openevent-button-info-more' style={{ transform: rotated ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.3s ease" }}/>
