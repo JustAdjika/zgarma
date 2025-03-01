@@ -280,11 +280,124 @@
     cursor: pointer;
     background-color: #D9D9D9;
     transition: 0.2s;
-    margin-right: 60px;
+    margin-right: 30px;
 }
 .event-modal-eventremote-button-pvpon:hover {
     background-color: #969696;
 }
 .event-modal-eventremote-main-team-container {
     margin-right: 30px;
+}
+.event-modal-eventremote-kit-container {
+    height: 30px;
+    width: 330px;
+    border: solid 2px #30762D;
+    background-color: #D9D9D9;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.event-modal-eventremote-kit-input{
+    background-color: #D9D9D9;
+    /* background-color: red; */
+    font-family: 'My Open Sans';
+    font-size: 14pt;
+    padding-left: 20px;
+    width: 260px;
+    height: 28px;
+    border: none;
+    outline: none;
+}
+.event-modal-eventremote-squad-container {
+    width: 100%;
+    background-color: #363636;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    border-radius: 4px;
+}
+.event-modal-eventremote-squad-header-container>input {
+    margin: 0px;
+    font-family: 'My Open Sans';
+    font-weight: lighter;
+    margin-top: 5px;
+    color: #D9D9D9;
+    font-size: 17pt;
+    width: 260px;
+    background-color: #363636;
+    padding-left: 20px;
+    margin-bottom: 10px;
+}
+.event-modal-eventremote-newKit {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 200px;
+    height: 30px;
+    font-size: 15pt;
+    font-family: 'My Open Sans';
+    font-weight: lighter;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.event-modal-eventremote-newKit:hover {
+    background-color: #969696;
+}
+.event-modal-eventremote-kit-container>button {
+    width: 20px;
+    height: 5px;
+    border-radius: 3px;
+    background-color: #C0392B;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-right: 15px;
+}
+.event-modal-eventremote-kit-container>button:hover {
+    background-color: #7a241a;
+}
+.event-modal-eventremote-button-squad-add {
+    height: 34px;
+    font-family: 'My Open Sans'; 
+    border: none;
+    outline: none;
+    border-radius: 2px; 
+    font-size: 13pt;
+    width: 250px;
+    cursor: pointer;
+    background-color: #D9D9D9;
+    transition: 0.2s;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.event-modal-eventremote-button-squad-add:hover {
+    background-color: #969696;
+}
+.event-modal-eventremote-squad-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 340px;
+}
+.event-modal-eventremote-button-squad-delete {
+    width: 20px;
+    height: 5px;
+    border-radius: 3px;
+    background-color: #C0392B;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-right: 20px;
+}
+.event-modal-eventremote-button-squad-delete:hover {
+    background-color: #7a241a;
 }
