@@ -58,7 +58,7 @@ router.patch('/info', PermissionsCheck, async(req, res) => {
         }
 
         await currentEvent.update(data, {
-            fields: ['title', 'description', 'time', 'date', 'metar']
+            fields: ['title', 'description', 'time', 'date', 'metar', 'team1', 'team2']
         })
 
         res.json({
