@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 
 import './Style/modalCreateEvent.css'
 
-const ModalCreateEvent = ({ isModalEventCreate, host }) => {
+const ModalCreateEvent = ({ isModalEventCreate, setIsModalEventCreate, host }) => {
     const [eventCreateType, setEventCreateType] = useState('PVP')
     const [eventCreateTitle, setEventCreateTitle] = useState("")
     const [eventCreateDay, setEventCreateDay] = useState("")

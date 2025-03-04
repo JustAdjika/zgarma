@@ -327,7 +327,7 @@ router.post('/imgupload', PermissionsCheck, async(req,res) => {
         })
 
         await currentEvent.update({
-            imgPath: uploadPath
+            imgPath: `eventImages/${newFileName}`
         })
 
         res.json({

@@ -6,7 +6,7 @@ import './Style/openEvent.css'
 import '../../pages/Style/fonts.css'
 import triangle from '../../assets/triangle.svg'
 
-const OpenEvent = ({eventData, setErrorMessage, host, eventListUpdate}) => {
+const OpenEvent = ({eventData, setErrorMessage, host, eventListUpdate, setIsModalEventRegister, setModalRegisterEvent}) => {
     const [rotated, setRotated] = useState(true);
 
     const handleHide = () => {
@@ -76,7 +76,7 @@ const OpenEvent = ({eventData, setErrorMessage, host, eventListUpdate}) => {
                             </div>
                         </div>
                     </div>
-                    <button className='openevent-button-register'>Информация и слоты</button>
+                    <button className='openevent-button-register' onClick={ () => { setIsModalEventRegister(true); setModalRegisterEvent(eventData) } }>Информация и слоты</button>
                     <button className='openevent-button-close-game' onClick={ handleCloseEvent }>Закончить игру</button>
                 </div>
             </div>
