@@ -1,0 +1,79 @@
+body {
+    font-family: 'My Open Sans';
+    font-weight: lighter;
+}
+
+.main-PTCH-div {
+    display: flex;
+    flex-direction: column;
+    width: 750px;
+    min-height: 100px;
+    margin-left: 30px;
+    margin-top: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.container-dop-info {
+    display: flex;
+    flex-direction: row;
+}
+
+.author-div {
+    font-size: 29px;
+}
+
+.time-PTCH-div {
+    margin-left: 350px;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.PTCH-container {
+    font-size: 20pt;
+}
+
+.message {
+    margin-top: 7px;
+    width: 690px;
+    min-height: 30px;
+    overflow-wrap: break-word;
+    padding-bottom: 5px;
+}
+
+.message-container {
+    display: flex;
+    align-items: flex-start; /* Вертикальное выравнивание */
+    gap: 10px; /* Расстояние между полоской и текстом */
+}
+
+.message-line {
+    width: 2px; /* Толщина полоски */
+    height: auto; /* Автоматическая высота, чтобы совпадать с соседним текстом */
+    background-color: white; /* Цвет полоски */
+    border-radius: 5px; /* Скругление углов */
+}
+
+.decorative-container {
+    display: flex;
+    justify-content: start;
+}
+
+.left-container {
+    border-left: solid 1px #d9d9d9;
+    border-bottom: solid 1px #d9d9d9;
+    min-height: 100%;
+    width: 15px;
+    margin-top: 5px;
+}
+
+.right-container {
+    padding-left: 10px;
+}
+
+.title-PTCH {
+    width: 690px;
+    min-height: 30px;
+    overflow-wrap: break-word;
+}

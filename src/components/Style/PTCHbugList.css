@@ -1,0 +1,59 @@
+body {
+    font-family: 'My Open Sans';
+    font-weight: lighter;
+    padding-bottom: 50px;
+}
+
+.main-container-bug {
+    width: 400px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    background-color: red;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.title-bug {
+    font-size: 27px;
+}
+
+.bug-status {
+    font-size: 17px;
+    margin-top: 5px;
+}
+
+.container-info-bug {
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+}
+
+.bug-information {
+    font-size: 17px;
+}
+
+.bug-time {
+    font-size: 17px;
+}
+
+
+/* Окошко с подробностями */
+.bug-information {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
+
+.bug-information:hover {
+    color: darkblue;
+}
+
+.bug-details {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #000000;
+    border-radius: 5px;
+}
