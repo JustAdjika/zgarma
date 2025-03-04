@@ -8,6 +8,7 @@ import ReadyEvent from '../components/events/readyEvent.jsx';
 import OpenEvent from '../components/events/openEvent.jsx';
 import ModalEventRemote from '../components/events/modalEventRemote.jsx';
 import ModalCreateEvent from '../components/events/modalCreateEvent.jsx';
+import ModalRegister from '../components/events/modalRegister.jsx';
 
 const Events = () => {
     const host = 'http://localhost:3000'
@@ -15,9 +16,11 @@ const Events = () => {
     const [eventList, eventListUpdate] = useState(0)
 
     // MODAL STATE
-    const [isModalEventCreate, setIsModalEventCreate] = useState(false)
-    const [isModalEventRemote, setIsModalEventRemote] = useState(false)
-    const [modalRemoteEvent, setModalRemoteEvent] = useState({})
+    const [isModalEventCreate, setIsModalEventCreate] = useState(false) // Состояние модального окна - Создание ивента
+    const [isModalEventRemote, setIsModalEventRemote] = useState(false) // Состояние модального окна - Управление ивентом
+    const [isModalEventRegister, setIsModalEventRegister] = useState(false) // Состояние модального окна - Регистрация на ивент
+    const [modalRemoteEvent, setModalRemoteEvent] = useState({}) // Ивент, которым управляют в данный момент
+    const [modalRegisterEvent, setModalRegisterEvent] = useState({}) // Ивент, на который регистрируются в данный момент
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
@@ -42,9 +45,28 @@ const Events = () => {
 
     return (
         <>
-            <ModalEventRemote host={host} setIsModalEventRemote={setIsModalEventRemote} isModalEventRemote={isModalEventRemote} modalRemoteEvent={modalRemoteEvent} setModalRemoteEvent={setModalRemoteEvent} setErrorMessage={setErrorMessage}/>
+            <ModalRegister 
+                host={host} 
+                setIsModalEventRegister={setIsModalEventRegister}
+                setModalRegisterEvent={setModalRegisterEvent}
+                modalRegisterEvent={modalRegisterEvent}
+                isModalEventRegister={isModalEventRegister}
+            />
+
+            <ModalEventRemote 
+                host={host} 
+                setIsModalEventRemote={setIsModalEventRemote} 
+                isModalEventRemote={isModalEventRemote} 
+                modalRemoteEvent={modalRemoteEvent} 
+                setModalRemoteEvent={setModalRemoteEvent} 
+                setErrorMessage={setErrorMessage}
+            />
             
-            <ModalCreateEvent isModalEventCreate={isModalEventCreate} host={host} />
+            <ModalCreateEvent 
+                isModalEventCreate={isModalEventCreate} 
+                setIsModalEventCreate={setIsModalEventCreate}
+                host={host} 
+            />
             <div className='event-main-container'>
                 <div className='event-ready-container'>
                     <div className='event-ready-title-container'>
@@ -77,7 +99,14 @@ const Events = () => {
                     <div className='event-open-output-container'>
                         { events.reverse().map(event => (
                             event.status == 'OPEN' ?
-                            <OpenEvent key={event.id || index} eventData={event} setErrorMessage={setErrorMessage} host={host} eventListUpdate={eventListUpdate} />
+                            <OpenEvent 
+                                key={event.id || index} 
+                                eventData={event} 
+                                setErrorMessage={setErrorMessage} 
+                                host={host} 
+                                eventListUpdate={eventListUpdate} 
+                                setModalRegisterEvent={setModalRegisterEvent} 
+                                setIsModalEventRegister={setIsModalEventRegister}/>
                             :
                             null
                         )) }

@@ -1,0 +1,137 @@
+.event-modal-eventreg-main {
+    background-color: #00000050;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    justify-content: center;
+    align-items: center;
+}
+.event-modal-eventreg-container {
+    width: 1400px;
+    height: 800px;
+    background-color: #1A1A1A;
+    padding-top: 30px;
+    padding-left: 70px;
+    padding-right: 70px;
+    display: flex; 
+    flex-direction: column;
+}
+.event-modal-eventreg-title {
+    font-family: 'My Open Sans';
+    margin: 0px;
+    color: #D9D9D9;
+    font-weight: lighter;
+    font-size: 30px;
+    width: 400px;
+    word-wrap: break-word;
+}
+.event-modal-eventreg-slots-value {
+    color: #D9D9D9;
+    margin: 0px;
+    margin-top: 5px;
+    margin-left: 20px;
+}
+.event-modal-eventreg-h3-title {
+    font-family: 'My Open Sans';
+    margin: 0px;
+    color: #D9D9D9;
+    font-weight: lighter;
+    font-size: 23px;
+    width: 400px;
+    margin-top: 40px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+}
+.event-modal-eventreg-img-container {
+    background-position: center;
+    background-size: cover;
+    width: 520px;
+    height: 292.5px;
+}
+.event-modal-eventreg-h3-decorative-line {
+    height: 5px;
+    width: 300px;
+    background-color: #D9D9D9;
+    border-radius: 10px;
+}
+#event-modal-eventreg-p-reg-header {
+    font-family: 'OpenSans_LightItalic';
+    font-size: 11pt;
+    margin-left: 10px;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    color: #D9D9D9;
+    align-items: center;
+    width: 300px;
+}
+.event-modal-eventreg-checkbox-container {
+    margin: 0px;
+    padding: 0px;
+    /* background-color: red; */
+    width: 350px;
+    height: 40px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.event-modal-eventreg-checkbox-container>p {
+    margin: 0px;
+    font-family: 'My Open Sans';
+    font-size: 11pt;
+    width: 280px;
+    cursor: pointer;
+    color: #D9D9D9;
+    margin-left: 10px;
+}
+.event-modal-eventreg-checkbox-container>div {
+    height: 33px;
+    width: 33px;
+    background-color: #D9D9D9;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.event-modal-eventreg-checkbox-container>div>div {
+    width: 21px;
+    height: 21px;
+    background-color: #969696;
+    border-radius: 3px;
+    box-shadow: inset 0px 0px 4px 2px #00000050;
+    transition: 0.2s;
+}
+.event-modal-eventreg-checkbox-container>div:hover {
+    background-color: #b1b1b1;
+}
+.event-modal-eventreg-sendRequest {
+    background-color: #30762D;
+    border: none;
+    outline: none;
+    width: 300px;
+    height: 40px;
+    font-family: 'My Open Sans';
+    font-weight: lighter;
+    border-radius: 3px;
+    font-size: 15pt;
+    margin-top: 15px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.event-modal-eventreg-sendRequest:hover {
+    background-color: #255f23;
+}
+#event-modal-eventreg-sendRequest-p-callback {
+    color: #D9D9D9;
+    font-size: 10pt;
+    width: 530px;
+    margin: 0px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
