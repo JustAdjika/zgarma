@@ -14,7 +14,24 @@ const PathchesPage = () => {
      };
 
     return (
-        <div className="main-container-ptch">
+        <div onClick={ (e) => e.stopPropagation() } className="main-container-ptch">
+         {isModal && (
+               <div onClick={ () => setIsModal(false) } className="main-container-modal" style={{ display: isModal ? 'flex' : 'none' }}>
+                    <div className="modal-PTCH" onClick={(e) => e.stopPropagation()}>
+                        <div className="title-modal-PTCH" >Оповестить об ошибке</div>
+                        <div className="decorative-modal-PTCH"></div>
+                        <div className="subtitle-modal-PTCH">Краткое описание</div>
+                        <input type="text" id="input-modal-PTCH" placeholder="Где вы обнаружили проблему?"/>
+                        <div className="second-subtitle-modal-PTCH">Подробное описание</div>
+                        <textarea name="textarea-modal-PTCH" id="modal-PTCH-text" placeholder="Подробно опишите свою проблему"></textarea>
+                        <div className="container-check-modal">
+                            <div className="modal-PTCH-dop">Поставьте галочку, если уже обращался с этой проблемой</div>
+                            <input type="checkbox" name="check-modal" id="checkbox-modal-PTCH" />
+                        </div>
+                        <div className="container-but-PTCH"><button id="button-modal-PTCH">Отправить</button></div>
+                    </div>
+                </div>
+            )}
             <div className="left-container-ptch">
                 <div className="l-container-ptch">
                     <div className="title-l-ptch">Список изменений</div>
@@ -51,17 +68,6 @@ const PathchesPage = () => {
                     <PTCHbug/>
                 </div>
             </div>
-            {isModal && (
-                <div className="modal-PTCH">
-                    <div className="title-modal-PTCH"></div>
-                    <div className="decorative-modal-PTCH"></div>
-                    <div className="subtitle-modal-PTCH"></div>
-                    <input type="text" id="input-modal-PTCH" />
-                    <div className="second-subtitle-modal-PTCH"></div>
-                    <textarea name="textarea-modal-PTCH" id="modal-PTCH-text"></textarea>
-                    <div className="modal-PTCH-dop"></div>
-                </div>
-            )}
         </div>
     )
 }

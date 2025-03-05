@@ -5,6 +5,12 @@ body {
     padding-bottom: 50px;
 }
 
+/* Иконочки мои сладкие */
+.icon-PTCH {
+    width: 23px;
+    margin-right: 5px;
+}
+
 .main-container-ptch {
     color: white;
     display: flex;
@@ -161,6 +167,7 @@ textarea, input {
 /* Всякая шняга */
 .link-ptch {
     color: #066DA7;
+    cursor: pointer;
 }
 
 .decorative-container-PTCH {
@@ -177,13 +184,116 @@ textarea, input {
 }
 
 
+
+
 /* Модальное окошко */
-.modal-PTCH {
-    width: 400px;
-    height: 450px;
-    background-color: gray;
+.main-container-modal {
+    background-color: #00000050;
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.modal-PTCH {
+    width: 380px;
+    height: 400px;
+    background-color: #353535; 
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.decorative-modal-PTCH {
+    width: 300px;
+    background-color: white;
+    height: 7px;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
+.title-modal-PTCH {
+    font-size: 25px;
+    font-family: 'My Open Sans';
+}
+
+.subtitle-modal-PTCH {
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+.second-subtitle-modal-PTCH {
+    font-size: 17px;
+    margin-top: 20px;
+}
+
+.modal-PTCH-dop {
+    font-size: 17px;
+    margin-top: 20px;
+}
+
+/* Инпуты модального окна */
+#input-modal-PTCH {
+    width: 98%;
+    height: 20px;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    margin-top: 5px;
+    background-color: #989898;
+}
+
+#modal-PTCH-text {
+    width: 100%;
+    height: 100px;
+    margin-top: 5px;
+    border: none;
+    outline: none;
+    background-color: #989898;
+    resize: none;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    vertical-align: top;
+    box-sizing: border-box;
+    color: rgba(0, 0, 0, 0.58);
+    font-family: "My Open Sans";
+
+}
+
+/* Фон скроллбара */
+#modal-PTCH-text::-webkit-scrollbar-track {
+    background: #989898; /* Цвет фона */
+    border-radius: 5px;
+}
+
+/* Полоска скроллбара */
+#modal-PTCH-text::-webkit-scrollbar-thumb {
+    background: #2E2E2E; /* Цвет полоски */
+    border-radius: 5px;
+    border-right: inset 2px #989898;
+    border-top: solid 3px #989898;
+    border-bottom: solid 3px #989898;
+    width: 4px;
+}
+
+/* Сам скроллбар */
+#modal-PTCH-text::-webkit-scrollbar {
+    width: 5px;
+}
+
+.container-but-PTCH {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+#button-modal-PTCH {
+    width: 100px;
+    height: 30px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
 }
