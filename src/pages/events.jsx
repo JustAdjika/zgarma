@@ -51,6 +51,7 @@ const Events = () => {
                 setModalRegisterEvent={setModalRegisterEvent}
                 modalRegisterEvent={modalRegisterEvent}
                 isModalEventRegister={isModalEventRegister}
+                setErrorMessage={setErrorMessage}
             />
 
             <ModalEventRemote 

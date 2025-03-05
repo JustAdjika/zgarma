@@ -13,9 +13,9 @@
     background-color: #1A1A1A;
     padding-top: 30px;
     padding-left: 70px;
-    padding-right: 70px;
+    /* padding-right: 70px; */
     display: flex; 
-    flex-direction: column;
+    justify-content: space-between;
 }
 .event-modal-eventreg-title {
     font-family: 'My Open Sans';
@@ -134,4 +134,81 @@
     margin: 0px;
     margin-top: 10px;
     margin-left: 10px;
+}
+.event-modal-eventreg-slots-h2 {
+    font-family: 'My Open Sans';
+    font-size: 20pt;
+    margin: 0px;
+    margin-bottom: 5px;
+    font-weight: lighter;
+}
+.event-modal-eventreg-slots-decorative-line {
+    height: 3px;
+    width: 100%;
+}
+.event-modal-eventreg-slot-container {
+    width: 322px;
+    box-sizing: border-box;
+    height: 37px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+    font-family: 'My Open Sans';
+    padding-left: 20px;
+    background-color: #D9D9D9;
+    font-size: 13pt;
+    color: #00000075;
+    cursor: pointer;
+    transition: 0.2s;
+    border: none;
+    outline: none;
+    border: solid 3px #30762D;
+}
+.event-modal-eventreg-slot-container:hover {
+    background-color: #b1b1b1;
+}
+.event-modal-eventreg-slots-main-container {
+    display: flex;
+    width: 724px;
+    margin-right: 10px;
+    height: 680px;
+    padding-right: 20px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+/* Фон скроллбара */
+.event-modal-eventreg-slots-main-container::-webkit-scrollbar-track {
+    background: #1A1A1A; /* Цвет фона */
+}
+/* Полоска скроллбара */
+.event-modal-eventreg-slots-main-container::-webkit-scrollbar-thumb {
+    background: #D9D9D9;
+    border-radius: 10px; /* Цвет полоски */
+}
+/* Сам скроллбар */
+.event-modal-eventreg-slots-main-container::-webkit-scrollbar {
+    width: 5px;
+}
+.event-modal-eventreg-squad-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #363636;
+    border-radius: 10px;
+    color: #D9D9D9;
+    padding-bottom: 25px;
+    margin-bottom: 40px;
+}
+.event-modal-eventreg-squad-container>h3 {
+    font-family: 'My Open Sans';
+    font-weight: lighter;
+    margin: 0px;
+    margin-top: 10px;
+    font-size: 15pt;
+    margin-left: 30px;
+    word-wrap: break-word;
+    padding-right: 30px;
+    width: 270px;
+    margin-bottom: 5px;
 }
