@@ -46,9 +46,10 @@ const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOrigina
                 }} 
                 className='event-modal-eventreg-slot-container'
                 style={{
-                    color: slotsOriginal[squadIndex].slots[0].player == null ? '#00000050' : '#000000',
+                    color: slotsOriginal[squadIndex].slots[0].player == null ? '#000000a1' : '#000000',
                     cursor: slotsOriginal[squadIndex].slots[0].player == null ? 'pointer' : 'not-allowed',
-                    borderColor: slotsOriginal[squadIndex].slots[0].player != null ? '#C0392B' : slot == 'SL' && team == 0 && squad == squadIndex ? '#066DA7' : '#30762D'
+                    borderColor: slotsOriginal[squadIndex].slots[0].player != null ? '#C0392B' : slot == 'SL' && team == 0 && squad == squadIndex ? '#066DA7' : '#30762D',
+                    backgroundColor: slot == 'SL' && team == 0 && squad == squadIndex ? '#153B51' : '#D9D9D9'
                 }}
             >
                 { slotsOriginal[squadIndex].slots[0].player == null ? slotItem.title : registeredUsername }
@@ -67,9 +68,10 @@ const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOrigina
                     }
                 }} 
                 style={{
-                    color: slotsOriginal[squadIndex].slots[slotIndex].player == null ? '#00000050' : '#000000',
+                    color: slotsOriginal[squadIndex].slots[slotIndex].player == null ? '#000000a1' : '#000000',
                     cursor: slotsOriginal[squadIndex].slots[slotIndex].player == null ? 'pointer' : 'not-allowed',
-                    borderColor: slotsOriginal[squadIndex].slots[slotIndex].player != null ? '#C0392B' : slot == slotIndex && team == 0 && squad == squadIndex ? '#066DA7' : '#30762D'
+                    borderColor: slotsOriginal[squadIndex].slots[slotIndex].player != null ? '#C0392B' : slot == slotIndex && team == 0 && squad == squadIndex ? '#066DA7' : '#30762D',
+                    backgroundColor: slot == slotIndex && team == 0 && squad == squadIndex ? '#153B51' : '#D9D9D9'
                 }}
                 className='event-modal-eventreg-slot-container'
             >
@@ -89,9 +91,10 @@ const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOrigina
                 }} 
                 className='event-modal-eventreg-slot-container'
                 style={{
-                    color: slotsOriginal[squadIndex].slots[0].player == null ? '#00000050' : '#000000',
+                    color: slotsOriginal[squadIndex].slots[0].player == null ? '#000000a1' : '#000000',
                     cursor: slotsOriginal[squadIndex].slots[0].player == null ? 'pointer' : 'not-allowed',
-                    borderColor: slotsOriginal[squadIndex].slots[0].player != null ? '#C0392B' : slot == 'SL' && team == 1 && squad == squadIndex ? '#066DA7' : '#30762D'
+                    borderColor: slotsOriginal[squadIndex].slots[0].player != null ? '#C0392B' : slot == 'SL' && team == 1 && squad == squadIndex ? '#066DA7' : '#30762D',
+                    backgroundColor: slot == 'SL' && team == 1 && squad == squadIndex ? '#153B51' : '#D9D9D9'
                 }}
             >
                 { slotsOriginal[squadIndex].slots[0].player == null ? slotItem.title : registeredUsername }
@@ -110,9 +113,10 @@ const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOrigina
                 }} 
                 className='event-modal-eventreg-slot-container'
                 style={{
-                    color: slotsOriginal[squadIndex].slots[slotIndex].player == null ? '#00000050' : '#000000',
+                    color: slotsOriginal[squadIndex].slots[slotIndex].player == null ? '#000000a1' : '#000000',
                     cursor: slotsOriginal[squadIndex].slots[slotIndex].player == null ? 'pointer' : 'not-allowed',
-                    borderColor: slotsOriginal[squadIndex].slots[slotIndex].player != null ? '#C0392B' : slot == slotIndex && team == 1 && squad == squadIndex ? '#066DA7' : '#30762D'
+                    borderColor: slotsOriginal[squadIndex].slots[slotIndex].player != null ? '#C0392B' : slot == slotIndex && team == 1 && squad == squadIndex ? '#066DA7' : '#30762D',
+                    backgroundColor: slot == slotIndex && team == 1 && squad == squadIndex ? '#153B51' : '#D9D9D9'
                 }}
             >
                 { slotsOriginal[squadIndex].slots[slotIndex].player == null ? slotItem.title : registeredUsername }
@@ -125,9 +129,10 @@ const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOrigina
                 className='event-modal-eventreg-slot-container' 
                 style={{ 
                     marginTop: '20px', 
-                    color: slotsOriginal.player == null ? '#00000050' : '#000000',
+                    color: slotsOriginal.player == null ? '#000000a1' : '#000000',
                     cursor: slotsOriginal.player == null ? 'pointer' : 'not-allowed',
-                    borderColor: slotsOriginal.player != null ? '#C0392B' : slot == 'CMD' && team == 0 ? '#066DA7' : '#30762D'
+                    borderColor: slotsOriginal.player != null ? '#C0392B' : slot == 'CMD' && team == 0 ? '#066DA7' : '#30762D',
+                    backgroundColor: slot == 'CMD' && team == 0 ? '#153B51' : '#D9D9D9'
                 }} 
                 onClick={ () => { 
                     if(slotsOriginal.player == null) {
@@ -146,9 +151,10 @@ const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOrigina
                 className='event-modal-eventreg-slot-container' 
                 style={{ 
                     marginTop: '20px', 
-                    color: slotsOriginal.player == null ? '#00000050' : '#000000',
+                    color: slotsOriginal.player == null ? '#000000a1' : '#000000',
                     cursor: slotsOriginal.player == null ? 'pointer' : 'not-allowed',
-                    borderColor: slotsOriginal.player != null ? '#C0392B' : slot == 'CMD' && team == 1 ? '#066DA7' : '#30762D'
+                    borderColor: slotsOriginal.player != null ? '#C0392B' : slot == 'CMD' && team == 1 ? '#066DA7' : '#30762D',
+                    backgroundColor: slot == 'CMD' && team == 1 ? '#153B51' : '#D9D9D9'
                 }}  
                 onClick={ () => { 
                     if(slotsOriginal.player == null) {
