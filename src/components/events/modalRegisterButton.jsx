@@ -15,6 +15,8 @@ const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOrigina
         if(butType == "SL_blue") id = slotsOriginal[squadIndex].slots[0].player
         if(butType == "blue") id = slotsOriginal[squadIndex].slots[slotIndex].player
         if(butType == "CMD_red" || butType == "CMD_blue") id = slotsOriginal.player 
+        
+        if(id == null) return
 
         const res = await axios.get(`${host}/api/developer/account/data/id?id=${id}`)
 
@@ -22,6 +24,7 @@ const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOrigina
             const tempData = JSON.parse(res.data.container.steam)
             setRegisteredUsername(tempData.personaname)
         } else {
+            console.log(`error id:`,id)
             console.error(res.data.err)
         }
     }

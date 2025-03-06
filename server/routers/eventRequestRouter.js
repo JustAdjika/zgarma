@@ -314,8 +314,6 @@ router.post('/accept', PermissionsCheck, async(req, res) => {
             slots[foundRequest.squad].slots[foundRequest.slot].player = foundRequest.userId
         }
 
-        console.log(JSON.stringify(slots))
-
         if(foundRequest.team === 'Red') {
             await event.update({
                 slotsTeam1: slots

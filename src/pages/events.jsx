@@ -9,6 +9,7 @@ import OpenEvent from '../components/events/openEvent.jsx';
 import ModalEventRemote from '../components/events/modalEventRemote.jsx';
 import ModalCreateEvent from '../components/events/modalCreateEvent.jsx';
 import ModalRegister from '../components/events/modalRegister.jsx';
+import ModalRegList from '../components/events/modalRegList.jsx';
 
 const Events = () => {
     const host = 'http://localhost:3000'
@@ -19,8 +20,12 @@ const Events = () => {
     const [isModalEventCreate, setIsModalEventCreate] = useState(false) // Состояние модального окна - Создание ивента
     const [isModalEventRemote, setIsModalEventRemote] = useState(false) // Состояние модального окна - Управление ивентом
     const [isModalEventRegister, setIsModalEventRegister] = useState(false) // Состояние модального окна - Регистрация на ивент
+    const [isModalEventReglist, setIsModalEventReglist] = useState(false)
+    
     const [modalRemoteEvent, setModalRemoteEvent] = useState({}) // Ивент, которым управляют в данный момент
     const [modalRegisterEvent, setModalRegisterEvent] = useState({}) // Ивент, на который регистрируются в данный момент
+    const [modalReglistEvent, setModalReglistEvent] = useState({})
+    
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
@@ -45,6 +50,15 @@ const Events = () => {
 
     return (
         <>
+            <ModalRegList 
+                host={host} 
+                setIsModalReglist={setIsModalEventReglist}
+                isModalReglist={isModalEventReglist}
+                setEvent={setModalReglistEvent}
+                event={modalReglistEvent}
+                setErrorMessage={setErrorMessage}
+            />
+
             <ModalRegister 
                 host={host} 
                 setIsModalEventRegister={setIsModalEventRegister}
@@ -107,7 +121,9 @@ const Events = () => {
                                 host={host} 
                                 eventListUpdate={eventListUpdate} 
                                 setModalRegisterEvent={setModalRegisterEvent} 
-                                setIsModalEventRegister={setIsModalEventRegister}/>
+                                setIsModalEventRegister={setIsModalEventRegister}
+                                setIsModalEventReglist={setIsModalEventReglist}
+                                setModalReglistEvent={setModalReglistEvent}/>
                             :
                             null
                         )) }

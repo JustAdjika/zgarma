@@ -14,3 +14,8 @@
     font-family: 'OpenSans_LightItalic';
     src: url('../../assets/Fonts/OpenSans-LightItalic.ttf');
 }
+
+@font-face {
+    font-family: 'OpenSans_SemiBold';
+    src: url('../../assets/Fonts/OpenSans-SemiBold.ttf');
+}
