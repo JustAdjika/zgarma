@@ -9,19 +9,16 @@ body {
     min-height: 100px;
     display: flex;
     flex-direction: column;
-    background-color: #353535;
+    background-color: #424242;
     border-radius: 5px;
-    padding: 20px;
+    padding: 10px 20px;
     margin-bottom: 20px;
+    border-radius: 5px;
+    position: relative;
 }
 
 .title-bug {
     font-size: 27px;
-}
-
-.bug-status {
-    font-size: 17px;
-    margin-top: 5px;
 }
 
 .container-info-bug {
@@ -46,10 +43,84 @@ body {
 
 /* Окошко с подробностями */
 .bug-details {
-    width: 390px;
-    min-height: 50px;
+    width: 380px;
+    height: 100px; /* Фиксированная высота */
     margin-top: 10px;
     padding: 10px;
-    background-color: #353535;
+    background-color: #303030;
     border-radius: 5px;
+    overflow-y: scroll; /* Добавляем вертикальный скроллбар */
+    overflow-x: hidden;
+    scrollbar-width: thin; /* Тонкий скроллбар для Firefox */
+    scrollbar-color: #555 #303030; /* Цвет полосы прокрутки */
+    word-wrap: break-word;
+}
+
+/* Для Chrome и Edge */
+.bug-details::-webkit-scrollbar {
+    width: 8px; /* Ширина скроллбара */
+}
+
+.bug-details::-webkit-scrollbar-track {
+    background: #303030; /* Цвет фона трека */
+    border-radius: 5px;
+}
+
+.bug-details::-webkit-scrollbar-thumb {
+    background: #555; /* Цвет ползунка */
+    border-radius: 5px;
+}
+
+.bug-details::-webkit-scrollbar-thumb:hover {
+    background: #777; /* Цвет ползунка при наведении */
+}
+
+/* Окошко с вариацией статуса бага */
+.bug-status {
+    font-size: 18px;
+    margin-top: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.status-container {
+    position: absolute;
+    top: 80px; 
+    left: 20px; 
+    width: 110px;
+    background-color: #272727;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    z-index: 10; 
+    align-items: center;
+    gap: 10px; 
+}
+
+#status-1 {
+    color: rgb(63, 63, 250);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#status-2 {
+    color: rgb(57, 207, 57);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#status-3 {
+    color: red;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#status-4 {
+    color: rgb(57, 207, 57);
+    font-size: 16px;
+    cursor: pointer;
 }
