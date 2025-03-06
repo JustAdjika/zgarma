@@ -51,6 +51,7 @@
     height: 15px;
     background-color: #1A1A1A;
     margin-right: 8px;
+    box-shadow: inset 0px 0px 4px 1px #00000025;
 }
 .event-modal-reglist-req-container>span {
     margin-left: 30px;
@@ -80,7 +81,7 @@
     width: 5px;
 }
 .event-modal-reglist-req-container:hover {
-    background-color: #303030;
+    background-color: #303030 !important;
 }
 .event-modal-reglist-report-container {
     height: 370px;
@@ -134,7 +135,7 @@
     margin-top: 15px;
     font-family: 'My Open Sans';
     border-radius: 5px;
-    font-size: 15pt;
+    font-size: 14pt;
     cursor: pointer;
     transition: 0.2s;
 }
@@ -151,7 +152,7 @@
     margin-top: 15px;
     font-family: 'My Open Sans';
     border-radius: 5px;
-    font-size: 15pt;
+    font-size: 14pt;
     cursor: pointer;
     transition: 0.2s;
 }

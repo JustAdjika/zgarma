@@ -60,8 +60,8 @@ const OpenEvent = ({setModalReglistEvent, setIsModalEventReglist, eventData, set
                             <div className='openevent-team-decorative-line'/>
                             <p className='openevent-info-team-content'>{ eventData.team1 }</p>
                             <div className='openevent-info-team-vehicle'>
-                                { vehicle1.map(element => (
-                                    <p>{ `${element.count}x ${element.title}` }</p>
+                                { vehicle1.map((element, index) => (
+                                    <p key={index}>{ `${element.count}x ${element.title}` }</p>
                                 ))}
                             </div>
                         </div>
@@ -70,8 +70,8 @@ const OpenEvent = ({setModalReglistEvent, setIsModalEventReglist, eventData, set
                             <div className='openevent-team-decorative-line' style={{ backgroundColor: '#066DA7' }}/>
                             <p className='openevent-info-team-content'>{ eventData.team2 }</p>
                             <div className='openevent-info-team-vehicle'>
-                                { vehicle2.map(element => (
-                                    <p>{ `${element.count}x ${element.title}` }</p>
+                                { vehicle2.map((element, index) => (
+                                    <p key={index}>{ `${element.count}x ${element.title}` }</p>
                                 ))}
                             </div>
                         </div>

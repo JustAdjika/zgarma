@@ -62,7 +62,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, setModalRegisterEvent, m
                 key: JSON.parse(Cookies.get("userData")).key,
                 eventId: modalRegisterEvent.id,
                 team: team == 0 ? 'Red' : 'Blue',
-                squad: squad+1,
+                squad: slot == 'CMD' ? 0 : squad+1,
                 slot: slot == 'SL' || slot == 'CMD' ? 0 : slot,
                 maybeSL: checkbox2,
                 maybeTL: checkbox1
