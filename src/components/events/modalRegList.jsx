@@ -79,6 +79,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
 
         if(res.data.status == 200) {
             getRequests()
+            updateEvent()
         } else {
             setErrorMessage(res.data.err)
             setTimeout(() => { setErrorMessage("") }, 3000)
