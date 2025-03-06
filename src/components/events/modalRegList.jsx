@@ -7,6 +7,8 @@ import '../../pages/Style/fonts.css'
 
 import ReglistItem from './reglistItem';
 import ReglistReport from './reglistReport';
+import ReglistSquad from './reglistSquad';
+import ReglistSlot from './reglistSlot';
 
 const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event, setErrorMessage }) => {
     const [reqests, setRequests] = useState([])
@@ -22,6 +24,19 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
 
         if(res.data.status == 200) {
             setRequests(res.data.container)
+        } else {
+            setErrorMessage(res.data.err)
+            setTimeout(() => {setErrorMessage("")}, 3000)
+        }
+    }
+
+    const updateEvent = async () => {
+        const res = await axios.get(`${host}/api/developer/event/data/all`)
+
+        if(res.data.status == 200) {
+            const events = res.data.container
+            
+            setEvent(events.filter(item => item.id == event.id)[0])
         } else {
             setErrorMessage(res.data.err)
             setTimeout(() => {setErrorMessage("")}, 3000)
@@ -92,7 +107,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
 
     return (
         <div onClick={ () => { setIsModalReglist(false) } } className='event-modal-reglist-main' style={{ display: isModalReglist ? 'flex' : 'none' }}>
-            <div onClick={(e) => e.stopPropagation()} className='event-modal-reglist-container'>
+            <div onClick={(e) => { e.stopPropagation()}} className='event-modal-reglist-container'>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <h2 className='event-modal-reglist-title' style={{ fontSize: event?.title?.length > 23 ? '23px' : '30px'}}>{event.title}</h2>
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '650px', height: '100%' }}>
@@ -122,8 +137,41 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                         </div>
                     </div>
                 </div>
-                <div style={{ display: 'flex' }}>
-
+                <div style={{ display: 'flex', flexDirection: 'column', width: '660px', height: '800px', marginRight: '30px' }}>
+                    <div style={{ display: 'flex', height: '40px', marginBottom: '13px' }}>
+                        <div className='event-modal-reglist-slots-header' style={{ marginRight: '30px' }}>
+                            <h2 style={{color:'#C0392B'}}>Красная сторона</h2>
+                            <div style={{backgroundColor: '#C0392B'}}/>
+                        </div>
+                        <div className='event-modal-reglist-slots-header'>
+                            <h2 style={{color:'#0B94E0'}}>Синяя сторона</h2>
+                            <div style={{backgroundColor: '#0B94E0'}}/>
+                        </div>
+                    </div>
+                    <div className='event-modal-reglist-slots-main'>
+                        <div className='event-modal-reglist-slots-container' style={{ marginRight: '30px' }}>
+                            <ReglistSlot 
+                                host={host}
+                                setErrorMessage={setErrorMessage}
+                                event={event}
+                                currentRequest={selectedRequest}
+                                reqests={reqests}
+                                type={'CMD'}
+                                team={0}
+                            />
+                        </div>
+                        <div className='event-modal-reglist-slots-container'>
+                            <ReglistSlot 
+                                host={host}
+                                setErrorMessage={setErrorMessage}
+                                event={event}
+                                currentRequest={selectedRequest}
+                                reqests={reqests}
+                                type={'CMD'}
+                                team={1}
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
