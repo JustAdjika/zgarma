@@ -12,6 +12,7 @@ const router = express.Router();
 router.use(bodyParser.json());
 
 const botKey = process.env.BOT_ACCESS_KEY
+const host = process.env.BASIC_URL
 
 console.log(`\x1b[34m |!| BUG_TICKETS ROUTER READY |!|\x1b[0m`);
 
@@ -82,7 +83,7 @@ router.post('/add', async(req,res) => {
             botKey: botKey
         }
 
-        axios.post('http://localhost:3000/api/developer/bot/bugtickets', botData)
+        axios.post(`${host}/api/developer/bot/bugtickets`, botData)
 
         res.json({
             status: 200

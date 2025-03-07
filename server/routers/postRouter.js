@@ -12,6 +12,7 @@ const router = express.Router();
 router.use(bodyParser.json());
 
 const botKey = process.env.BOT_ACCESS_KEY
+const host = process.env.BASIC_URL
 
 console.log(`\x1b[34m |!|    POST ROUTER READY     |!| \x1b[0m`);
 
@@ -45,7 +46,7 @@ router.post('/add', PermissionsCheck, async(req, res) => {
             votes: [],
         });
 
-        axios.post('http://localhost:3000/api/developer/bot/post', { ...newPost.dataValues, botKey: botKey })
+        axios.post(`${host}/api/developer/bot/post`, { ...newPost.dataValues, botKey: botKey })
 
         res.json({
             status: 200

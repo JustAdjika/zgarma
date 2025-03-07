@@ -4,11 +4,9 @@ import axios from 'axios';
 import './Style/terminal.css';
 import '../pages/Style/fonts.css'
 
-const Terminal = ({ setErrorMessage }) => {
+const Terminal = ({ setErrorMessage, host }) => {
     const [stringArr, setStringArr] = useState([])
     const [inputData, setInputData] = useState("")
-
-    const host = "http://localhost:3000"
 
     const handleExecute = () => {
         try {
