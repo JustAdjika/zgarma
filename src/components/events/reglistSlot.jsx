@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, type, team }) => {
+const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, type, team, squad, slot }) => {
     const [slotTitle, setSlotTitle] = useState("")
     const [slots, setSlots] = useState([])
     const [style, setStyle] = useState("open")
@@ -39,6 +39,27 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
                 setStyle('close')
             } else {
                 setSlotTitle("Командир стороны")
+                setStyle('open')
+            }
+        }
+
+        if(type == 'SL') {
+            if( slots[team][squad].slots[0].player != null ) {
+                getUser(slots[team][squad].slots[0].player).then(user => setSlotTitle(JSON.parse(user.steam).personaname))
+                setStyle('close')
+            } else {
+                setSlotTitle(slots[team][squad].slots[0].title)
+                setStyle('open')
+            }
+        }
+
+        if(type == 'classic') {
+            if( slots[team][squad].slots[slot].player != null ) {
+                getUser(slots[team][squad].slots[slot].player).then(user => setSlotTitle(JSON.parse(user.steam).personaname))
+                setStyle('close')
+            } else {
+                setSlotTitle(slots[team][squad].slots[slot].title)
+                setStyle('open')
             }
         }
     }, [slots])
@@ -52,6 +73,22 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
             if(reqests[currentRequest].squad != 0) return
             
             if(teamId == team) {
+                setStyle('select')
+            }
+        }
+
+        if(type == 'SL') {
+            if(reqests[currentRequest].squad != squad ) return
+            
+            if(teamId == team && reqests[currentRequest].slot == 0) {
+                setStyle('select')
+            }
+        }
+
+        if(type == 'classic') {
+            if(reqests[currentRequest].squad != squad) return
+            
+            if(teamId == team && reqests[currentRequest].squad == squad && reqests[currentRequest].slot == slot) {
                 setStyle('select')
             }
         }

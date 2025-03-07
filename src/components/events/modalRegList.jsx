@@ -12,6 +12,8 @@ import ReglistSlot from './reglistSlot';
 
 const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event, setErrorMessage }) => {
     const [reqests, setRequests] = useState([])
+    const [slotsRed, setSlotsRed] = useState([])
+    const [slotsBlue, setSlotsBlue] = useState([])
 
     const [selectedRequest, setSelectedRequest] = useState(null)
 
@@ -45,6 +47,11 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
 
     useEffect(() => {
         getRequests()
+
+        if(!event.id) return
+
+        setSlotsRed(JSON.parse(event.slotsTeam1).filter((item, index) => index != 0))
+        setSlotsBlue(JSON.parse(event.slotsTeam2).filter((item, index) => index != 0))
     }, [event])
 
     const handleRequestAccept = async () => {
@@ -160,6 +167,19 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                 type={'CMD'}
                                 team={0}
                             />
+                            { slotsRed.map((squadItem, squadIndex ) => (
+                                <ReglistSquad 
+                                    host={host}
+                                    setErrorMessage={setErrorMessage}
+                                    event={event}
+                                    currentRequest={selectedRequest}
+                                    reqests={reqests}
+                                    team={0}
+                                    squad={squadItem}
+                                    squadIndex={squadIndex}
+                                    slots={slotsRed}
+                                />
+                            )) }
                         </div>
                         <div className='event-modal-reglist-slots-container'>
                             <ReglistSlot 
@@ -171,6 +191,19 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                 type={'CMD'}
                                 team={1}
                             />
+                            { slotsBlue.map((squadItem, squadIndex ) => (
+                                <ReglistSquad 
+                                    host={host}
+                                    setErrorMessage={setErrorMessage}
+                                    event={event}
+                                    currentRequest={selectedRequest}
+                                    reqests={reqests}
+                                    team={1}
+                                    squad={squadItem}
+                                    squadIndex={squadIndex}
+                                    slots={slotsBlue}
+                                />
+                            )) }
                         </div>
                     </div>
                 </div>
