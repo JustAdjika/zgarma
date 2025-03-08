@@ -4,7 +4,7 @@ import './Style/readyEvent.css'
 import '../../pages/Style/fonts.css'
 import triangle from '../../assets/triangle.svg'
 
-const ReadyEvent = ({eventData, setIsModalEventRemote, setModalRemoteEvent}) => {
+const ReadyEvent = ({isAdmin, eventData, setIsModalEventRemote, setModalRemoteEvent}) => {
     const [rotated, setRotated] = useState(true);
 
     const handleHide = () => {
@@ -19,7 +19,7 @@ const ReadyEvent = ({eventData, setIsModalEventRemote, setModalRemoteEvent}) => 
             </div>
             <div className='readyevent-center-container'>
                 <img onClick={ handleHide } src={triangle} alt="" width={40} height={40} className='readyevent-button-info-more' style={{ transform: rotated ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.3s ease" }}/>
-                <button onClick={ () => { setModalRemoteEvent(eventData); setIsModalEventRemote(true) } } className='readyevent-button-event-remote'>Управление игрой</button>
+                <button style={{ display: isAdmin ? 'block' : 'none' }} onClick={ () => { setModalRemoteEvent(eventData); setIsModalEventRemote(true) } } className='readyevent-button-event-remote'>Управление игрой</button>
             </div>
             <div className='readyevent-info-container' style={{ display: rotated ? 'none' : 'flex' }}>
                 <div className='readyevent-info-decorative-line'/>

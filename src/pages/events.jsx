@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 import './Style/events.css'
 import './Style/fonts.css'
@@ -15,6 +16,7 @@ const Events = () => {
     const host = 'http://localhost:3000'
     const [events, setEvents] = useState([])
     const [eventList, eventListUpdate] = useState(0)
+    const [isAdmin, setIsAdmin] = useState(false)
 
     // MODAL STATE
     const [isModalEventCreate, setIsModalEventCreate] = useState(false) // Состояние модального окна - Создание ивента
@@ -33,8 +35,20 @@ const Events = () => {
             const res = await axios.get(`${host}/api/developer/event/data/all`)
             setEvents(res.data.container)
         }
+        const adminCheck = async () => {
+            if(!JSON.parse(Cookies.get("userData"))) return
+            const res = await axios.get(`${host}/api/developer/adminlist/remote/isAdmin?id=${JSON.parse(Cookies.get('userData')).id}`)
+
+            if(res.data.status == 200) {
+                setIsAdmin(res.data.container)
+            } else {
+                setErrorMessage(res.data.err)
+                setTimeout(() => setErrorMessage(""), 3000)
+            }
+        }
 
         getEvents()
+        adminCheck()
     }, [])
 
     useEffect(() => {
@@ -45,7 +59,6 @@ const Events = () => {
 
         getEvents()
     }, [eventList])
-
 
 
     return (
@@ -87,7 +100,7 @@ const Events = () => {
                     <div className='event-ready-title-container'>
                         <div className='event-ready-title-up-container'>
                             <h1>Анонсы игр</h1>
-                            <button className='event-button-create-game' onClick={ () => { setIsModalEventCreate(true) } }>Создать игру</button>
+                            <button className='event-button-create-game' style={{ alignItems: 'center', justifyContent: 'center', display: isAdmin ? 'flex' : 'none' }} onClick={ () => { setIsModalEventCreate(true) } }>Создать игру</button>
                         </div>
                         <div className='event-title-decorative-line'></div>
                     </div>
@@ -97,7 +110,8 @@ const Events = () => {
                             <ReadyEvent 
                                 key={event.id || index} 
                                 eventData={event} 
-                                setIsModalEventRemote={setIsModalEventRemote} 
+                                setIsModalEventRemote={setIsModalEventRemote}
+                                isAdmin={isAdmin} 
                                 setModalRemoteEvent={setModalRemoteEvent} />
                             :
                             null
@@ -116,6 +130,7 @@ const Events = () => {
                             event.status == 'OPEN' ?
                             <OpenEvent 
                                 key={event.id || index} 
+                                isAdmin={isAdmin}
                                 eventData={event} 
                                 setErrorMessage={setErrorMessage} 
                                 host={host} 

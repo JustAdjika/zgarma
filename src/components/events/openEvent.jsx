@@ -6,7 +6,7 @@ import './Style/openEvent.css'
 import '../../pages/Style/fonts.css'
 import triangle from '../../assets/triangle.svg'
 
-const OpenEvent = ({setModalReglistEvent, setIsModalEventReglist, eventData, setErrorMessage, host, eventListUpdate, setIsModalEventRegister, setModalRegisterEvent}) => {
+const OpenEvent = ({isAdmin, setModalReglistEvent, setIsModalEventReglist, eventData, setErrorMessage, host, eventListUpdate, setIsModalEventRegister, setModalRegisterEvent}) => {
     const [rotated, setRotated] = useState(true);
 
     const handleHide = () => {
@@ -43,7 +43,7 @@ const OpenEvent = ({setModalReglistEvent, setIsModalEventReglist, eventData, set
             </div>
             <div className='openevent-center-container'>
                 <img onClick={ handleHide } src={triangle} alt="" width={40} height={40} className='openevent-button-info-more' style={{ transform: rotated ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.3s ease" }}/>
-                <button className='openevent-button-requests-open' onClick={() => { setIsModalEventReglist(true); setModalReglistEvent(eventData) }} >Просмотр заявок</button>
+                <button style={{ display: isAdmin ? 'block' : 'none' }} className='openevent-button-requests-open' onClick={() => { setIsModalEventReglist(true); setModalReglistEvent(eventData) }} >Просмотр заявок</button>
                 <span className='openevent-mod-download-container'>Нажмите, чтобы <a href={`${host}/api/developer/event/data/download/modpack/${eventData.id}`} className='openevent-button-mod-download'>скачать сборку</a></span>
             </div>
             <div className='openevent-info-container' style={{ display: rotated ? 'none' : 'flex' }}>
@@ -77,7 +77,7 @@ const OpenEvent = ({setModalReglistEvent, setIsModalEventReglist, eventData, set
                         </div>
                     </div>
                     <button className='openevent-button-register' onClick={ () => { setIsModalEventRegister(true); setModalRegisterEvent(eventData) } }>Информация и слоты</button>
-                    <button className='openevent-button-close-game' onClick={ handleCloseEvent }>Закончить игру</button>
+                    <button style={{ display: isAdmin ? 'block' : 'none' }} className='openevent-button-close-game' onClick={ handleCloseEvent }>Закончить игру</button>
                 </div>
             </div>
             <div className='openevent-hide-info-container' style={{ display: rotated ? 'flex' : 'none' }}>
