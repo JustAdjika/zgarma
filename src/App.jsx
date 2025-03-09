@@ -7,6 +7,7 @@ import Announcement from './pages/annoucement.jsx';
 import DiscordAuthCallback from './pages/discordAuthCallback.jsx'
 import Events from './pages/events.jsx'
 import PathchesPage from './pages/patches.jsx';
+import RulesPage from './pages/rules.jsx';
 
 
 import './App.css'
@@ -14,19 +15,26 @@ import './App.css'
 function App() {
   const [count, setCount] = useState(0)
 
+  window.onerror = function (message, source, lineno, colno, error) {
+    if (message.includes("*,:x")) {
+        alert("Ошибка: Возможно, одно из расширений браузера мешает работе сайта. Попробуйте отключить расширения и перезагрузить страницу.");
+    }
+};
+
   return (
-    <div className='div-main'>
-      <Router> 
-        <Routes>
-          <Route path='/main' element={<ArmaZgMain />} /> 
-          <Route path='/announcement' element={<Announcement />} />
-          <Route path='/events' element={<Events />} />
-          <Route path='/auth/discord/callback' element={<DiscordAuthCallback />} />
-          <Route path='/patches' element={<PathchesPage />} />
-        </Routes>
-      </Router>
-    </div>
-  )
-}
+      <div className='div-main'>
+        <Router> 
+          <Routes>
+            <Route path='/main' element={<ArmaZgMain />} /> 
+            <Route path='/announcement' element={<Announcement />} />
+            <Route path='/events' element={<Events />} />
+            <Route path='/auth/discord/callback' element={<DiscordAuthCallback />} />
+            <Route path='/patches' element={<PathchesPage />} />
+            <Route path='/rules' element={<RulesPage />} />
+          </Routes>
+        </Router>
+      </div>
+    )
+};
 
 export default App;

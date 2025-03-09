@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Layouts from "../layouts/layout";
 import './Style/patches.css';
 
 import PTCHadmin from "../components/PTCHadminMSG";
 import PTCHbug from "../components/PTCHbugList";
+import axios from "axios";
+import Cookies from "js-cookie";
     
 
 const PathchesPage = () => {
@@ -30,30 +33,52 @@ const PathchesPage = () => {
     const [currentSteamUsername, setCurrentSteamUsername] = useState("Не привязан стим")
     const [isAdmin, setIsAdmin] = useState(true)
 
+
+    // Checkbox модальное окно 
+    const [checkboxModal, setCheckboxModal] = useState(false);
+
     
     // Состояние для ошибки
     const [errorMessage, setErrorMessage] = useState("");
 
 
-      // Функция для отправки объявления
-      const handleSubmit = () => {
-        if (!title.trim() || !message.trim()) {
-            setErrorMessage("Пожалуйста, заполните заголовок и текст сообщения.");
-            setTimeout(() => setErrorMessage(""), 5000);
-            return;
-        }
+    // Функция для отправки объявления
+    const handleSubmit = async () => {
+    if (!title.trim() || !message.trim()) {
+        setErrorMessage("Пожалуйста, заполните заголовок и текст сообщения.");
+        setTimeout(() => setErrorMessage(""), 5000);
+        return;
+    }
+    console.log(currentUser);
     
-        setPatches(prevPatches => [
-            ...prevPatches,
-            { id: Date.now(), title, content: message, date: "06.03.25" }
-        ]);
-    
-        setTitle("");
-        setMessage("");
+
+    //POST Запрос на добавление сообщения администратора
+    const resFixList = await axios.post(`${host}/api/developer/bugfix/notes/add`, {
+        title: title,
+        content: message, 
+        date: new Date().toISOString(), 
+        key: currentUser.key
+    });
+    if(resFixList.data.status !==200) {
+        setErrorMessage(resFixList.data.err);
+        setTimeout(() => setErrorMessage(""), 5000); // Скрывает через 5 сек
+        return;  // Прерываем выполнение функции
+    }
+
+    setPatches(prevPatches => [
+        ...prevPatches,
+        { id: Date.now(), title, content: message, date: new Date().toLocaleDateString() }
+    ]);
+
+    setTitle("");
+    setMessage("");
+
+    window.location.reload();
     };
 
+
     // Функция для отправки оповещения об ошибки
-    const handleModalSend = () => {
+    const handleModalSend = async () => {
         if(!description.trim() || !detailedDescription.trim()) {
             setErrorMessage("Пожалуйста, заполните заголовок и текст сообщения.");
             setTimeout(() => setErrorMessage(""), 5000);
@@ -70,15 +95,95 @@ const PathchesPage = () => {
 
         console.log(description);
         console.log(detailedDescription);
+
         
-    }
 
+        // POST Запрос на добавление нового тикета
+        const resFixTicket = await axios.post(`${host}/api/developer/bugfix/tickets/add`, {
+            title: description,
+            content: detailedDescription, 
+            date: new Date().toISOString(), 
+            key: currentUser.key,
+            isRepeat: document.getElementById('modal-input').checked 
+        });
+        if(resFixTicket.data.status !==200) {
+            setErrorMessage(resFixTicket.data.err);
+            setTimeout(() => setErrorMessage(""), 5000); // Скрывает через 5 сек
+            return;  // Прерываем выполнение функции
+        }
 
+        setPatches(prevPatches => [
+            ...prevPatches,
+            { id: Date.now(), title, content: message, date: new Date().toLocaleDateString() }
+        ]);
+
+        setTitle("");
+        setMessage("");
+
+        window.location.reload();
+    };
+        
 
     // Функция для открытия модального окошка
     const toggleModal = () => {
         setIsModal(prevState => !prevState);
-    };
+    }
+
+//=======================================================================================================================================
+//=======================================================================================================================================
+//Бэк get запросы
+
+    // GET запрос на получение сообщения о изменениях
+    useEffect(() => {
+        const GetFixList = async () => {
+            try {
+                const resFixList = await axios.get(`${host}/api/developer/bugfix/notes/data/all`);
+                const FixList = resFixList.data.container;
+    
+                if (!FixList) {
+                    console.error("Ошибка: Пустой ответ от сервера");
+                    console.log(FixList);
+                    return;
+                }
+    
+                console.log("Полученные данные:", FixList); // Для проверки
+    
+                setPatches(FixList); // Обновляем состояние
+            } catch (error) {
+                console.error("Ошибка загрузки данных:", error);
+            }
+        };
+    
+        GetFixList();
+        if(!JSON.parse(Cookies.get(`userData`))) return;
+        setCurrentUser(JSON.parse(Cookies.get('userData')));
+    }, []);
+
+
+
+    // GET запрос на получение тикета
+    useEffect(() => {
+        const GetFixTickets = async () => {
+            try {
+                const resFixTickets = await axios.get(`${host}/api/developer/bugfix/tickets/data/all`);
+                const FixTickets = resFixTickets.data.container;
+
+                if (!FixTickets) {
+                    console.error("Ошибка: Пустой ответ от сервера");
+                    return;
+                }
+
+                console.log("Полученные тикеты:", FixTickets); 
+                setBugReports(FixTickets); 
+
+            } catch (error) {
+                console.error("Ошибка загрузки тикетов:", error);
+            }
+        };
+
+        GetFixTickets();
+    }, []);
+
 
     return (
         <div onClick={ (e) => e.stopPropagation() } className="main-container-ptch">
@@ -105,7 +210,11 @@ const PathchesPage = () => {
                             />
                         <div className="container-check-modal">
                             <div className="modal-PTCH-dop">Поставьте галочку, если уже обращался с этой проблемой</div>
-                            <input type="checkbox" name="check-modal" id="checkbox-modal-PTCH" />
+                            <input type="checkbox" id='modal-input' className="modal-inputik"/>
+                            <label htmlFor="modal-input"></label>
+                            <div className="decoration-container-modal">
+                                <div className="decoration-modal-container"></div>
+                            </div>
                         </div>
                         <div className="container-but-PTCH"><button id="button-modal-PTCH" onClick={handleModalSend}>Отправить</button></div>
                     </div>
@@ -154,8 +263,8 @@ const PathchesPage = () => {
                         <PTCHbug 
                             key={index}
                             date={bugs.date}
-                            description={bugs.description}
-                            detailedDescription={bugs.detailedDescription}
+                            description={bugs.title}
+                            detailedDescription={bugs.content}
                         />
                     ))}
                 </div>
@@ -167,7 +276,6 @@ const PathchesPage = () => {
                 </div>
             )}
         </div>
-    )
-}
+    )}
 
 export default PathchesPage;

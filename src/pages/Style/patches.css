@@ -231,6 +231,7 @@ textarea, input {
 .modal-PTCH-dop {
     font-size: 17px;
     margin-top: 20px;
+    width: 250px;
 }
 
 /* Инпуты модального окна */
@@ -296,4 +297,41 @@ textarea, input {
     border-radius: 5px;
     border: none;
     cursor: pointer;
+    margin-top: 15px;
+}
+
+.container-check-modal {
+    display: flex;
+    flex-direction: row;
+}
+
+/* Модальное окошко ИНПУТИК */
+.modal-inputik {
+    display: none;
+}
+
+.decoration-container-modal {
+    width: 35px;
+    height: 35px;
+    background-color: #d9d9d9;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    margin-right: 10px;
+    margin-top: 30px;
+    margin-left: 5px;
+}
+
+.decoration-modal-container {
+    width: 20px;
+    height: 20px;
+    background-color: rgba(150, 150, 150);
+    color: black;
+    display: flex;
+    border-radius: 3px;
+    box-shadow: 0px 0px 3px black ;
+    font-family: "Outist";
+    font-size: 17pt;
 }

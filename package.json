@@ -23,6 +23,7 @@
     "express-fileupload": "^1.5.1",
     "express-session": "^1.18.1",
     "fs": "^0.0.1-security",
+    "jquery": "^3.7.1",
     "js-cookie": "^3.0.5",
     "mysql": "^2.18.1",
     "mysql2": "^3.11.5",

@@ -1,0 +1,39 @@
+.banner-container-rules {
+    display: flex;
+    flex-direction: row;
+}
+
+.bunner-text-rules {
+    display: flex;
+    flex-direction: column;
+}
+
+.title-bunner {
+    font-size: 90pt;
+    width: 1100px;
+    height: 120px;
+    padding: 30px;
+    background-color: white;
+    color: black;
+}
+
+.decorative-container-bunner {
+    height: 80px;
+    width: 900px;
+    background-color: gray;
+}
+
+.text-bunner {
+    width: 1100px;
+    font-size: 18pt;
+    color: rgb(160, 160, 160);
+    padding: 50px;
+}
+
+.decoration-line-rules {
+    height: 4px;
+    background-color: white;
+    width: 1700px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
