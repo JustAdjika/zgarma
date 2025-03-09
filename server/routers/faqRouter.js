@@ -8,6 +8,7 @@ import FAQ_TAB from '../database/faq.js';
 import ACCOUNTS_TAB from '../database/accounts.js';
 
 import PermissionsCheck from '../modules/permissions.js'
+import AccountCheck from '../modules/accountCheck.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -20,7 +21,7 @@ console.log(`\x1b[34m |!|     FAQ ROUTER READY     |!|\x1b[0m`);
 
 
 // IMAGE UPLOAD
-router.post('/imgupload', PermissionsCheck, async(req,res) => {
+router.post('/imgupload', AccountCheck, PermissionsCheck, async(req,res) => {
     try {
         const userKey = req.body.key
 
@@ -84,7 +85,7 @@ router.post('/imgupload', PermissionsCheck, async(req,res) => {
 
 
 // FAQ OBJECT LOADER
-router.put('/upload', PermissionsCheck, async(req,res) => {
+router.put('/upload', AccountCheck, PermissionsCheck, async(req,res) => {
     try {
         const data = req.body
 

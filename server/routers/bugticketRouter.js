@@ -7,6 +7,7 @@ import ACCOUNTS_TAB from '../database/accounts.js';
 
 import GetDateInfo from '../modules/dateInfo.js'
 import PermissionsCheck from '../modules/permissions.js'
+import AccountCheck from '../modules/accountCheck.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -17,7 +18,7 @@ const host = process.env.BASIC_URL
 console.log(`\x1b[34m |!| BUG_TICKETS ROUTER READY |!|\x1b[0m`);
 
 // GET ALL TICKETS
-router.get('/data/all', PermissionsCheck, async(req,res) => {
+router.get('/data/all', async(req,res) => {
     try{
         const container = await BUG_TICKETS_TAB.findAll()
 
@@ -43,7 +44,7 @@ router.get('/data/all', PermissionsCheck, async(req,res) => {
 });
 
 // ADD NEW TICKET
-router.post('/add', async(req,res) => {
+router.post('/add', AccountCheck, async(req,res) => {
     try{
         const data = req.body
 
@@ -98,7 +99,7 @@ router.post('/add', async(req,res) => {
 });
 
 // CHANGE TICKET STATUS
-router.patch('/status/set', PermissionsCheck, async(req,res) => {
+router.patch('/status/set', AccountCheck, PermissionsCheck, async(req,res) => {
     try{
         const data = req.body
 
