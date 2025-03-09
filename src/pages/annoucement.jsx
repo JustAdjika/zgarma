@@ -179,7 +179,7 @@ const Announcement = () => {
                 <button style={{ display: isAdmin && currentUser.id ? 'inline-block' : 'none' }} onClick={ () => { setIsTerminalOpen(!isTerminalOpen) } }>Терминал { isTerminalOpen ? 'Открыт' : 'Закрыт' }</button>
                 { inDiscord ? null : <p>Зайдите на наш дискорд сервер!</p> }
             </nav>
-            {isTerminalOpen ? <Terminal setErrorMessage = {setErrorMessage} /> : null}
+            {isTerminalOpen ? <Terminal setErrorMessage = {setErrorMessage} host={host} /> : null}
             {/* Div с картинкой */}
             <div className="background-banner">
                 <div className="title-bunner"> ZG ARMA 3</div>
@@ -263,6 +263,7 @@ const Announcement = () => {
                                 voteIndex={vote.id}
                                 currentUser={currentUser}
                                 votes={vote.votes}
+                                host={host}
                             />
                         ))}
                     </div>

@@ -3,13 +3,11 @@ import axios from "axios";
 import './Style/ANNvote.css';
 import '../pages/Style/fonts.css'
 
-function AnnVote({ title, content, date, options, voteIndex, currentUser, votes }) {
+function AnnVote({ title, content, date, options, voteIndex, currentUser, votes, host }) {
 
     // Состояние для хранения выбранного чекбокса
     const [selectedOption, setSelectedOption] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
-
-    const host = "http://localhost:3000"
 
     useEffect( () => {
         

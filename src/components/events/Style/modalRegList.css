@@ -185,3 +185,101 @@
 .event-modal-reglist-report-reason-input::-webkit-scrollbar {
     width: 5px;
 }
+.event-modal-reglist-slots-header {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 300px;
+}
+.event-modal-reglist-slots-header>h2 {
+    font-weight: lighter;
+    color: #D9D9D9;
+    margin: 0px;
+}
+.event-modal-reglist-slots-header>div {
+    width: 100%;
+    height: 3px;
+}
+.event-modal-reglist-slots-main {
+    display: flex;
+    /* background-color: green; */
+    height: 760px;
+}
+.event-modal-reglist-slots-container {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.event-modal-reglist-slots-main::-webkit-scrollbar-track {
+    background: #1A1A1A; /* Цвет фона */
+}
+/* Полоска скроллбара */
+.event-modal-reglist-slots-main::-webkit-scrollbar-thumb {
+    background: #D9D9D9;
+    border-radius: 10px; /* Цвет полоски */
+}
+/* Сам скроллбар */
+.event-modal-reglist-slots-main::-webkit-scrollbar {
+    width: 5px;
+}
+.reglistSlot-main-container-open {
+    background-color: #D9D9D9;
+    overflow: hidden;
+    height: 30px;
+    width: 270px;
+    border: solid 3px #30762D;
+    color: #000;
+    font-family: 'My Open Sans';
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    margin-bottom: 2px;
+}
+.reglistSlot-main-container-select {
+    background-color: #153B51;
+    overflow: hidden;
+    height: 30px;
+    width: 270px;
+    border: solid 3px #066DA7;
+    color: #000;
+    font-family: 'My Open Sans';
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    margin-bottom: 2px;
+}
+.reglistSlot-main-container-close {
+    background-color: #D9D9D9;
+    overflow: hidden;
+    height: 30px;
+    width: 270px;
+    border: solid 3px #C0392B;
+    color: #000;
+    font-family: 'My Open Sans';
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    margin-bottom: 2px;
+}
+.reglistSquad-main-container {
+    /* height: 100px; */
+    width: 300px;
+    background-color: #363636;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    border-radius: 5px;
+    align-items: center;
+    padding-bottom: 30px;
+}
+.reglistSquad-main-container>h2 {
+    color: #D9D9D9;
+    font-weight: lighter;
+    font-size: 15pt;
+    margin: 0px;
+    margin-top: 10px;
+    margin-left: 25px;
+    overflow: hidden;
+    width: 275px;
+}

@@ -1,22 +1,26 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import axios from 'axios';
 
 import POSTS_TAB from '../database/posts.js';
 import ACCOUNTS_TAB from '../database/accounts.js';
 
 import GetDateInfo from '../modules/dateInfo.js'
 import PermissionsCheck from '../modules/permissions.js'
-import axios from 'axios';
+import AccountCheck from '../modules/accountCheck.js'
+
+
 
 const router = express.Router();
 router.use(bodyParser.json());
 
 const botKey = process.env.BOT_ACCESS_KEY
+const host = process.env.BASIC_URL
 
 console.log(`\x1b[34m |!|    POST ROUTER READY     |!| \x1b[0m`);
 
 // ADD POST
-router.post('/add', PermissionsCheck, async(req, res) => {
+router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
     try{
         const data = req.body;
 
@@ -45,7 +49,7 @@ router.post('/add', PermissionsCheck, async(req, res) => {
             votes: [],
         });
 
-        axios.post('http://localhost:3000/api/developer/bot/post', { ...newPost.dataValues, botKey: botKey })
+        axios.post(`${host}/api/developer/bot/post`, { ...newPost.dataValues, botKey: botKey })
 
         res.json({
             status: 200
@@ -85,7 +89,7 @@ router.get('/data/all', async(req, res) => {
 });
 
 // ADD VOTE 
-router.put('/vote/add', async(req, res) => {
+router.put('/vote/add', AccountCheck, async(req, res) => {
     try{
         const data = req.body;
 

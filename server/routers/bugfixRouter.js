@@ -7,6 +7,7 @@ import ACCOUNTS_TAB from '../database/accounts.js';
 
 import GetDateInfo from '../modules/dateInfo.js'
 import PermissionsCheck from '../modules/permissions.js'
+import AccountCheck from '../modules/accountCheck.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -42,7 +43,7 @@ router.get('/data/all', async(req,res) => {
 });
 
 // ADD NEW PATCH NOTE
-router.post('/add', PermissionsCheck, async(req,res) => {
+router.post('/add', AccountCheck, PermissionsCheck, async(req,res) => {
     try{
         const data = req.body
 
