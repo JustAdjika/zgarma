@@ -330,3 +330,11 @@ textarea, input {
     margin-right: 20px;
     border-radius: 10px;
 }
+#input-Lside-first::placeholder {
+    color: #00000070;
+    letter-spacing: 0.1px;
+}
+#input-Lside-second::placeholder {
+    color: #00000070;
+    letter-spacing: 0.1px;
+}
