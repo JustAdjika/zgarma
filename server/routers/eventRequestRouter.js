@@ -9,6 +9,7 @@ import NOTICES_TAB from '../database/notices.js'
 import GetDateInfo from '../modules/dateInfo.js'
 import PermissionsCheck from '../modules/permissions.js'
 import AccountCheck from '../modules/accountCheck.js'
+import SteamCheck from '../modules/steamCheck.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -57,7 +58,7 @@ router.post('/data/all', AccountCheck, PermissionsCheck, async(req, res) => {
 
 
 // ADD NEW REQUEST
-router.post('/add', AccountCheck, async(req, res) => {
+router.post('/add', SteamCheck, async(req, res) => {
     try{
         const data = req.body
 

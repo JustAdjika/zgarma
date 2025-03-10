@@ -7,7 +7,7 @@ import '../../pages/Style/fonts.css'
 
 import ModalRegisterButton from './modalRegisterButton';
 
-const ModalRegister = ({ host, setIsModalEventRegister, setModalRegisterEvent, modalRegisterEvent, isModalEventRegister, setErrorMessage }) => {
+const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegisterEvent, isModalEventRegister, setErrorMessage }) => {
     const [checkbox1, setCheckbox1] = useState(false)
     const [checkbox2, setCheckbox2] = useState(false)
     const [slotCount, setSlotCount] = useState({
@@ -126,7 +126,8 @@ const ModalRegister = ({ host, setIsModalEventRegister, setModalRegisterEvent, m
                             <div style={{ backgroundColor: checkbox2 ? '#28272E' : '#969696' }} />
                         </div>
                     </label>
-                    <button className='event-modal-eventreg-sendRequest' onClick={ handleSendRequest }>Отправить заявку</button>
+                    <button style={{ display: isAccount ? 'block' : 'none' }} className='event-modal-eventreg-sendRequest' onClick={ handleSendRequest }>Отправить заявку</button>
+                    <p style={{ color: '#C0712B', display: isAccount ? 'none' : 'flex' }}>Чтобы отправить заявку, войдите в аккаунт и привяжите Steam!</p>
                     <p style={{ display: reqState ? 'flex' : 'none' }} id='event-modal-eventreg-sendRequest-p-callback'>Заявка успешно отправлена. Ожидайте ответа администрации, подробности ответа вы сможете увидеть в уведомлениях профиля</p>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>

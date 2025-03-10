@@ -28,6 +28,9 @@ const client = new Client({
 const token = process.env.DISCORD_BOT_TOKEN
 const serverid = process.env.DISCORD_SERVER_ID
 
+
+
+// Выполнение при запуске
 client.on('ready', async () => {
     console.log(`\x1b[35m |!--- DISCORD_BOT IS READY ---!|\x1b[0m`);
 
@@ -103,6 +106,17 @@ client.on('ready', async () => {
 })
 
 
+
+
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+/////////           BOT TRIGGER                  ///////////////
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+
+
+
+
 // Ping - pong
 client.on('messageCreate', async(message) => {
     const command = 'ping'
@@ -144,6 +158,78 @@ client.on('messageCreate', async(message) => {
     } catch (e) {
         console.log(`Bot error: ${command} - ${e}`)
     }
+})
+
+
+// Выдача Authorized при присоединении
+client.on('guildMemberAdd', async (member) => {
+    
+    const allAccounts = await ACCOUNTS_TAB.findAll()
+
+    const guild = await client.guilds.fetch(serverid)
+    let isAuth = false
+
+    allAccounts.forEach(account => {
+        const discordData = JSON.parse(account.dataValues.discord)
+
+        if(discordData.id == member.id) {
+            isAuth = true
+        }
+    });
+
+    if(isAuth) {
+        try {
+            const foundMember = await guild.members.fetch(member.id);
+            if (!foundMember) {
+                console.log(`Пользователь ${member.id} не найден в гильдии`);
+                return;
+            }
+
+            await member.roles.add('1343535112373145610');
+            console.log(`Роль 'Authorized' выдана пользователю ${id}`);
+        } catch (error) {
+            console.error(`Ошибка при выдаче роли пользователю ${id}:`, error.message);
+        }
+    }
+});
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+/////////           BOT ROUTERS                  ///////////////
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+router.post('/role/add/authorized', BotPermissionsCheck, async(req,res) => {
+    try {
+        const discordid = req.body.discordid
+        const guild = await client.guilds.fetch(serverid)
+
+        const foundMember = await guild.members.fetch(discordid);
+        if (!foundMember) {
+            console.log(`Пользователь ${discordid} не найден в гильдии`);
+            return;
+        }
+
+        await foundMember.roles.add('1343535112373145610');
+        console.log(`Роль 'Authorized' выдана пользователю ${discordid}`);
+    }catch(e){
+        console.error(`\x1b[31mApi developer error: bot/role/add/authorized - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: bot/role/add/authorized - ${e}`
+        });
+    };
 })
 
 

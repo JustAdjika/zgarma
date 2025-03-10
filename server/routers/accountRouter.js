@@ -21,6 +21,8 @@ router.use(cookieParser())
 dotenv.config()
 
 
+const botKey = process.env.BOT_ACCESS_KEY
+const host = process.env.BASIC_URL
 
 // GENERAL DOTENV
 const BASIC_URL = process.env.BASIC_URL
@@ -210,6 +212,11 @@ router.get('/data/discord', async(req,res) => {
                 date: GetDateInfo.all
             })
 
+            axios.post(`${host}/api/developer/bot/role/add/authorized`, {
+                botKey: botKey,
+                discordid: userResponse.data.id
+            })
+
             res.json({
                 status: 200,
                 container: newUser
@@ -217,6 +224,12 @@ router.get('/data/discord', async(req,res) => {
         }else{
             let parsedData = foundUser.dataValues
             parsedData.discord = JSON.parse(parsedData.discord)
+
+            axios.post(`${host}/api/developer/bot/role/add/authorized`, {
+                botKey: botKey,
+                discordid: parsedData.discord.id
+            })
+
             res.json({
                 status: 200,
                 container: parsedData

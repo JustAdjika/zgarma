@@ -17,6 +17,7 @@ const Events = () => {
     const [events, setEvents] = useState([])
     const [eventList, eventListUpdate] = useState(0)
     const [isAdmin, setIsAdmin] = useState(false)
+    const [isAccount, setIsAccount] = useState(false)
 
     // MODAL STATE
     const [isModalEventCreate, setIsModalEventCreate] = useState(false) // Состояние модального окна - Создание ивента
@@ -31,6 +32,14 @@ const Events = () => {
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
+        const accountCheck = async () => {
+            if(!JSON.parse(Cookies.get("userData"))) {
+                setIsAccount(false)
+            } else {
+                if(!JSON.parse(Cookies.get("userData")).steam) { setIsAccount(false) }
+                else { setIsAccount(true) } 
+            }
+        }
         const getEvents = async () => {
             const res = await axios.get(`${host}/api/developer/event/data/all`)
             setEvents(res.data.container)
@@ -47,6 +56,7 @@ const Events = () => {
             }
         }
 
+        accountCheck()
         getEvents()
         adminCheck()
     }, [])
@@ -79,6 +89,7 @@ const Events = () => {
                 modalRegisterEvent={modalRegisterEvent}
                 isModalEventRegister={isModalEventRegister}
                 setErrorMessage={setErrorMessage}
+                isAccount={isAccount}
             />
 
             <ModalEventRemote 
