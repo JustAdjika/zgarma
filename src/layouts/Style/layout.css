@@ -2,17 +2,18 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: white;
+    background-color: #D9D9D9;
     color: black;
-    padding: 10px 20px;
+    /* padding: 10px 10px; */
 }
 
 /* Название проекта в левом углу */
 .project-title {
-    font-size: 26pt;
     font-weight: bold;
     margin-left: 30px;
     color: black;
+    font-family: 'outist';
+    font-size: 35pt;
 }
 
 /* Стили для навигации */
@@ -32,14 +33,16 @@
 
 .nav-item {
     position: relative;
-    padding: 10px;
+    padding: 5px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 25px;
     width: 180px;
-    color: black;
-    background-color: red;
+    color: white;
+    background-color: #1A1A1A;
     text-align: center;
-    border-radius: 20px;
+    border-radius: 10px;
+    border: 4px solid #6A6A6A;
+    font-family: 'outist';
 }
 
 .dropdown {
@@ -49,10 +52,13 @@
     list-style: none;
     padding: 10px;
     border-radius: 5px;
-    top: 100%;
+    top: 45px;
     left: 0;
-    min-width: 150px;
+    min-width: 140px;
     color: black;
+    width: 180px;
+    font-family: 'My Open Sans';
+    font-size: 17px;
 }
 
 .dropdown li {
@@ -64,22 +70,93 @@
     display: block;
 }
 
+
+
 /* Блок с аватаркой пользователя */
 .user-info {
     display: flex;
     align-items: center;
+    color: black;
+    position: relative;
+    cursor: pointer;
+    margin-right: 40px;
+}
+
+.nick-name-user {
+    font-size: 25px;
+    font-family: 'outist';
+    margin-right: 20px;
 }
 
 .user-avatar {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     overflow: hidden;
-    border: 2px solid white;
+    background-color: black;
 }
 
 .user-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* Выпадающее меню */
+.user-dropdown {
+    display: none;
+    position: absolute;
+    top: 104%;
+    right: 0;
+    background: #1A1A1A;
+    color: white;
+    list-style: none;
+    padding: 10px;
+    border-radius: 10px;
+    width: 350px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.decoration-container-dropdown {
+    height: 2px;
+    background-color: white;
+    width: 150px;
+}
+
+.user-dropdown li {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.user-dropdown li:hover {
+    background: #333;
+}
+
+.user-info:hover .user-dropdown {
+    display: block;
+}
+
+.user-pod-info {
+    display: flex;
+    flex-direction: row;
+}
+
+.info-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-avatar-menu {
+    background-color: white;
+    border-radius: 50px;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+}
+
+.linked {
+    color: rgb(48, 48, 245);
+    font-size: 15px;
 }

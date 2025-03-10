@@ -184,6 +184,14 @@ const PathchesPage = () => {
         GetFixTickets();
     }, []);
 
+    // PATCH запрос на изменения статуса ошибки
+    useEffect(() => {
+        const PatchStatus = async () => {
+            const resPatchStatus = await axios.patch(`${host}/api/developer/bugfix/tickets/status/set`);
+            const statusTicket = resPatchStatus
+        }
+    })
+
 
     return (
         <div onClick={ (e) => e.stopPropagation() } className="main-container-ptch">
@@ -262,9 +270,13 @@ const PathchesPage = () => {
                     {bugReports.map((bugs, index) => (
                         <PTCHbug 
                             key={index}
+                            id={bugs.id}
                             date={bugs.date}
                             description={bugs.title}
                             detailedDescription={bugs.content}
+                            currentUser={currentUser}
+                            host={host}
+                            defaultStatus={bugs.status}
                         />
                     ))}
                 </div>

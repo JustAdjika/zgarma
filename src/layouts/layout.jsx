@@ -34,9 +34,27 @@ const Layouts = () => {
 
             {/* Блок с аватаркой пользователя */}
             <div className="user-info">
+                <div className="nick-name-user">JustTajika</div>
                 <div className="user-avatar">
                     {/* <img src="/path-to-user-avatar.jpg" alt="User Avatar" /> */}
                 </div>
+                <ul className="user-dropdown">
+                    <li>Discord</li>
+                    <li><div className="decoration-container-dropdown"></div></li>
+                    <li><div className="user-pod-info">
+                        <div className="info-container">
+                            <div className="nick-name-user">justtajika</div>
+                            <div className="user-id-menu">342134215312532</div>
+                        </div>
+                        <div className="user-avatar-menu">
+                            {/* <img src="/path-to-user-avatar.jpg" alt="User Avatar" /> */}
+                        </div>
+                    </div></li>
+                    <li>Вступите в наш <span className="linked">Discord сервер</span></li>
+                    <li>Steam</li>
+                    <li><div className="decoration-container-dropdown"></div></li>
+                    <li>*Авторизируйте свой <span className="linked">Steam аккаунт</span></li>
+                </ul>
             </div>
         </header>
     );

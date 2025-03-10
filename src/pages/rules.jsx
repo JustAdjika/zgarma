@@ -9,17 +9,17 @@ const RulesPage = () => {
             <Layouts />
             <div className="banner-container-rules">
                 <div className="bunner-text-rules">
-                    <div className="title-bunner">Правила проекта</div>
+                    <div className="title-bunner-rules"><span className="bunner-rules-title">Правила проекта</span></div>
                     <div className="decorative-container-bunner"></div>
                     <div className="text-bunner">Об  изменениях в правилах мы оповестим всех в дискорде и уведомлением на сайте. Пожалуйста ознакомьтесь со всеми пунктами и соблюдайте их, так вы проявите уважение ко всем, кто играет на данном проекте и хочет весело провести время</div>
                 </div>
                 <div className="img-banner-rules">
-                    <img src={rulesBunner} alt="Rules Banner" style={{ width: '700px' }}/>
+                    {/* <img src={rulesBunner} alt="Rules Banner" style={{ width: '710px', marginTop: "120px" }}/> */}
                 </div>
             </div>
             <div className="decoration-line-rules"></div>
             <div className="rules-paragraph">
-                <h2>Правила на игре</h2>
+                <h2>Правила на игре:</h2>
                 <ul>
                     <li><b>Авторитет персонала</b> должен уважаться. Если <b>GM</b> или <b>Админ</b> просят вас прекратить какие-либо действия — вы обязаны немедленно остановиться.</li>
 
@@ -41,7 +41,7 @@ const RulesPage = () => {
                     <li><b>Запрещено использование ПО</b>, дающего игровое преимущество, таких как <i>Teamspeak Overwolf, ReShade</i> и другие моды или плагины.</li>
                 </ul>
 
-                <h2>Правила регистрации</h2>
+                <h2>Правила регистрации:</h2>
                 <ul>
                     <li>Ваш никнейм не должен содержать посторонние символы и должен быть либо на кириллице, либо на латинице.</li>
                     <li>Запрещено использование альтернативных аккаунтов.</li>

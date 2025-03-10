@@ -1,12 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './Style/PTCHbugList.css';
 import upIcon from '../assets/up.svg';
 import downIcon from '../assets/down.svg';
+import axios from "axios";
 
-const PTCHbug = ({ date, description, detailedDescription }) => {
+const PTCHbug = ({ date, description, detailedDescription, currentUser,id, host, defaultStatus }) => {
     const [isDetailsVisible, setIsDetailsVisible] = useState(false);
     const [isStatusBug, setIsStatusBug] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState("Не отмечен");
+
+    useEffect(() => {
+        switch (defaultStatus) {
+            case "CHECKED": setSelectedStatus("Исправляется"); break;
+            case "NOT FOUND": setSelectedStatus("Не обнаружен"); break;
+            case "FAIL": setSelectedStatus("Не решён"); break;
+            case "COMPLETE": setSelectedStatus("Решён"); break;
+            case "NOT CHECKED" : setSelectedStatus("Не отмечен"); break;
+        }
+        console.log(defaultStatus);
+    },[defaultStatus]);
+
+    useEffect(() => {
+        switch (selectedStatus) {
+            case "Исправляется": setColor("#0B94E0"); break;
+            case "Не обнаружен": setColor("#2ECC71"); break;
+            case "Не решён": setColor("#C0392B"); break;
+            case "Решён": setColor("#2ECC71"); break;
+        }
+    }, [selectedStatus])
 
     // Функция для изменения видимости меню статусов
     const toggleStatus = () => {
@@ -20,12 +41,6 @@ const PTCHbug = ({ date, description, detailedDescription }) => {
 
     // Правильные цвета к каждому статусу
     const [color, setColor] = useState("#9B59B6");
-    // const statusStyles = {
-    //     "Исправляется": "status status-1",
-    //     "Не обнаружен": "status status-2",
-    //     "Не решён": "status status-3",
-    //     "Решён": "status status-4"
-    // };
 
     // Функция для выбора конкретного статуса бага
     const handleStatusChange = (status) => {
@@ -37,6 +52,35 @@ const PTCHbug = ({ date, description, detailedDescription }) => {
             case "Решён": setColor("#2ECC71"); break;
         }
         setIsStatusBug(false); // Закрываем список статусов
+        updateStatusOnServer(status);
+    };
+
+
+//=======================================================================================================================================
+//=======================================================================================================================================
+//Бэк get запросы
+
+
+    // Функция обновления статуса на сервере
+    const updateStatusOnServer = async (status) => {
+        try {
+            let serverStatus
+            switch (status) {
+                case "Исправляется": serverStatus = "CHECKED"; break;
+                case "Не обнаружен": serverStatus = "NOT FOUND"; break;
+                case "Не решён": serverStatus = "FAIL"; break;
+                case "Решён": serverStatus = "COMPLETE"; break;
+            }
+            const response = await axios.patch(`${host}/api/developer/bugfix/tickets/status/set`, {
+                ticketId: id,
+                status: serverStatus,
+                key:  currentUser.key
+            });
+
+            console.log("Статус обновлён:", response.data);
+        } catch (error) {
+            console.error("Ошибка при обновлении статуса:", error);
+        }
     };
 
     return (
