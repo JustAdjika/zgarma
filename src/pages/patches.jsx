@@ -29,9 +29,7 @@ const PathchesPage = () => {
 
     // Пользователь
     const [currentUser, setCurrentUser] = useState({})
-    const [currentUsername, setCurrentUsername] = useState("Не вошел в аккаунт")
-    const [currentSteamUsername, setCurrentSteamUsername] = useState("Не привязан стим")
-    const [isAdmin, setIsAdmin] = useState(true)
+    const [isAdmin, setIsAdmin] = useState(false)
 
 
     // Checkbox модальное окно 
@@ -184,110 +182,125 @@ const PathchesPage = () => {
         GetFixTickets();
     }, []);
 
-    // PATCH запрос на изменения статуса ошибки
     useEffect(() => {
-        const PatchStatus = async () => {
-            const resPatchStatus = await axios.patch(`${host}/api/developer/bugfix/tickets/status/set`);
-            const statusTicket = resPatchStatus
+        const checkAdmin = async () => {
+            const res = await axios.get(`${host}/api/developer/adminlist/remote/isAdmin?id=${currentUser.id}`)
+        
+            if(res.data.status == 200) {
+                setIsAdmin(res.data.container)
+            } else {
+                setErrorMessage(res.data.err)
+                setTimeout(() => setErrorMessage(""), 3000)
+            }
         }
-    })
+
+        if(!currentUser.id) return
+
+        checkAdmin()
+    }, [currentUser])
 
 
     return (
-        <div onClick={ (e) => e.stopPropagation() } className="main-container-ptch">
-         {isModal && (
-               <div onClick={ () => setIsModal(false) } className="main-container-modal" style={{ display: isModal ? 'flex' : 'none' }}>
+        <>
+            {isModal && (
+                <div onClick={ () => setIsModal(false) } className="main-container-modal" style={{ display: isModal ? 'flex' : 'none', zIndex: '2' }}>
                     <div className="modal-PTCH" onClick={(e) => e.stopPropagation()}>
-                        <div className="title-modal-PTCH" >Оповестить об ошибке</div>
+                        <p className="title-modal-PTCH" >Оповестить об ошибке</p>
                         <div className="decorative-modal-PTCH"></div>
-                        <div className="subtitle-modal-PTCH">Краткое описание</div>
+                        <p className="subtitle-modal-PTCH">Краткое описание</p>
                         <input 
-                        type="text" 
+                            type="text" 
                             id="input-modal-PTCH" 
                             placeholder="Где вы обнаружили проблему?"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
+                            style={{ marginBottom: '20px' }}
+                            maxLength={20}
                         />
-                        <div className="second-subtitle-modal-PTCH">Подробное описание</div>
+                        <p className="second-subtitle-modal-PTCH">Подробное описание</p>
                         <textarea 
                             name="textarea-modal-PTCH" 
                             id="modal-PTCH-text" 
                             placeholder="Подробно опишите свою проблему"
                             value={detailedDescription}
                             onChange={(e) => setDetailedDescription(e.target.value)}
+                            style={{ borderRadius: '3px' }}
                             />
-                        <div className="container-check-modal">
-                            <div className="modal-PTCH-dop">Поставьте галочку, если уже обращался с этой проблемой</div>
-                            <input type="checkbox" id='modal-input' className="modal-inputik"/>
-                            <label htmlFor="modal-input"></label>
-                            <div className="decoration-container-modal">
-                                <div className="decoration-modal-container"></div>
+                        <input onChange={() => setCheckboxModal(prev => !prev)} type="checkbox" id='modal-input' className="modal-inputik"/>
+                        <label htmlFor="modal-input" className="container-check-modal">
+                            <p className="modal-PTCH-dop" style={{ cursor: 'pointer' }}>Поставьте галочку, если уже обращался с этой проблемой</p>
+                            <div style={{ cursor: 'pointer' }} className="decoration-container-modal">
+                                <div className="decoration-modal-container" style={{ backgroundColor: checkboxModal ? '#28272E' : '#969696' }}></div>
                             </div>
-                        </div>
+                        </label>
                         <div className="container-but-PTCH"><button id="button-modal-PTCH" onClick={handleModalSend}>Отправить</button></div>
                     </div>
                 </div>
             )}
-            <div className="left-container-ptch">
-                <div className="l-container-ptch">
-                    <div className="title-l-ptch">Список изменений</div>
-                    <div className="subtitle-l-ptch">Если у вас есть информация об ошибке, баге или недоработке, пожалуйста сообщите нам через <span className="link-ptch" onClick={toggleModal}> эту форму </span></div>
-                    <div className="decorative-container-PTCH"></div>
-                </div>
-                {/* инпутики */}
-                <div className="inputs-container-ptch">
-                    <input
-                        type="text"
-                        id="input-l-ptch"
-                        placeholder="Введите заголовок"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-                    <textarea
-                        id="textarea-l-ptch"
-                        className="textarea-ptch"
-                        placeholder="Введите текст сообщения"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                    />
-                    <button id="send-but-ptch" onClick={handleSubmit}>Отправить</button>
-                </div>
-                {/* Сообщения админа */}
-                <div className="container-comp-l">
-                    {patches.map((patch, index) => (
-                        <PTCHadmin 
-                            key={index}
-                            date={patch.date}
-                            title={patch.title}
-                            content={patch.content}
+            <div className="main-container-ptch">
+                <div className="left-container-ptch">
+                    <div className="l-container-ptch">
+                        <div className="title-l-ptch">Список изменений</div>
+                        <div className="subtitle-l-ptch">Если у вас есть информация об ошибке, баге или недоработке, пожалуйста сообщите нам через <span className="link-ptch" onClick={toggleModal}> эту форму </span></div>
+                        <div className="decorative-container-PTCH"></div>
+                    </div>
+                    {/* инпутики */}
+                    <div className="inputs-container-ptch" style={{ display: isAdmin ? 'flex' : 'none' }}>
+                        <input
+                            type="text"
+                            id="input-l-ptch"
+                            placeholder="Введите заголовок"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            style={{ backgroundColor: '#D9D9D9' }}
                         />
-                    ))}
-                </div>
-            </div>
-            <div className="rigth-container-ptch">
-                <div className="title-container-ptch">Баг трекер</div>
-                <div className="container-comp-r">
-                    {bugReports.map((bugs, index) => (
-                        <PTCHbug 
-                            key={index}
-                            id={bugs.id}
-                            date={bugs.date}
-                            description={bugs.title}
-                            detailedDescription={bugs.content}
-                            currentUser={currentUser}
-                            host={host}
-                            defaultStatus={bugs.status}
+                        <textarea
+                            id="textarea-l-ptch"
+                            className="textarea-ptch"
+                            placeholder="Введите текст сообщения"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            style={{ backgroundColor: '#D9D9D9', fontSize: '12pt' }}
                         />
-                    ))}
+                        <button id="send-but-ptch" onClick={handleSubmit}>Отправить</button>
+                    </div>
+                    {/* Сообщения админа */}
+                    <div className="container-comp-l">
+                        {patches.slice().reverse().map((patch, index) => (
+                            <PTCHadmin 
+                                key={index}
+                                date={patch.date}
+                                title={patch.title}
+                                content={patch.content}
+                            />
+                        ))}
+                    </div>
                 </div>
+                <div className="rigth-container-ptch">
+                    <div className="title-container-ptch">Баг трекер</div>
+                    <div className="container-comp-r" style={{ display: isAdmin ? 'block' : 'none' }}>
+                        {bugReports.slice().reverse().map((bugs, index) => (
+                            <PTCHbug 
+                                key={index}
+                                id={bugs.id}
+                                date={bugs.date}
+                                description={bugs.title}
+                                detailedDescription={bugs.content}
+                                currentUser={currentUser}
+                                host={host}
+                                defaultStatus={bugs.status}
+                            />
+                        ))}
+                    </div>
+                </div>
+                {/* Обработка ошибочки */}
+                {errorMessage && (
+                    <div className="error-message">
+                        {errorMessage}
+                    </div>
+                )}
             </div>
-              {/* Обработка ошибочки */}
-              {errorMessage && (
-                <div className="error-message">
-                    {errorMessage}
-                </div>
-            )}
-        </div>
+        </>
     )}
 
 export default PathchesPage;

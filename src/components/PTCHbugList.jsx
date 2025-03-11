@@ -88,7 +88,7 @@ const PTCHbug = ({ date, description, detailedDescription, currentUser,id, host,
             <div className="title-bug">{description}</div>
             
             {/* Отображаем выбранный статус */}
-            <div className="bug-status" onClick={toggleStatus} style={{ color : color }}>
+            <div className="bug-status" onClick={toggleStatus} style={{ color : color, userSelect: 'none', width: '130px' }}>
                 {selectedStatus}
             </div>
 
@@ -105,9 +105,10 @@ const PTCHbug = ({ date, description, detailedDescription, currentUser,id, host,
             <div className="container-info-bug">
                 <div className="bug-information" onClick={toggleDetails}>
                     <img 
-                        src={isDetailsVisible ? upIcon : downIcon} 
+                        src={upIcon} 
                         alt="toggle icon"
                         className="icon-PTCH"
+                        style={{ rotate: isDetailsVisible ? '0deg' : '180deg', transition: '0.3s', userSelect: 'none' }}
                     />
                     Подробности
                 </div>
