@@ -23,7 +23,7 @@ const Announcement = () => {
     const [currentUser, setCurrentUser] = useState({})
     const [currentUsername, setCurrentUsername] = useState("Не вошел в аккаунт")
     const [currentSteamUsername, setCurrentSteamUsername] = useState("Не привязан стим")
-    const [isAdmin, setIsAdmin] = useState(true)
+    const [isAdmin, setIsAdmin] = useState(false)
 
     // Создание Голосования
     const [optionVote, setOptionVote] = useState([]);

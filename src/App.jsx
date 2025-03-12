@@ -8,6 +8,7 @@ import DiscordAuthCallback from './pages/discordAuthCallback.jsx'
 import Events from './pages/events.jsx'
 import PathchesPage from './pages/patches.jsx';
 import RulesPage from './pages/rules.jsx';
+import Layouts from "./layouts/layout";
 
 
 import './App.css'
@@ -19,10 +20,13 @@ function App() {
     if (message.includes("*,:x")) {
         alert("Ошибка: Возможно, одно из расширений браузера мешает работе сайта. Попробуйте отключить расширения и перезагрузить страницу.");
     }
-};
+  };
+
+  const [userinfoMenu, setUserinfoMenu] = useState(false)
 
   return (
-      <div className='div-main'>
+      <div className='div-main' onClick={() => setUserinfoMenu(false)}>
+        <Layouts setUserinfoMenu={setUserinfoMenu} userinfoMenu={userinfoMenu} />
         <Router> 
           <Routes>
             <Route path='/main' element={<ArmaZgMain />} /> 

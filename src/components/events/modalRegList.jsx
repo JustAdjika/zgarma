@@ -46,6 +46,8 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
     }
 
     useEffect(() => {
+        if(!isModalReglist) return
+
         getRequests()
 
         if(!event.id) return

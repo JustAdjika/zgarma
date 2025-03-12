@@ -156,14 +156,6 @@
     border-radius: 5px;
 }
 
-.user-dropdown li:hover {
-    background: #333;
-}
-
-/* .user-info:hover .user-dropdown {
-    display: block;
-} */
-
 .user-pod-info {
     display: flex;
     flex-direction: row;
@@ -185,4 +177,111 @@
 .linked {
     color: rgb(48, 48, 245);
     font-size: 15px;
+}
+
+.nav-userinfo-container {
+    width: 400px;
+    max-height: 320px;
+    background-color: #303030;
+    position: fixed;
+    right: 30px;
+    top: 60px;
+    z-index: 37;
+    border-radius: 7px;
+    box-shadow: 0px 5px 10px 3px rgba(0, 0, 0, 0.521);
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20px;
+}
+.nav-userinfo-container>h2 {
+    margin: 0px;
+    color: #D9D9D9;
+    font-weight: lighter;
+    font-family: 'My Open Sans';
+    margin-left: 30px;
+    margin-top: 10px;
+}
+.nav-userinfo-decorative-line {
+    margin-top: 3px;
+    width: 200px;
+    height: 3px;
+    background-color: #D9D9D9;
+    margin-left: 15px;
+    border-radius: 50px;
+    margin-bottom: 10px;
+}
+.nav-userinfo-container span {
+    color: #D9D9D9;
+    font-family: 'My Open Sans';
+    margin-left: 30px;
+    font-size: 15pt;
+    overflow: hidden;
+}
+.nav-userinfo-container p {
+    color: #D9D9D9;
+    font-family: 'My Open Sans';
+    font-size: 12pt;
+    overflow: hidden;
+    margin: 0px;
+    margin-left: 30px;
+    margin-top: 10px;
+}
+.nav-userinfo-but-exit {
+    width: 120px;
+    margin-left: 20px;
+    margin-top: 25px;
+    height: 30px;
+    border: none;
+    outline: none;
+    /* background-color: #D42A00; */
+    color: #D9D9D9;
+    cursor: pointer;
+    border: solid 3px #C0392B;
+    background-color: #303030;
+    border-radius: 5px;
+    font-family: 'outist';
+    font-size: 15pt;
+    color: #C0392B;
+    transition: 0.2s;
+    letter-spacing: 1px;
+}
+.nav-userinfo-but-exit:hover {
+    color: #7c251b;
+    border: solid 3px #7c251b;
+}
+.nav-userinfo-admin {
+    border: solid 3px #be7713;
+    border-radius: 8px;
+    height: 30px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'outist';
+    font-size: 20pt;
+    color: #be7713;
+    margin-right: 10px;
+}
+.nav-login {
+    position: relative;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 18pt;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 180px;
+    color: white;
+    background-color: #1A1A1A;
+    text-align: center;
+    border-radius: 5px;
+    font-family: 'outist';
+    height: 28px;
+    letter-spacing: 0.5px;
+    transition: 0.2s;
+    margin-right: 30px;
+    text-decoration: none;
+}
+.nav-login:hover {
+    background-color: #3a3a3a;
 }

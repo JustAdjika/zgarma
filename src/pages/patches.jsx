@@ -153,7 +153,7 @@ const PathchesPage = () => {
         };
     
         GetFixList();
-        if(!JSON.parse(Cookies.get(`userData`))) return;
+        if(!Cookies.get(`userData`)) return;
         setCurrentUser(JSON.parse(Cookies.get('userData')));
     }, []);
 
@@ -277,7 +277,7 @@ const PathchesPage = () => {
                     </div>
                 </div>
                 <div className="rigth-container-ptch">
-                    <div className="title-container-ptch">Баг трекер</div>
+                    <div className="title-container-ptch" style={{ display: isAdmin ? 'block' : 'none' }}>Баг трекер</div>
                     <div className="container-comp-r" style={{ display: isAdmin ? 'block' : 'none' }}>
                         {bugReports.slice().reverse().map((bugs, index) => (
                             <PTCHbug 

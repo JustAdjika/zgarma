@@ -19,13 +19,14 @@ const DiscordCallback = () => {
           tempUserData.steam = JSON.parse(tempUserData.steam)
           Cookies.set('userData', JSON.stringify(tempUserData), { expires: 60 })
 
-          navigate("/announcement"); // Перенаправление после входа
+          navigate('/announcement')
+          window.location.reload(); // Перенаправление после входа
         })
         .catch((err) => console.error("Ошибка авторизации", err));
     }
   }, [navigate]);
 
-  return <p>Авторизация...</p>;
+  return <></>;
 };
 
 export default DiscordCallback;

@@ -1,12 +1,10 @@
 import React from "react";
 import './Style/rules.css';
 import rulesBunner from '../assets/rulesBunner.png';
-import Layouts from "../layouts/layout";
 
 const RulesPage = () => {
     return (
         <div className="main-container-rules">
-            <Layouts />
             <div className="banner-container-rules">
                 <div className="bunner-text-rules">
                     <div className="title-bunner-rules"><span className="bunner-rules-title">Правила проекта</span></div>
