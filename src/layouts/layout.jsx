@@ -5,7 +5,7 @@ import axios from "axios";
 import triangle from '../assets/navTriangle.svg'
 import "./Style/layout.css"; 
 
-const Layouts = ({ setUserinfoMenu, userinfoMenu }) => {
+const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
     const [currentUser, setCurrentUser] = useState({})
     const [discordName, setDiscordName] = useState("Loading...")
     const [avatarUrl, setAvatarUrl] = useState("")
@@ -14,6 +14,9 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu }) => {
     const [inDiscord, setInDiscord] = useState(false)
     const [isAdmin, setIsAdmin] = useState(false)
     const [isSteam, setIsSteam] = useState(false)
+
+    const [noticeCount, setNoticeCount] = useState(0)
+    const [notice, setNotice] = useState([])
 
     const host = "http://localhost:3000"
     const STEAM_AUTH_URL = `http://localhost:3000/api/developer/account/auth/steam`
@@ -42,6 +45,25 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu }) => {
         if(!currentUser.steam) return
 
         setIsSteam(true)
+    }, [currentUser])
+
+    useEffect(() => {
+        if(!currentUser.id) return
+
+        const getNotices = async () => {
+            const res = await axios.post(`${host}/api/developer/account/notices/data/all`, {
+                key: currentUser.key
+            })
+
+            if(res.data.status == 200) {
+                setNotice(res.data.container)
+                console.log(res.data.container)
+            } else {
+                console.error(res.data.err)
+            }
+        }
+
+        getNotices()
     }, [currentUser])
 
 
@@ -93,12 +115,13 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu }) => {
                 {/* Блок с аватаркой пользователя */}
                 { currentUser.id == null ? <a className="nav-login" href={DISCORD_AUTH_URL}>Войти в аккаунт</a> : 
                     <div className="user-info">
-                        <svg style={{ marginTop: '10px', marginRight: '30px', cursor: 'pointer' }} className="icon" width="40" height="40" viewBox="0 0 24 24">
+                        <div className="nav-notice-count" onClick={() => { setNotices(true); setUserinfoMenu(false) }} style={{ display: noticeCount ? 'flex' : 'none',cursor: 'pointer' }}>2</div>
+                        <svg onClick={() => { setNotices(true); setUserinfoMenu(false) }} style={{ cursor: 'pointer', marginRight: '30px', transition: '0.1s' }} className="icon" width="45" height="45" viewBox="-7 -5 30 30">
                             <path style={{transition: '0.2s'}} d="M8.04492 0C7.40917 0 6.89555 0.530664 6.89555 1.1875V1.9C4.27354 2.44922 2.29806 4.84648 2.29806 7.71875V8.41641C2.29806 10.1605 1.67668 11.8453 0.55604 13.1516L0.290247 13.4596C-0.0114629 13.8084 -0.0832987 14.3094 0.0998826 14.7361C0.283064 15.1629 0.69612 15.4375 1.14869 15.4375H14.9412C15.3937 15.4375 15.8032 15.1629 15.99 14.7361C16.1767 14.3094 16.1013 13.8084 15.7996 13.4596L15.5338 13.1516C14.4132 11.8453 13.7918 10.1643 13.7918 8.41641V7.71875C13.7918 4.84648 11.8163 2.44922 9.19429 1.9V1.1875C9.19429 0.530664 8.68067 0 8.04492 0ZM9.672 18.3061C10.103 17.8607 10.3437 17.2559 10.3437 16.625H8.04492H5.74618C5.74618 17.2559 5.98683 17.8607 6.41784 18.3061C6.84885 18.7514 7.43432 19 8.04492 19C8.65553 19 9.24099 18.7514 9.672 18.3061Z" fill="#28272E"/>
                         </svg>
                         <div style={{ display: isAdmin ? 'flex' : 'none' }} className="nav-userinfo-admin">Administrator</div>
-                        <div onClick={ () => setUserinfoMenu(true) } className="nick-name-user" style={{cursor: 'pointer'}}>{ discordName }</div>
-                        <div onClick={ () => setUserinfoMenu(true) } className="user-avatar" style={{ cursor: 'pointer', backgroundColor: '#28272E' }}>
+                        <div onClick={ () => { setNotices(false); setUserinfoMenu(true) }  } className="nick-name-user" style={{cursor: 'pointer'}}>{ discordName }</div>
+                        <div onClick={ () => { setNotices(false); setUserinfoMenu(true) } } className="user-avatar" style={{ cursor: 'pointer', backgroundColor: '#28272E' }}>
                             <img src={avatarUrl} alt="User Avatar" />
                         </div>
                     </div>
@@ -132,6 +155,19 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu }) => {
                     </div>
                 : null }
                 <button className="nav-userinfo-but-exit" onClick={() => { Cookies.remove("userData"); window.location.reload() }}>Выйти</button>
+            </div>
+            <div style={{ display: notices ? 'flex': 'none' }} className="nav-notices-container" onClick={ (e) => e.stopPropagation() }>
+                <h2>Уведомления</h2>
+                <div>
+                    { notice.reverse().map(item => (
+                        <div className="nav-notice">
+                            <p>
+                                { item.content }
+                                <p style={{ marginBottom: '0px' }}>{ item.date }</p>
+                            </p>
+                        </div>
+                    )) }
+                </div>
             </div>
         </>
     );

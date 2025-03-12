@@ -12,8 +12,10 @@ import cookieParser from 'cookie-parser';
 import { Sequelize } from 'sequelize';
 
 import ACCOUNTS_TAB from '../database/accounts.js';
+import NOTICES_TAB from '../database/notices.js'
 
 import GetDateInfo from '../modules/dateInfo.js';
+import AccountCheck from '../modules/accountCheck.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -245,6 +247,37 @@ router.get('/data/discord', async(req,res) => {
 });
 
 
+// GET NOTICES
+router.post('/notices/data/all', AccountCheck, async(req, res) => {
+    try{
+        const data = req.body
+
+        const foundAccount = await ACCOUNTS_TAB.findOne({
+            where: {
+                key: data.key
+            }
+        })
+
+        if(!foundAccount) return res.json({ status: 404, err: 'Account undefined' })
+
+        const notices = await NOTICES_TAB.findAll({
+            where: {
+                destination: foundAccount.id
+            }
+        })
+
+        res.json({
+            status: 200,
+            container: notices
+        })
+    }catch(e){
+        console.error(`\x1b[31mApi developer error: account/notices/data/all - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: account/notices/data/all - ${e}`
+        });
+    };
+})
 
 
 

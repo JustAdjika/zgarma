@@ -23,10 +23,11 @@ function App() {
   };
 
   const [userinfoMenu, setUserinfoMenu] = useState(false)
+  const [notices, setNotices] = useState(false)
 
   return (
-      <div className='div-main' onClick={() => setUserinfoMenu(false)}>
-        <Layouts setUserinfoMenu={setUserinfoMenu} userinfoMenu={userinfoMenu} />
+      <div className='div-main' onClick={() => { setUserinfoMenu(false); setNotices(false) }}>
+        <Layouts setUserinfoMenu={setUserinfoMenu} userinfoMenu={userinfoMenu} notices={notices} setNotices={setNotices}/>
         <Router> 
           <Routes>
             <Route path='/main' element={<ArmaZgMain />} /> 
