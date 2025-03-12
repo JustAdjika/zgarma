@@ -30,12 +30,13 @@ function App() {
         <Layouts setUserinfoMenu={setUserinfoMenu} userinfoMenu={userinfoMenu} notices={notices} setNotices={setNotices}/>
         <Router> 
           <Routes>
-            <Route path='/main' element={<ArmaZgMain />} /> 
+            {/* <Route path='/main' element={<ArmaZgMain />} />  */}
             <Route path='/announcement' element={<Announcement />} />
             <Route path='/events' element={<Events />} />
             <Route path='/auth/discord/callback' element={<DiscordAuthCallback />} />
             <Route path='/patches' element={<PathchesPage />} />
             <Route path='/rules' element={<RulesPage />} />
+            <Route path="*" element={<h1 style={{ color: '#D9D9D9', margin: '0px', position: 'relative', top: '100px', left: '50px' }}>404. Page not found</h1> }/>
           </Routes>
         </Router>
       </div>

@@ -105,6 +105,7 @@ const Events = () => {
                 isModalEventCreate={isModalEventCreate} 
                 setIsModalEventCreate={setIsModalEventCreate}
                 host={host} 
+                setErrorMessage={setErrorMessage}
             />
             <div className='event-main-container'>
                 <div className='event-ready-container'>

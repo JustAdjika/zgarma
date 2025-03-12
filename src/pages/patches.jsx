@@ -241,8 +241,12 @@ const PathchesPage = () => {
                 <div className="left-container-ptch">
                     <div className="l-container-ptch">
                         <div className="title-l-ptch">Список изменений</div>
-                        <div className="subtitle-l-ptch">Если у вас есть информация об ошибке, баге или недоработке, пожалуйста сообщите нам через <span className="link-ptch" onClick={toggleModal}> эту форму </span></div>
-                        <div className="decorative-container-PTCH"></div>
+                        { currentUser.id ? 
+                            <div className="subtitle-l-ptch">Если у вас есть информация об ошибке, баге или недоработке, пожалуйста сообщите нам через <span className="link-ptch" onClick={toggleModal}> эту форму </span></div>
+                        :
+                            <div className="subtitle-l-ptch">Войдите в аккаунт, чтобы отправить уведомление об ошибке</div>
+                        }
+                        <div className="decorative-container-PTCH" style={{ width: currentUser.id ? '937px' : '545px' }}></div>
                     </div>
                     {/* инпутики */}
                     <div className="inputs-container-ptch" style={{ display: isAdmin ? 'flex' : 'none' }}>

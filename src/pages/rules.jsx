@@ -8,8 +8,8 @@ const RulesPage = () => {
             <div className="banner-container-rules">
                 <div className="bunner-text-rules">
                     <div className="title-bunner-rules"><span className="bunner-rules-title">Правила проекта</span></div>
-                    <div className="decorative-container-bunner"></div>
-                    <div className="text-bunner">Об  изменениях в правилах мы оповестим всех в дискорде и уведомлением на сайте. Пожалуйста ознакомьтесь со всеми пунктами и соблюдайте их, так вы проявите уважение ко всем, кто играет на данном проекте и хочет весело провести время</div>
+                    <div className="decorative-container-bunner" style={{ boxShadow: '0px 0px 10px 10px #00000050' }}></div>
+                    <div className="text-bunner" style={{ fontSize: '15pt', color: '#7D7D7D' }}>Об  изменениях в правилах мы оповестим всех в дискорде и уведомлением на сайте. Пожалуйста ознакомьтесь со всеми пунктами и соблюдайте их, так вы проявите уважение ко всем, кто играет на данном проекте и хочет весело провести время</div>
                 </div>
                 <div className="img-banner-rules">
                     {/* <img src={rulesBunner} alt="Rules Banner" style={{ width: '710px', marginTop: "120px" }}/> */}
