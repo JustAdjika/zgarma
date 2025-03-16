@@ -10,8 +10,7 @@ function AnnVote({ title, content, date, options, voteIndex, currentUser, votes,
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect( () => {
-        
-        JSON.parse(votes).forEach(element => {
+        votes.forEach(element => {
             if(element.userId == currentUser.id) {
                 setSelectedOption(element.option -1)
             }
@@ -21,16 +20,22 @@ function AnnVote({ title, content, date, options, voteIndex, currentUser, votes,
     // Функция для обработки выбора radio
     const handleCheckboxChange = async (index) => {
         setSelectedOption(index); // Устанавливаем выбранный индекс
-        const resVote = await axios.put(`${host}/api/developer/post/vote/add`, {
-            key: currentUser.key,
-            option: index + 1,
-            postId: voteIndex
-        });
-        if(resVote.data.status !== 200) {
-            setErrorMessage(resVote.data.err);
-            setTimeout(() => setErrorMessage(""), 5000); // Скрывает через 5 сек
-            return;  // Прерываем выполнение функции
-        };
+        try {
+            const resVote = await axios.put(`${host}/api/developer/post/vote/add`, {
+                key: currentUser.key,
+                option: index + 1,
+                postId: voteIndex
+            });
+            if(resVote.data.status !== 200) {
+                console.error(`Ответ вызвал ошибку: ${resVote.data.err}`)
+                setErrorMessage(resVote.data.err);
+                setTimeout(() => setErrorMessage(""), 5000); // Скрывает через 5 сек
+                return;  // Прерываем выполнение функции
+            };
+        } catch (e) {
+            console.log(`Запрос, неудача: ${e}`)
+        }
+        
     };
 
     return (

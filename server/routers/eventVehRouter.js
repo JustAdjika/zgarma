@@ -64,11 +64,31 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
         }
 
 
-        const updateVehicle = [...JSON.parse(oldVehicle), newVehicle]
+        const updateVehicle = () => {
+            let parsedData = [];
+        
+            if (typeof oldVehicle === "string" && oldVehicle.trim() !== "") {
+                try {
+                    parsedData = JSON.parse(oldVehicle);
+                } catch (error) {
+                    console.error(`\x1b[33mApi developer error: event/edit/vehicle/add: JSON parsing failed - ${error.message}\x1b[0m`);
+                    return [newVehicle]; // Создаем новый массив
+                }
+            } else if (Array.isArray(oldVehicle)) {
+                parsedData = oldVehicle;
+            }
+        
+            if (Array.isArray(parsedData)) {
+                return [...parsedData, newVehicle];
+            } else {
+                console.error(`\x1b[33mApi developer error: event/edit/vehicle/add: oldVehicle is not an array\x1b[0m`);
+                return [newVehicle]; // Создаем новый массив
+            }
+        };
 
 
-        if(data.team == 'Red') { await currentEvent.update({vehTeam1: updateVehicle}) }
-        else if(data.team == 'Blue') { await currentEvent.update({vehTeam2: updateVehicle}) }
+        if(data.team == 'Red') { await currentEvent.update({vehTeam1: updateVehicle()}) }
+        else if(data.team == 'Blue') { await currentEvent.update({vehTeam2: updateVehicle()}) }
         else {
             res.json({
                 status: 404,
@@ -127,8 +147,26 @@ router.patch('/', AccountCheck, PermissionsCheck, async(req, res) => {
         let vehicleList
         const vehId = data.vehId
 
-        if(data.team == 'Red') { vehicleList = JSON.parse(currentEvent.vehTeam1) }
-        else if(data.team == 'Blue') { vehicleList = JSON.parse(currentEvent.vehTeam2) }
+        if(data.team == 'Red') {  
+            if(currentEvent.vehTeam1 && typeof currentEvent.vehTeam1 === 'string') {
+                const parsedData = JSON.parse(currentEvent.vehTeam1)
+                if(Array.isArray(parsedData) && parsedData.length > 0) {
+                    vehicleList = parsedData
+                } else if( Array.isArray(parsedData) && parsedData.length == 0 ) {
+                    vehicleList = []
+                }
+            }
+        }
+        else if(data.team == 'Blue') { 
+            if(currentEvent.vehTeam2 && typeof currentEvent.vehTeam2 === 'string') {
+                const parsedData = JSON.parse(currentEvent.vehTeam2)
+                if(Array.isArray(parsedData) && parsedData.length > 0) {
+                    vehicleList = parsedData
+                } else if( Array.isArray(parsedData) && parsedData.length == 0 ) {
+                    vehicleList = []
+                }
+            } 
+        }
         else {
             res.json({
                 status: 404,

@@ -13,7 +13,7 @@ import ModalRegister from '../components/events/modalRegister.jsx';
 import ModalRegList from '../components/events/modalRegList.jsx';
 
 const Events = () => {
-    const host = 'http://localhost:3000'
+    const host = 'https://api.zgarma.ru'
     const [events, setEvents] = useState([])
     const [eventList, eventListUpdate] = useState(0)
     const [isAdmin, setIsAdmin] = useState(false)

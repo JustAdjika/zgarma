@@ -77,32 +77,36 @@ router.get(
     "/auth/steam/callback", 
     passport.authenticate("steam", { failureRedirect: "/announcement" }),
     async(req, res) => {
-        const userData = req.user._json
+        try {
+            const userData = req.user._json
 
-        const foundAccount = await ACCOUNTS_TAB.findOne({
-            where: {
-                key: JSON.parse(req.cookies.userData).key
+            const foundAccount = await ACCOUNTS_TAB.findOne({
+                where: {
+                    key: JSON.parse(req.cookies.userData).key
+                }
+            })
+
+            if(!foundAccount) {
+                return res.end("Ошибка аутентификации")
             }
-        })
 
-        if(!foundAccount) {
-            return res.end("Ошибка аутентификации")
+            await foundAccount.update({
+                steam: userData
+            })
+
+            let parsedData = foundAccount.dataValues
+
+            res.cookie("userData", JSON.stringify(parsedData), {
+                secure: true, // Должно быть true, если используешь HTTPS
+                sameSite: "None", // Разрешает передачу куков между разными доменами
+                domain: ".zgarma.ru",
+                maxAge: 60 * 24 * 60 * 60 * 1000, 
+            });
+
+            res.redirect("https://zgarma.ru/announcement")
+        } catch (e) {
+            console.error(`\x1b[31mApi developer error: Steam callback error - ${e} \x1b[0m`);
         }
-
-        await foundAccount.update({
-            steam: userData
-        })
-
-        let parsedData = foundAccount.dataValues
-        parsedData.discord = JSON.parse(parsedData.discord)
-
-        res.cookie("userData", JSON.stringify(parsedData), {
-            httpOnly: false, // Куки доступны только серверу (защита от XSS)
-            secure: false, // Установи `true`, если используешь HTTPS
-            maxAge: 60 * 24 * 60 * 60 * 1000, // 60 дней
-        });
-
-        res.redirect("http://localhost:5173/announcement")
     }
 )
 
@@ -225,12 +229,21 @@ router.get('/data/discord', async(req,res) => {
             })
         }else{
             let parsedData = foundUser.dataValues
-            parsedData.discord = JSON.parse(parsedData.discord)
+            parsedData.steam = JSON.parse(parsedData.steam)
 
             axios.post(`${host}/api/developer/bot/role/add/authorized`, {
                 botKey: botKey,
                 discordid: parsedData.discord.id
             })
+
+            console.log(parsedData)
+
+            res.cookie("userData", JSON.stringify(parsedData), {
+                secure: true, // Должно быть true, если используешь HTTPS
+                sameSite: "None", // Разрешает передачу куков между разными доменами
+                domain: ".zgarma.ru",
+                maxAge: 60 * 24 * 60 * 60 * 1000, 
+            });
 
             res.json({
                 status: 200,

@@ -128,7 +128,7 @@ router.put('/vote/add', AccountCheck, async(req, res) => {
             return;
         };
 
-        const votes = JSON.parse(post.dataValues.votes)
+        const votes = post.dataValues.votes
 
         const userVote = votes.find(vote => vote.userId === user.id)
         const newVote = {

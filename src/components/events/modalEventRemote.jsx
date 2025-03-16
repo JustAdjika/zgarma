@@ -30,13 +30,33 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
         setEventRemoteTeam2(modalRemoteEvent.team2)
         setEventRemoteType(modalRemoteEvent.type)
 
-        if(modalRemoteEvent.vehTeam1){
-            setEventRemoteVeh1(JSON.parse(modalRemoteEvent.vehTeam1))
-        }
-        if(modalRemoteEvent.vehTeam2) {
-            setEventRemoteVeh2(JSON.parse(modalRemoteEvent.vehTeam2))
+
+
+
+
+        // Veh team 1 array check
+        if (modalRemoteEvent.vehTeam1 && typeof modalRemoteEvent.vehTeam1 === "string") {
+            const parsedData = JSON.parse(modalRemoteEvent.vehTeam1);
+            if (Array.isArray(parsedData) && parsedData.length > 0) {
+                setEventRemoteVeh1(parsedData);
+            }
+        } else if(modalRemoteEvent.vehTeam1 && Array.isArray(modalRemoteEvent.vehTeam1)) {
+            setEventRemoteVeh1(modalRemoteEvent.vehTeam1)
         }
         
+        // Veh team 1 array check
+        if (modalRemoteEvent.vehTeam2 && typeof modalRemoteEvent.vehTeam2 === "string") {
+            const parsedData = JSON.parse(modalRemoteEvent.vehTeam2);
+            if (Array.isArray(parsedData) && parsedData.length > 0) {
+                setEventRemoteVeh2(parsedData);
+            }
+        } else if(modalRemoteEvent.vehTeam2 && Array.isArray(modalRemoteEvent.vehTeam2)) {
+            setEventRemoteVeh2(modalRemoteEvent.vehTeam2)
+        }
+        
+
+
+
         if(modalRemoteEvent.time) {
             const [hours, minutes] = modalRemoteEvent.time.split(":")
             setEventRemoteTimeM(minutes)
@@ -44,12 +64,12 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
         }
 
         if(modalRemoteEvent.slotsTeam1) {
-            const tempSlots = JSON.parse(modalRemoteEvent.slotsTeam1).filter((_, i) => i != 0)
+            const tempSlots = modalRemoteEvent.slotsTeam1.filter((_, i) => i != 0)
             setEventRemoteSlots1(tempSlots)
             console.log(tempSlots)
         }
         if(modalRemoteEvent.slotsTeam2) {
-            const tempSlots = JSON.parse(modalRemoteEvent.slotsTeam2).filter((_, i) => i != 0)
+            const tempSlots = modalRemoteEvent.slotsTeam2.filter((_, i) => i != 0)
             setEventRemoteSlots2(tempSlots)
             console.log(tempSlots)
         }

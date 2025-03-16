@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
     
 
 const PathchesPage = () => {
-    const host = "http://localhost:3000"
+    const host = "https://api.zgarma.ru"
 
 
     const [isModal, setIsModal] = useState(false);

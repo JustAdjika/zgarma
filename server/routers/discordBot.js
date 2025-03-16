@@ -34,75 +34,78 @@ const serverid = process.env.DISCORD_SERVER_ID
 client.on('ready', async () => {
     console.log(`\x1b[35m |!--- DISCORD_BOT IS READY ---!|\x1b[0m`);
 
+    try {
+        // Authorized role add
+        const accounts = await ACCOUNTS_TAB.findAll()
+        const guild = await client.guilds.fetch(serverid)
 
-    // Authorized role add
-    const accounts = await ACCOUNTS_TAB.findAll()
-    const guild = await client.guilds.fetch(serverid)
+        let discordAccs = []
 
-    let discordAccs = []
+        accounts.forEach(account => {
+            const parsedData = account.discord
+            
+            discordAccs.push(parsedData.id)
+        });
 
-    accounts.forEach(account => {
-        const parsedData = JSON.parse(account.discord)
-        
-        discordAccs.push(parsedData.id)
-    });
-
-    const role = guild.roles.cache.get('1343535112373145610');
-    if (!role) {
-        console.error("Роль с ID 1343535112373145610 не найдена!");
-        return;
-    }
-
-    await Promise.allSettled(discordAccs.map(async (id) => {
-        try {
-            const member = await guild.members.fetch(id);
-            if (!member) {
-                console.log(`Пользователь ${id} не найден в гильдии`);
-                return;
-            }
-
-            await member.roles.add(role);
-            console.log(`Роль 'Authorized' выдана пользователю ${id}`);
-        } catch (error) {
-            console.error(`Ошибка при выдаче роли пользователю ${id}:`, error.message);
+        const role = guild.roles.cache.get('1343535112373145610');
+        if (!role) {
+            console.error("Роль с ID 1343535112373145610 не найдена!");
+            return;
         }
-    }));
 
-    // Web Administrator role add
-    const admins = await ADMINS_TAB.findAll()
-
-    await Promise.allSettled(admins.map(async (admin) => {
-        try {
-            const role = guild.roles.cache.get('1343548802455310358');
-            if (!role) {
-                console.error("Роль с ID 1343548802455310358 не найдена!");
-                return;
-            }
-
-            const adminAcc = await ACCOUNTS_TAB.findOne({
-                where: {
-                    key: admin.key
+        await Promise.allSettled(discordAccs.map(async (id) => {
+            try {
+                const member = await guild.members.fetch(id);
+                if (!member) {
+                    console.log(`Пользователь ${id} не найден в гильдии`);
+                    return;
                 }
-            })
 
-            if (!adminAcc) {
-                console.log(`Администратор не найден в гильдии`);
-                return;
+                await member.roles.add(role);
+                console.log(`Роль 'Authorized' выдана пользователю ${id}`);
+            } catch (error) {
+                console.error(`Ошибка при выдаче роли пользователю ${id}:`, error.message);
             }
+        }));
 
-            const member = await guild.members.fetch(JSON.parse(adminAcc.dataValues.discord).id)
+        // Web Administrator role add
+        const admins = await ADMINS_TAB.findAll()
 
-            if (!member) {
-                console.log(`Пользователь ${JSON.parse(adminAcc.dataValues.discord).id} не найден в гильдии`);
-                return;
+        await Promise.allSettled(admins.map(async (admin) => {
+            try {
+                const role = guild.roles.cache.get('1343548802455310358');
+                if (!role) {
+                    console.error("Роль с ID 1343548802455310358 не найдена!");
+                    return;
+                }
+
+                const adminAcc = await ACCOUNTS_TAB.findOne({
+                    where: {
+                        key: admin.key
+                    }
+                })
+
+                if (!adminAcc) {
+                    console.log(`Администратор не найден в гильдии`);
+                    return;
+                }
+
+                const member = await guild.members.fetch(JSON.parse(adminAcc.dataValues.discord).id)
+
+                if (!member) {
+                    console.log(`Пользователь ${JSON.parse(adminAcc.dataValues.discord).id} не найден в гильдии`);
+                    return;
+                }
+
+                await member.roles.add(role);
+                console.log(`Роль 'Web Administrator' выдана пользователю ${JSON.parse(adminAcc.dataValues.discord).id}`);
+            } catch (error) {
+                console.error(`Ошибка при выдаче роли пользователю ${JSON.parse(adminAcc.dataValues.discord).id}:`, error.message);
             }
-
-            await member.roles.add(role);
-            console.log(`Роль 'Web Administrator' выдана пользователю ${JSON.parse(adminAcc.dataValues.discord).id}`);
-        } catch (error) {
-            console.error(`Ошибка при выдаче роли пользователю ${JSON.parse(adminAcc.dataValues.discord).id}:`, error.message);
-        }
-    }));
+        }));
+    } catch (e) {
+        console.error(`Discord preload bot error: ${e}`);
+    }
 })
 
 
@@ -223,6 +226,8 @@ router.post('/role/add/authorized', BotPermissionsCheck, async(req,res) => {
 
         await foundMember.roles.add('1343535112373145610');
         console.log(`Роль 'Authorized' выдана пользователю ${discordid}`);
+
+        res.end()
     }catch(e){
         console.error(`\x1b[31mApi developer error: bot/role/add/authorized - ${e} \x1b[31m`);
         res.json({
@@ -287,6 +292,8 @@ router.post('/post', BotPermissionsCheck, async(req, res) => {
             .setFooter({ text: 'ZG ARMA 3 | Администрация' });
 
         await channel.send({ embeds: [embed] });
+
+        res.end()
     }catch(e){
         console.error(`\x1b[31mApi developer error: bot/post - ${e} \x1b[31m`);
         res.json({
@@ -311,6 +318,7 @@ router.post('/patchnote', BotPermissionsCheck, async(req, res) => {
             .setFooter({ text: 'Системный Администратор ZG' });
 
         await channel.send({ embeds: [embed] });
+        res.end()
     }catch(e){
         console.error(`\x1b[31mApi developer error: bot/patchnote - ${e} \x1b[31m`);
         res.json({
@@ -364,6 +372,7 @@ router.post('/bugtickets', BotPermissionsCheck, async(req, res) => {
             .setFooter({ text: 'Система ZG ARMA 3 WEBSITE ' });
 
         await channel.send({ embeds: [embed], content: '<@&1343515117819789382>' });
+        res.end()
     }catch(e){
         console.error(`\x1b[31mApi developer error: bot/bugtickets - ${e} \x1b[31m`);
         res.json({
@@ -395,6 +404,7 @@ router.post('/eventAnnouncements/ready', BotPermissionsCheck, async(req, res) =>
         .setFooter({ text: 'ZG ARMA 3 | Администрация' });
 
         await channel.send({ embeds: [embed] });
+        res.end()
     }catch(e){
         console.error(`\x1b[31mApi developer error: eventAnnouncements/ready - ${e} \x1b[31m`);
         res.json({
@@ -425,6 +435,7 @@ router.post('/eventAnnouncements/close', BotPermissionsCheck, async(req, res) =>
         .setFooter({ text: 'ZG ARMA 3 | Администрация' });
 
         await channel.send({ embeds: [embed] });
+        res.end()
     }catch(e){
         console.error(`\x1b[31mApi developer error: eventAnnouncements/close - ${e} \x1b[31m`);
         res.json({
@@ -457,6 +468,7 @@ router.post('/eventAnnouncements/open', BotPermissionsCheck, async(req, res) => 
         .setFooter({ text: 'ZG ARMA 3 | Администрация' });
 
         await channel.send({ embeds: [embed] });
+        res.end()
     }catch(e){
         console.error(`\x1b[31mApi developer error: eventAnnouncements/open - ${e} \x1b[31m`);
         res.json({

@@ -11,7 +11,7 @@ import './Style/fonts.css'
 
 
 const Announcement = () => {
-    const host = "http://localhost:3000"
+    const host = "https://api.zgarma.ru"
 
     // Создание Объявления
     const [announcements, setAnnouncements] = useState([]);
@@ -153,11 +153,6 @@ const Announcement = () => {
 
 
 
-    const CLIENT_ID = "1342587047600328896";
-    const REDIRECT_URI = "http://localhost:5173/auth/discord/callback";
-    const DISCORD_AUTH_URL = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify%20email`;
-
-    const STEAM_AUTH_URL = `http://localhost:3000/api/developer/account/auth/steam`
 
     const [isTerminalOpen, setIsTerminalOpen] = useState(false)
 
@@ -168,17 +163,6 @@ const Announcement = () => {
 
     return (
         <div className="div-main-annoucement">
-            <nav className="menu-container">
-                { currentUser.id == null ? <a href={DISCORD_AUTH_URL}>Register</a> : null }
-                <span>DISCORD USERNAME: {currentUsername}</span>
-                <br />
-                { currentUser.id ? currentUser.steam == null ? <a href={STEAM_AUTH_URL}>Link Steam</a> : null : null }
-                <span>STEAM USERNAME: {currentSteamUsername}</span>
-                <br />
-                { Cookies.get("userData") ? <button onClick={ handleLogOut }>Log out</button> : null }
-                <button style={{ display: isAdmin && currentUser.id ? 'inline-block' : 'none' }} onClick={ () => { setIsTerminalOpen(!isTerminalOpen) } }>Терминал { isTerminalOpen ? 'Открыт' : 'Закрыт' }</button>
-                { inDiscord ? null : <p>Зайдите на наш дискорд сервер!</p> }
-            </nav>
             {isTerminalOpen ? <Terminal setErrorMessage = {setErrorMessage} host={host} /> : null}
             {/* Div с картинкой */}
             <div className="background-banner">

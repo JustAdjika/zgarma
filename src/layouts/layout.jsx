@@ -18,15 +18,17 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
     const [noticeCount, setNoticeCount] = useState(0)
     const [notice, setNotice] = useState([])
 
-    const host = "http://localhost:3000"
-    const STEAM_AUTH_URL = `http://localhost:3000/api/developer/account/auth/steam`
+    const host = "https://api.zgarma.ru"
+    const STEAM_AUTH_URL = `https://api.zgarma.ru/api/developer/account/auth/steam`
 
     const CLIENT_ID = "1342587047600328896";
-    const REDIRECT_URI = "http://localhost:5173/auth/discord/callback";
+    const REDIRECT_URI = "https://zgarma.ru/auth/discord/callback";
     const DISCORD_AUTH_URL = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify%20email`;
 
     useEffect(() => {
-        if(!Cookies.get("userData")) return
+        if(!Cookies.get("userData")) return console.log('куков нет')
+
+        console.log(Cookies.get("userData"))
 
         setCurrentUser(JSON.parse(Cookies.get("userData")))
     }, [])

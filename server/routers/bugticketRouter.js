@@ -71,7 +71,7 @@ router.post('/add', AccountCheck, async(req,res) => {
             isRepeat: data.isRepeat
         })
 
-        const username = JSON.parse(user.discord).username
+        const username = user.discord.username
 
         const botData = {
             title: data.title,
