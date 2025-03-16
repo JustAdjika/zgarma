@@ -96,6 +96,18 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
         
     }, [currentUser])
 
+
+    useEffect(() => {
+        const healthcheck = async () => { 
+            try { 
+                const res = await axios.get('https://api.zgarma.ru/healthcheck')
+            } catch {
+                alert('Сервер отключен. Функционал не доступен!')
+            }
+        }
+        healthcheck()   
+    })
+
     return (
         <>
             <header className="main-header" onClick={ (e) => e.stopPropagation() }>

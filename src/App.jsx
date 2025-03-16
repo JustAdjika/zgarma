@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 
@@ -12,6 +12,7 @@ import Layouts from "./layouts/layout";
 
 
 import './App.css'
+import axios from 'axios';
 
 function App() {
   const [count, setCount] = useState(0)
