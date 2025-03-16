@@ -73,6 +73,10 @@ const startServer = async () => {
         app.use('/api/developer/adminlist/remote', adminList);
         app.use('/api/developer/bot', discordBot);
 
+        app.get('/healthcheck', async (req, res) => {
+            return res.json({ status: 200 })
+        })
+
     } catch (error) {
         console.error("❌ Ошибка при создании таблиц:", error);
     }
