@@ -69,9 +69,11 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
             return
         }
 
+        console.log(oldSquadList)
 
-        const updateSquadList = [...JSON.parse(oldSquadList), newSquad]
+        const updateSquadList = [...oldSquadList, newSquad]
 
+        console.log(updateSquadList)
 
         if(data.team == 'Red') { await currentEvent.update({slotsTeam1: updateSquadList}) }
         else if(data.team == 'Blue') { await currentEvent.update({slotsTeam2: updateSquadList}) }
@@ -134,8 +136,8 @@ router.delete('/delete', AccountCheck, PermissionsCheck, async(req, res) => {
         let squadList
         const squadId = data.squadId
 
-        if(data.team == 'Red') { squadList = JSON.parse(currentEvent.slotsTeam1) }
-        else if(data.team == 'Blue') { squadList = JSON.parse(currentEvent.slotsTeam2) }
+        if(data.team == 'Red') { squadList = currentEvent.slotsTeam1 }
+        else if(data.team == 'Blue') { squadList = currentEvent.slotsTeam2 }
         else {
             res.json({
                 status: 404,
@@ -156,15 +158,12 @@ router.delete('/delete', AccountCheck, PermissionsCheck, async(req, res) => {
 
         squadList.splice(squadId, 1)
 
-        if(data.team == 'Red') { await currentEvent.update({slotsTeam1: squadList}) }
-        else if(data.team == 'Blue') { await currentEvent.update({slotsTeam2: squadList}) }
-        else {
-            res.json({
-                status: 404,
-                err: 'You can only indicate the Blue and Red command (2lvl)'
-            })
-            return
-        }
+        if(data.team == 'Red') { currentEvent.setDataValue('slotsTeam1', squadList) }
+        else { currentEvent.setDataValue('slotsTeam2', squadList) }
+
+        currentEvent.changed('slotsTeam1', true);
+        currentEvent.changed('slotsTeam2', true);
+        await currentEvent.save();
 
         res.json({
             status: 200
@@ -234,7 +233,7 @@ router.post('/slots/add', AccountCheck, PermissionsCheck, async(req, res) => {
             return
         }
 
-        let squadListParsed = JSON.parse(oldSquadList)
+        let squadListParsed = oldSquadList
         const findedSquad = squadListParsed[squadId]
 
         if(!findedSquad) {
@@ -250,16 +249,14 @@ router.post('/slots/add', AccountCheck, PermissionsCheck, async(req, res) => {
         const oldSlots = squadListParsed[squadId].slots
         squadListParsed[squadId].slots = [...oldSlots, newSlot]
 
-        
-        if(data.team == 'Red') { await currentEvent.update({slotsTeam1: squadListParsed}) }
-        else if(data.team == 'Blue') { await currentEvent.update({slotsTeam2: squadListParsed}) }
-        else {
-            res.json({
-                status: 404,
-                err: 'You can only indicate the Blue and Red command (2lvl)'
-            })
-            return
-        }
+
+
+        if(data.team == 'Red') { currentEvent.setDataValue('slotsTeam1', squadListParsed) }
+        else { currentEvent.setDataValue('slotsTeam2', squadListParsed) }
+
+        currentEvent.changed('slotsTeam1', true);
+        currentEvent.changed('slotsTeam2', true);
+        await currentEvent.save();
 
         res.json({
             status: 200
@@ -313,8 +310,8 @@ router.delete('/slots/delete', AccountCheck, PermissionsCheck, async(req, res) =
         const squadId = data.squadId
         const slotId = data.slotId
 
-        if(data.team == 'Red') { squadList = JSON.parse(currentEvent.slotsTeam1) }
-        else if(data.team == 'Blue') { squadList = JSON.parse(currentEvent.slotsTeam2) }
+        if(data.team == 'Red') { squadList = currentEvent.slotsTeam1 }
+        else if(data.team == 'Blue') { squadList = currentEvent.slotsTeam2 }
         else {
             res.json({
                 status: 404,
@@ -347,15 +344,12 @@ router.delete('/slots/delete', AccountCheck, PermissionsCheck, async(req, res) =
 
         squadList[squadId].slots.splice(slotId, 1)
 
-        if(data.team == 'Red') { await currentEvent.update({slotsTeam1: squadList}) }
-        else if(data.team == 'Blue') { await currentEvent.update({slotsTeam2: squadList}) }
-        else {
-            res.json({
-                status: 404,
-                err: 'You can only indicate the Blue and Red command (2lvl)'
-            })
-            return
-        }
+        if(data.team == 'Red') { currentEvent.setDataValue('slotsTeam1', squadList) }
+        else { currentEvent.setDataValue('slotsTeam2', squadList) }
+
+        currentEvent.changed('slotsTeam1', true);
+        currentEvent.changed('slotsTeam2', true);
+        await currentEvent.save();
 
         res.json({
             status: 200
@@ -408,8 +402,8 @@ router.patch('/rename', AccountCheck, PermissionsCheck, async(req, res) => {
         let squadList
         const squadId = data.squadId
 
-        if(data.team == 'Red') { squadList = JSON.parse(currentEvent.slotsTeam1) }
-        else if(data.team == 'Blue') { squadList = JSON.parse(currentEvent.slotsTeam2) }
+        if(data.team == 'Red') { squadList = currentEvent.slotsTeam1 }
+        else if(data.team == 'Blue') { squadList = currentEvent.slotsTeam2 }
         else {
             res.json({
                 status: 404,
@@ -430,15 +424,12 @@ router.patch('/rename', AccountCheck, PermissionsCheck, async(req, res) => {
 
         squadList[squadId].title = data.title
 
-        if(data.team == 'Red') { await currentEvent.update({slotsTeam1: squadList}) }
-        else if(data.team == 'Blue') { await currentEvent.update({slotsTeam2: squadList}) }
-        else {
-            res.json({
-                status: 404,
-                err: 'You can only indicate the Blue and Red command (2lvl)'
-            })
-            return
-        }
+        if(data.team == 'Red') { currentEvent.setDataValue('slotsTeam1', squadList) }
+        else { currentEvent.setDataValue('slotsTeam2', squadList) }
+
+        currentEvent.changed('slotsTeam1', true);
+        currentEvent.changed('slotsTeam2', true);
+        await currentEvent.save();
 
         res.json({
             status: 200
@@ -492,8 +483,9 @@ router.patch('/slots/rename', AccountCheck, PermissionsCheck, async(req, res) =>
         const squadId = data.squadId
         const slotId = data.slotId
 
-        if(data.team == 'Red') { squadList = JSON.parse(currentEvent.slotsTeam1) }
-        else if(data.team == 'Blue') { squadList = JSON.parse(currentEvent.slotsTeam2) }
+
+        if(data.team == 'Red') { squadList = currentEvent.slotsTeam1 }
+        else if(data.team == 'Blue') { squadList = currentEvent.slotsTeam2 }
         else {
             res.json({
                 status: 404,
@@ -522,15 +514,14 @@ router.patch('/slots/rename', AccountCheck, PermissionsCheck, async(req, res) =>
 
         squadList[squadId].slots[slotId].title = data.title
 
-        if(data.team == 'Red') { await currentEvent.update({slotsTeam1: squadList}) }
-        else if(data.team == 'Blue') { await currentEvent.update({slotsTeam2: squadList}) }
-        else {
-            res.json({
-                status: 404,
-                err: 'You can only indicate the Blue and Red command (2lvl)'
-            })
-            return
-        }
+        if(data.team == 'Red') { currentEvent.setDataValue('slotsTeam1', squadList) }
+        else { currentEvent.setDataValue('slotsTeam2', squadList) }
+
+
+        currentEvent.changed('slotsTeam1', true);
+        currentEvent.changed('slotsTeam2', true);
+        await currentEvent.save();
+
 
         res.json({
             status: 200
