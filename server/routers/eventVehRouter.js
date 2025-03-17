@@ -218,82 +218,45 @@ router.patch('/', AccountCheck, PermissionsCheck, async(req, res) => {
 
 
 // VEHICLE SLOT DELETE
-router.delete('/delete', AccountCheck, PermissionsCheck, async(req, res) => {
-    try{
-        const data = req.body
+router.delete('/delete', AccountCheck, PermissionsCheck, async (req, res) => {
+    try {
+        const { key, eventId, vehId, team } = req.body;
 
-        const user = await ACCOUNTS_TAB.findOne({
-            where: {
-                key: data.key
-            }
-        })
+        const user = await ACCOUNTS_TAB.findOne({ where: { key } });
+        if (!user) return res.json({ status: 404, err: 'User undefined' });
 
-        if(!user){
-            res.json({
-                status: 404,
-                err: 'User undefined'
-            })
-            return
+        const currentEvent = await EVENTS_TAB.findOne({ where: { id: eventId } });
+        if (!currentEvent) return res.json({ status: 404, err: 'Current event undefined' });
+
+        let vehicleList;
+        if (team === 'Red') vehicleList = [...currentEvent.vehTeam1]; 
+        else if (team === 'Blue') vehicleList = [...currentEvent.vehTeam2];
+        else return res.json({ status: 404, err: 'You can only indicate the Blue and Red command' });
+
+        if (vehId < 0 || vehId >= vehicleList.length) {
+            return res.json({ status: 404, err: 'Vehicle by id undefined' });
         }
 
-        const currentEvent = await EVENTS_TAB.findOne({
-            where: {
-                id: data.eventId
-            }
-        })
 
-        if(!currentEvent){
-            res.json({
-                status: 404,
-                err: 'Current event undefined'
-            })
-            return
+
+
+        vehicleList.splice(vehId, 1); 
+
+
+        if (team === 'Red') {
+            currentEvent.setDataValue('vehTeam1', vehicleList);
+        } else {
+            currentEvent.setDataValue('vehTeam2', vehicleList);
         }
 
-        let vehicleList
-        const vehId = data.vehId
+        await currentEvent.save();
 
-        if(data.team == 'Red') { vehicleList = JSON.parse(currentEvent.vehTeam1) }
-        else if(data.team == 'Blue') { vehicleList = JSON.parse(currentEvent.vehTeam2) }
-        else {
-            res.json({
-                status: 404,
-                err: 'You can only indicate the Blue and Red command'
-            })
-            return
-        }
-
-        if(!vehicleList[vehId]){
-            res.json({
-                status: 404,
-                err: 'Vehicle by id undefined'
-            })
-            return
-        }
-
-        vehicleList.splice(vehId, 1)
-
-        if(data.team == 'Red') { await currentEvent.update({vehTeam1: vehicleList}) }
-        else if(data.team == 'Blue') { await currentEvent.update({vehTeam2: vehicleList}) }
-        else {
-            res.json({
-                status: 404,
-                err: 'You can only indicate the Blue and Red command (2lvl)'
-            })
-            return
-        }
-
-        res.json({
-            status: 200
-        })
-    }catch(e){
+        res.json({ status: 200 });
+    } catch (e) {
         console.error(`\x1b[31mApi developer error: event/edit/vehicle/delete - ${e} \x1b[31m`);
-        res.json({
-            status: 500,
-            err: `Api developer error: event/edit/vehicle/delete - ${e}`
-        });
-    };
-})
+        res.json({ status: 500, err: `Api developer error: event/edit/vehicle/delete - ${e}` });
+    }
+});
 
 
 export default router;
