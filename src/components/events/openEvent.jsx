@@ -8,13 +8,26 @@ import triangle from '../../assets/triangle.svg'
 
 const OpenEvent = ({isAdmin, setModalReglistEvent, setIsModalEventReglist, eventData, setErrorMessage, host, eventListUpdate, setIsModalEventRegister, setModalRegisterEvent}) => {
     const [rotated, setRotated] = useState(true);
+    const [vehicle1, setVehicle1] = useState([])
+    const [vehicle2, setVehicle2] = useState([])
 
     const handleHide = () => {
         setRotated((prev) => !prev)
     }
 
-    const vehicle1 = JSON.parse(eventData.vehTeam1)
-    const vehicle2 = JSON.parse(eventData.vehTeam2)
+    useEffect(() => {
+        if(eventData.vehTeam1 && typeof eventData.vehTeam1 === 'string') {
+            setVehicle1(JSON.parse(eventData.vehTeam1))
+        } else if (eventData.vehTeam1 && Array.isArray(eventData.vehTeam1)) {
+            setVehicle1(eventData.vehTeam1)
+        }
+
+        if(eventData.vehTeam2 && typeof eventData.vehTeam2 === 'string') {
+            setVehicle2(JSON.parse(eventData.vehTeam2))
+        } else if (eventData.vehTeam2 && Array.isArray(eventData.vehTeam2)) {
+            setVehicle2(eventData.vehTeam2)
+        }
+    }, [eventData])
 
     const handleCloseEvent = async () => {
         if(window.confirm('Вы уверены, что хотите закончить событие?')){

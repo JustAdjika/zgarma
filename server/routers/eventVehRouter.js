@@ -155,6 +155,8 @@ router.patch('/', AccountCheck, PermissionsCheck, async(req, res) => {
                 } else if( Array.isArray(parsedData) && parsedData.length == 0 ) {
                     vehicleList = []
                 }
+            } else if (currentEvent.vehTeam1 && Array.isArray(currentEvent.vehTeam1)) {
+                vehicleList = currentEvent.vehTeam1
             }
         }
         else if(data.team == 'Blue') { 
@@ -165,7 +167,9 @@ router.patch('/', AccountCheck, PermissionsCheck, async(req, res) => {
                 } else if( Array.isArray(parsedData) && parsedData.length == 0 ) {
                     vehicleList = []
                 }
-            } 
+            } else if (currentEvent.vehTeam2 && Array.isArray(currentEvent.vehTeam2)) {
+                vehicleList = currentEvent.vehTeam2
+            }
         }
         else {
             res.json({
@@ -190,16 +194,12 @@ router.patch('/', AccountCheck, PermissionsCheck, async(req, res) => {
 
         vehicleList[vehId] = {...vehicleList[vehId], ...newData}
 
+        if(data.team == 'Red') { currentEvent.setDataValue('vehTeam1', vehicleList); }
+        else { currentEvent.setDataValue('vehTeam2', vehicleList);}
 
-        if(data.team == 'Red') { await currentEvent.update({vehTeam1: vehicleList}) }
-        else if(data.team == 'Blue') { await currentEvent.update({vehTeam2: vehicleList}) }
-        else {
-            res.json({
-                status: 404,
-                err: 'You can only indicate the Blue and Red command (2lvl)'
-            })
-            return
-        }
+        currentEvent.changed('vehTeam1', true);
+        currentEvent.changed('vehTeam2', true);
+        await currentEvent.save();
 
         res.json({
             status: 200
