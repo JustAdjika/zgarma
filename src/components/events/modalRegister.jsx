@@ -26,14 +26,14 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
 
     useEffect(() => {
         if(modalRegisterEvent.slotsTeam1) {
-            const tempSlots = JSON.parse(modalRegisterEvent.slotsTeam1).filter((_, i) => i != 0)
+            const tempSlots = modalRegisterEvent.slotsTeam1.filter((_, i) => i != 0)
             setSlots1(tempSlots)
-            setCmdSlotRed(JSON.parse(modalRegisterEvent.slotsTeam1)[0])
+            setCmdSlotRed(modalRegisterEvent.slotsTeam1[0])
         }
         if(modalRegisterEvent.slotsTeam2) {
-            const tempSlots = JSON.parse(modalRegisterEvent.slotsTeam2).filter((_, i) => i != 0)
+            const tempSlots = modalRegisterEvent.slotsTeam2.filter((_, i) => i != 0)
             setSlots2(tempSlots)
-            setCmdSlotBlue(JSON.parse(modalRegisterEvent.slotsTeam2)[0])
+            setCmdSlotBlue(modalRegisterEvent.slotsTeam2[0])
         }
     }, [modalRegisterEvent])
 
