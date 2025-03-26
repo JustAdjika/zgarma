@@ -74,9 +74,9 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
             }
         } else {
             if(thisRequest.team == 'Red') {
-                slotTitle = JSON.parse(event.slotsTeam1)[thisRequest.squad].slots[thisRequest.slot].title
+                slotTitle = event.slotsTeam1[thisRequest.squad].slots[thisRequest.slot].title
             } else {
-                slotTitle = JSON.parse(event.slotsTeam2)[thisRequest.squad].slots[thisRequest.slot].title
+                slotTitle = event.slotsTeam2[thisRequest.squad].slots[thisRequest.slot].title
             }
         }
 
@@ -166,7 +166,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                             <div style={{backgroundColor: '#0B94E0'}}/>
                         </div>
                     </div>
-                    <div className='event-modal-reglist-slots-main'>
+                    <div className='event-modal-reglist-slots-main' style={{ overflowX: 'hidden', overflowY: 'scroll' }}>
                         <div className='event-modal-reglist-slots-container' style={{ marginRight: '30px' }}>
                             <ReglistSlot 
                                 host={host}
