@@ -19,7 +19,7 @@ const ReglistItem = ({ host, requestIndex, selectedRequest, setSelectedRequest, 
             const res = await axios.get(`${host}/api/developer/account/data/id?id=${requestItem.userId}`)
             
             if(res.data.status == 200) {
-                setUser(JSON.parse(res.data.container.steam))
+                setUser(res.data.container.steam)
             } else {
                 setErrorMessage(res.data.err)
                 setTimeout(() => { setErrorMessage("") }, 3000)
@@ -39,11 +39,19 @@ const ReglistItem = ({ host, requestIndex, selectedRequest, setSelectedRequest, 
         }
 
         if( requestItem.team == 'Red' ) {
-            const slots = JSON.parse(event.slotsTeam1)
+            console.log(event)
+            const slots = event.slotsTeam1
+
+            console.log(`requestItem:`, requestItem)
+            console.log(`requestItem.squad:`, requestItem.squad)
+            console.log(`slots:`, slots)
+            console.log(`slots[requestItem.squad]:`, slots[requestItem.squad])
             setSquad(slots[requestItem.squad].title)
             setSlot(slots[requestItem.squad].slots[requestItem.slot].title)
         } else {
-            const slots = JSON.parse(event.slotsTeam2)
+            const slots = event.slotsTeam2
+
+            console.log(slots)
             setSquad(slots[requestItem.squad].title)
             setSlot(slots[requestItem.squad].slots[requestItem.slot].title)
         }

@@ -21,7 +21,7 @@ const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOrigina
         const res = await axios.get(`${host}/api/developer/account/data/id?id=${id}`)
 
         if(res.data.status == 200) {
-            const tempData = JSON.parse(res.data.container.steam)
+            const tempData = res.data.container.steam
             setRegisteredUsername(tempData.personaname)
         } else {
             console.log(`error id:`,id)

@@ -24,8 +24,8 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
     useEffect(() => {
         if (!event.id) return
 
-        const slots1 = JSON.parse(event.slotsTeam1)
-        const slots2 = JSON.parse(event.slotsTeam2)
+        const slots1 = event.slotsTeam1
+        const slots2 = event.slotsTeam2
         
         setSlots([slots1, slots2])
     }, [event])
@@ -35,7 +35,7 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
 
         if(type == 'CMD') {
             if( slots[team][0].player != null ) {
-                getUser(slots[team][0].player).then(user => setSlotTitle(JSON.parse(user.steam).personaname))
+                getUser(slots[team][0].player).then(user => setSlotTitle(user.steam.personaname))
                 setStyle('close')
             } else {
                 setSlotTitle("Командир стороны")
@@ -45,7 +45,7 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
 
         if(type == 'SL') {
             if( slots[team][squad].slots[0].player != null ) {
-                getUser(slots[team][squad].slots[0].player).then(user => setSlotTitle(JSON.parse(user.steam).personaname))
+                getUser(slots[team][squad].slots[0].player).then(user => setSlotTitle(user.steam.personaname))
                 setStyle('close')
             } else {
                 setSlotTitle(slots[team][squad].slots[0].title)
@@ -55,7 +55,7 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
 
         if(type == 'classic') {
             if( slots[team][squad].slots[slot].player != null ) {
-                getUser(slots[team][squad].slots[slot].player).then(user => setSlotTitle(JSON.parse(user.steam).personaname))
+                getUser(slots[team][squad].slots[slot].player).then(user => setSlotTitle(user.steam.personaname))
                 setStyle('close')
             } else {
                 setSlotTitle(slots[team][squad].slots[slot].title)

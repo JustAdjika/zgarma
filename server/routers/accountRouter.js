@@ -223,13 +223,20 @@ router.get('/data/discord', async(req,res) => {
                 discordid: userResponse.data.id
             })
 
+            res.cookie("userData", JSON.stringify(newUser), {
+                secure: true, // Должно быть true, если используешь HTTPS
+                sameSite: "None", // Разрешает передачу куков между разными доменами
+                domain: ".zgarma.ru",
+                maxAge: 60 * 24 * 60 * 60 * 1000, 
+            });
+
             res.json({
                 status: 200,
                 container: newUser
             })
         }else{
             let parsedData = foundUser.dataValues
-            parsedData.steam = JSON.parse(parsedData.steam)
+            parsedData.steam = parsedData.steam
 
             axios.post(`${host}/api/developer/bot/role/add/authorized`, {
                 botKey: botKey,
@@ -293,5 +300,25 @@ router.post('/notices/data/all', AccountCheck, async(req, res) => {
 })
 
 
+
+router.get('/logout', async (req, res) => {
+    try {
+        res.clearCookie("userData", {
+            domain: ".zgarma.ru",
+            secure: true, // Должно быть true, если используешь HTTPS
+            sameSite: "None"
+        });
+
+        res.json({
+            status: 200
+        })
+    } catch (e) {
+        console.error(`\x1b[31mApi developer error: account/logout - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: account/logout - ${e}`
+        });
+    }
+})
 
 export default router;

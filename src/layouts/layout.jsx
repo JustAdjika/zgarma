@@ -108,6 +108,16 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
         healthcheck()   
     })
 
+    const handleLogout = async () => {
+        const res = await axios.get('https://api.zgarma.ru/api/developer/account/logout', { withCredentials: true })
+
+        if(res.data.status == 200) {
+            window.location.reload()
+        } else {
+            console.error(res.data.err)
+        }
+    }
+
     return (
         <>
             <header className="main-header" onClick={ (e) => e.stopPropagation() }>
@@ -168,7 +178,7 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
                         </div>
                     </div>
                 : null }
-                <button className="nav-userinfo-but-exit" onClick={() => { Cookies.remove("userData"); window.location.reload() }}>Выйти</button>
+                <button className="nav-userinfo-but-exit" onClick={ handleLogout }>Выйти</button>
             </div>
             <div style={{ display: notices ? 'flex': 'none' }} className="nav-notices-container" onClick={ (e) => e.stopPropagation() }>
                 <h2>Уведомления</h2>

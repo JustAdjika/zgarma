@@ -20,8 +20,9 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
     const [reason, setReason] = useState("")
 
     const getRequests = async () => {
-        const res = await axios.post(`${host}/api/developer/event/request/data/all`, {
-            key: JSON.parse(Cookies.get("userData")).key
+        const res = await axios.post(`${host}/api/developer/event/request/data/id`, {
+            key: JSON.parse(Cookies.get("userData")).key,
+            id: event.id
         })
 
         if(res.data.status == 200) {
@@ -52,8 +53,10 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
 
         if(!event.id) return
 
-        setSlotsRed(JSON.parse(event.slotsTeam1).filter((item, index) => index != 0))
-        setSlotsBlue(JSON.parse(event.slotsTeam2).filter((item, index) => index != 0))
+        console.log(123)
+
+        setSlotsRed(event.slotsTeam1.filter((item, index) => index != 0))
+        setSlotsBlue(event.slotsTeam2.filter((item, index) => index != 0))
     }, [event])
 
     const handleRequestAccept = async () => {
@@ -114,6 +117,11 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         }
 
     }
+
+
+    useEffect(() => {
+        setSelectedRequest(null)
+    }, [event])
 
     return (
         <div onClick={ () => { setIsModalReglist(false) } } className='event-modal-reglist-main' style={{ display: isModalReglist ? 'flex' : 'none' }}>

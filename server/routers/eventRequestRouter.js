@@ -57,6 +57,52 @@ router.post('/data/all', AccountCheck, PermissionsCheck, async(req, res) => {
 
 
 
+// GET REQUESTS BY EVENT ID
+router.post('/data/id', AccountCheck, PermissionsCheck, async(req, res) => {
+    try{
+        const data = req.body
+
+        const user = await ACCOUNTS_TAB.findOne({
+            where: {
+                key: data.key 
+            }
+        })
+
+        if(!user) {
+            res.json({
+                status: 404,
+                err: 'User undefined'
+            })
+            return
+        }
+
+        let container = await EVENT_REQUESTS_TAB.findAll({
+            where: {
+                eventId: data.id
+            }
+        })
+
+        if(!container) {
+            container = []
+        }
+
+        res.json({
+            status: 200,
+            container
+        })
+    }catch(e){
+        console.error(`\x1b[31mApi developer error: event/request/data/all - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: event/request/data/all - ${e}`
+        });
+    };
+})
+
+
+
+
+
 // ADD NEW REQUEST
 router.post('/add', SteamCheck, async(req, res) => {
     try{
@@ -308,8 +354,9 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
 
 
         let slots = foundRequest.team == 'Red'
-            ? JSON.parse(event.dataValues.slotsTeam1)
-            : JSON.parse(event.dataValues.slotsTeam2)
+            ? event.dataValues.slotsTeam1
+            : event.dataValues.slotsTeam2
+
 
         if(foundRequest.squad === 0) {
             slots[foundRequest.squad].player = foundRequest.userId
@@ -317,15 +364,16 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
             slots[foundRequest.squad].slots[foundRequest.slot].player = foundRequest.userId
         }
 
+
         if(foundRequest.team === 'Red') {
-            await event.update({
-                slotsTeam1: slots
-            })
+            event.setDataValue('slotsTeam1', slots)
         } else {
-            await event.update({
-                slotsTeam2: slots
-            })
+            event.setDataValue('slotsTeam2', slots)
         }
+
+        event.changed('slotsTeam1', true);
+        event.changed('slotsTeam2', true);
+        await event.save();
 
 
         await NOTICES_TAB.create({
@@ -342,10 +390,10 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/request/cancel - ${e} \x1b[31m`);
+        console.error(`\x1b[31mApi developer error: event/request/accept - ${e} \x1b[31m`);
         res.json({
             status: 500,
-            err: `Api developer error: event/request/cancel - ${e}`
+            err: `Api developer error: event/request/accept - ${e}`
         });
     };
 })

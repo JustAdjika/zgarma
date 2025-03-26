@@ -16,9 +16,9 @@ const ReglistReport = ({ host, currentRequest, setErrorMessage }) => {
             const res = await axios.get(`${host}/api/developer/account/data/id?id=${currentRequest.userId}`)
             
             if(res.data.status == 200) {
-                setSteamName(JSON.parse(res.data.container.steam).personaname)
-                setDiscordName(JSON.parse(res.data.container.discord).username)
-                setDiscordid(JSON.parse(res.data.container.discord).id)
+                setSteamName(res.data.container.steam.personaname)
+                setDiscordName(res.data.container.discord.username)
+                setDiscordid(res.data.container.discord.id)
                 setRegDate(res.data.container.date)
             } else {
                 setErrorMessage(res.data.err)
