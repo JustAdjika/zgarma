@@ -272,7 +272,7 @@ router.get('/members/data/all', async(req, res) => {
 router.post('/post', BotPermissionsCheck, async(req, res) => {
     try {
         const data = req.body
-        const channel = await client.channels.fetch('1343553783824650240')
+        const channel = await client.channels.fetch('1354470729403465879')
 
         const embed = new EmbedBuilder()
             .setTitle(data.title)
@@ -287,12 +287,12 @@ router.post('/post', BotPermissionsCheck, async(req, res) => {
                     data.option3 && { name: 'Вариант 3', value: `${data.option3}`, inline: true },
                     data.option4 && { name: 'Вариант 4', value: `${data.option4}`, inline: true },
                 ].filter(Boolean), // Убираем `undefined`
-                { name: '', value: '*Чтобы проголосовать, [зарегистрируйтесь на сайте](http://localhost:5173/announcement).*', inline: false }
+                { name: '', value: '*Чтобы проголосовать, [зарегистрируйтесь на сайте](https://zgarma.ru/announcement).*', inline: false }
             )
             .setTimestamp()
             .setFooter({ text: 'ZG ARMA 3 | Администрация' });
 
-        await channel.send({ embeds: [embed] });
+        await channel.send({ content: '@everyone', embeds: [embed] });
 
         res.end()
     }catch(e){
@@ -310,7 +310,7 @@ router.post('/post', BotPermissionsCheck, async(req, res) => {
 router.post('/patchnote', BotPermissionsCheck, async(req, res) => {
     try {
         const data = req.body
-        const channel = await client.channels.fetch('1343952216901423205')
+        const channel = await client.channels.fetch('1354465781819379742')
 
         const embed = new EmbedBuilder()
             .setTitle(`Ченджлог #${data.id} за ${data.date} - ${data.title}`)
@@ -335,7 +335,7 @@ router.post('/patchnote', BotPermissionsCheck, async(req, res) => {
 router.post('/bugtickets', BotPermissionsCheck, async(req, res) => {
     try {
         const data = req.body
-        const channel = await client.channels.fetch('1343949638025216133')
+        const channel = await client.channels.fetch('1354468883150536804')
 
         // const buttons = new ActionRowBuilder()
         //     .addComponents(
@@ -387,7 +387,7 @@ router.post('/bugtickets', BotPermissionsCheck, async(req, res) => {
 router.post('/eventAnnouncements/ready', BotPermissionsCheck, async(req, res) => {
     try {
         const data = req.body
-        const channel = await client.channels.fetch('1344865229246566522')
+        const channel = await client.channels.fetch('1287145544837238925')
 
         const embed = new EmbedBuilder()
         .setTitle(`Анонсирована игра`)
@@ -399,12 +399,12 @@ router.post('/eventAnnouncements/ready', BotPermissionsCheck, async(req, res) =>
             { name: 'Красные', value: `${data.eventTeam1}`, inline: true },
             { name: 'Синие', value: `${data.eventTeam2}`, inline: true },
             { name: '', value: ``, inline: false },
-            { name: '', value: `*[Подробнее на странице сайта](http://localhost:5173/events)*`, inline: false },
+            { name: '', value: `*[Подробнее на странице сайта](https://zgarma.ru/events)*`, inline: false },
         )
         .setTimestamp()
         .setFooter({ text: 'ZG ARMA 3 | Администрация' });
 
-        await channel.send({ embeds: [embed] });
+        await channel.send({ content: '@everyone', embeds: [embed] });
         res.end()
     }catch(e){
         console.error(`\x1b[31mApi developer error: eventAnnouncements/ready - ${e} \x1b[31m`);
@@ -419,7 +419,7 @@ router.post('/eventAnnouncements/ready', BotPermissionsCheck, async(req, res) =>
 router.post('/eventAnnouncements/close', BotPermissionsCheck, async(req, res) => {
     try {
         const data = req.body
-        const channel = await client.channels.fetch('1344865229246566522')
+        const channel = await client.channels.fetch('1287145544837238925')
 
         const embed = new EmbedBuilder()
         .setTitle(`Игра окончена`)
@@ -430,7 +430,7 @@ router.post('/eventAnnouncements/close', BotPermissionsCheck, async(req, res) =>
             { name: 'Синие', value: `${data.eventTeam2}`, inline: true },
             { name: '', value: `**Благодарим всех за участие в данном событии, просим оставить отзыв в дискорде, а так же приглашаем на другие наши игры.**`, inline: false },
             { name: '', value: ``, inline: false },
-            { name: '', value: `*Следите за играми на нашем [сайте](http://localhost:5173/events)*`, inline: false },
+            { name: '', value: `*Следите за играми на нашем [сайте](https://zgarma.ru/events)*`, inline: false },
         )
         .setTimestamp()
         .setFooter({ text: 'ZG ARMA 3 | Администрация' });
@@ -451,7 +451,7 @@ router.post('/eventAnnouncements/close', BotPermissionsCheck, async(req, res) =>
 router.post('/eventAnnouncements/open', BotPermissionsCheck, async(req, res) => {
     try {
         const data = req.body
-        const channel = await client.channels.fetch('1344865229246566522')
+        const channel = await client.channels.fetch('1287145544837238925')
 
         const embed = new EmbedBuilder()
         .setTitle(`Игра открыта для регистрации!`)
@@ -463,12 +463,12 @@ router.post('/eventAnnouncements/open', BotPermissionsCheck, async(req, res) => 
             { name: 'Красные', value: `${data.eventTeam1}`, inline: true },
             { name: 'Синие', value: `${data.eventTeam2}`, inline: true },
             { name: '', value: ``, inline: false },
-            { name: '', value: `*[Подробнее на странице сайта](http://localhost:5173/events)*`, inline: false },
+            { name: '', value: `*[Подробнее на странице сайта](https://zgarma.ru/events)*`, inline: false },
         )
         .setTimestamp()
         .setFooter({ text: 'ZG ARMA 3 | Администрация' });
 
-        await channel.send({ embeds: [embed] });
+        await channel.send({ content: '@everyone', embeds: [embed] });
         res.end()
     }catch(e){
         console.error(`\x1b[31mApi developer error: eventAnnouncements/open - ${e} \x1b[31m`);
