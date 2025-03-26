@@ -70,12 +70,17 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
 
             if(res.data.status == 200) {
                 setReqState(true)
+                setTimeout(() => { setReqState(false) }, 5000)
             } else {
                 setErrorMessage(res.data.err)
                 setTimeout(() => { setErrorMessage("") }, 3000)
             }
         }
     }
+
+    useEffect(() => {
+        setReqState(false)
+    }, [modalRegisterEvent])
 
     return (
         <div onClick={ () => { setIsModalEventRegister(false) } } className='event-modal-eventreg-main' style={{ display: isModalEventRegister ? 'flex' : 'none' }}>

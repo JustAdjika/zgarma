@@ -99,9 +99,9 @@ router.post('/add', SteamCheck, async(req, res) => {
         }
 
         const slots = data.team === 'Red'
-            ? JSON.parse(foundEvent.dataValues.slotsTeam1)
+            ? foundEvent.dataValues.slotsTeam1
             : data.team === 'Blue'
-            ? JSON.parse(foundEvent.dataValues.slotsTeam2)
+            ? foundEvent.dataValues.slotsTeam2
             : "Undefined"
 
         if(slots === 'Undefined') {
@@ -114,6 +114,7 @@ router.post('/add', SteamCheck, async(req, res) => {
 
         const squad = slots[data.squad]
         let slot
+
         if(data.squad === 0) {
             slot = squad
         }else{
