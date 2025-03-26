@@ -85,7 +85,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                     <p className='event-modal-eventreg-slots-value'>Количество слотов {slotCount.red}х{slotCount.blue}</p>
                     
                     <h3 className='event-modal-eventreg-h3-title'>Иллюстрация к миссии</h3>
-                    <div className='event-modal-eventreg-img-container' style={{ backgroundImage: `url("../../../server/files/${modalRegisterEvent.imgPath}")` }}></div>
+                    <div className='event-modal-eventreg-img-container' style={{ backgroundImage: `url("https://api.zgarma.ru/${modalRegisterEvent.imgPath}")` }}></div>
                     <div style={{ display: 'flex', marginTop: '20px' }}>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <h3 style={{ marginTop: '0px', width: '300px' }} className='event-modal-eventreg-h3-title'>Регистрация</h3>
