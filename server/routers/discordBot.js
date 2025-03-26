@@ -68,6 +68,7 @@ client.on('ready', async () => {
             }
         }));
 
+
         // Web Administrator role add
         const admins = await ADMINS_TAB.findAll()
 
@@ -90,7 +91,7 @@ client.on('ready', async () => {
                     return;
                 }
 
-                const member = await guild.members.fetch(JSON.parse(adminAcc.dataValues.discord).id)
+                const member = await guild.members.fetch(adminAcc.dataValues.discord.id);
 
                 if (!member) {
                     console.log(`Пользователь ${JSON.parse(adminAcc.dataValues.discord).id} не найден в гильдии`);
@@ -98,7 +99,7 @@ client.on('ready', async () => {
                 }
 
                 await member.roles.add(role);
-                console.log(`Роль 'Web Administrator' выдана пользователю ${JSON.parse(adminAcc.dataValues.discord).id}`);
+                console.log(`Роль 'Web Administrator' выдана пользователю ${adminAcc.dataValues.discord.id}`);
             } catch (error) {
                 console.error(`Ошибка при выдаче роли пользователю ${JSON.parse(adminAcc.dataValues.discord).id}:`, error.message);
             }
