@@ -94,14 +94,14 @@ client.on('ready', async () => {
                 const member = await guild.members.fetch(adminAcc.dataValues.discord.id);
 
                 if (!member) {
-                    console.log(`Пользователь ${JSON.parse(adminAcc.dataValues.discord).id} не найден в гильдии`);
+                    console.log(`Пользователь ${adminAcc.dataValues.discord.id} не найден в гильдии`);
                     return;
                 }
 
                 await member.roles.add(role);
                 console.log(`Роль 'Web Administrator' выдана пользователю ${adminAcc.dataValues.discord.id}`);
             } catch (error) {
-                console.error(`Ошибка при выдаче роли пользователю ${JSON.parse(adminAcc.dataValues.discord).id}:`, error.message);
+                console.error(`Ошибка при выдаче роли пользователю ${adminAcc.dataValues.discord.id}:`, error.message);
             }
         }));
     } catch (e) {
@@ -174,7 +174,7 @@ client.on('guildMemberAdd', async (member) => {
     let isAuth = false
 
     allAccounts.forEach(account => {
-        const discordData = JSON.parse(account.dataValues.discord)
+        const discordData = account.dataValues.discord
 
         if(discordData.id == member.id) {
             isAuth = true
