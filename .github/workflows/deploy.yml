@@ -1,0 +1,38 @@
+name: Deploy to FTP
+
+on:
+  push:
+    branches:
+      - production-client
+      - production-vps
+      - dev-branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout репозиторий
+        uses: actions/checkout@v3
+
+      - name: Определить, куда загружать
+        id: ftp_config
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/production-client" ]]; then
+            echo "FTP_HOST=${{ secrets.FTP_HOST_CLIENT }}" >> $GITHUB_ENV
+            echo "FTP_USERNAME=${{ secrets.FTP_USERNAME_CLIENT }}" >> $GITHUB_ENV
+            echo "FTP_PASSWORD=${{ secrets.FTP_PASSWORD_CLIENT }}" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == "refs/heads/production-vps" || "${{ github.ref }}" == "refs/heads/dev-branch" ]]; then
+            echo "FTP_HOST=${{ secrets.FTP_HOST_VPS }}" >> $GITHUB_ENV
+            echo "FTP_USERNAME=${{ secrets.FTP_USERNAME_VPS }}" >> $GITHUB_ENV
+            echo "FTP_PASSWORD=${{ secrets.FTP_PASSWORD_VPS }}" >> $GITHUB_ENV
+          fi
+
+      - name: Загрузка файлов на FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ env.FTP_HOST }}
+          username: ${{ env.FTP_USERNAME }}
+          password: ${{ env.FTP_PASSWORD }}
+          local-dir: "./"  # Укажи папку с файлами, если нужно
+          server-dir: "/public_html/"  # Укажи путь на сервере
