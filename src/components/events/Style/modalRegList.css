@@ -204,6 +204,7 @@
     display: flex;
     /* background-color: green; */
     height: 760px;
+    margin-bottom: 30px;
 }
 .event-modal-reglist-slots-container {
     width: 300px;
@@ -226,7 +227,7 @@
 .reglistSlot-main-container-open {
     background-color: #D9D9D9;
     overflow: hidden;
-    height: 30px;
+    min-height: 30px;
     width: 270px;
     border: solid 3px #30762D;
     color: #000;
@@ -239,7 +240,7 @@
 .reglistSlot-main-container-select {
     background-color: #153B51;
     overflow: hidden;
-    height: 30px;
+    min-height: 30px;
     width: 270px;
     border: solid 3px #066DA7;
     color: #000;
@@ -252,7 +253,7 @@
 .reglistSlot-main-container-close {
     background-color: #D9D9D9;
     overflow: hidden;
-    height: 30px;
+    min-height: 30px;
     width: 270px;
     border: solid 3px #C0392B;
     color: #000;

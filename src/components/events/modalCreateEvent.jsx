@@ -68,7 +68,7 @@ const ModalCreateEvent = ({ isModalEventCreate, setIsModalEventCreate, host, set
                         <textarea onChange={ (e) => { setEventCreateTeamRed(e.target.value) } } maxLength={60} type="text" placeholder='Красная команда' className='event-modal-eventcreate-team-input'/>
                     </div>
                     <div className='event-modal-eventcreate-team-container'>
-                        <span style={{ color: '#0B94E0', fontFamily: 'My Open Sans', fontSize: '23pt' }}>Красная сторона</span>
+                        <span style={{ color: '#0B94E0', fontFamily: 'My Open Sans', fontSize: '23pt' }}>Синяя сторона</span>
                         <div style={{ backgroundColor: '#0B94E0' }} className='event-modal-eventcreate-team-decorative-line'/>
                         <textarea onChange={ (e) => { setEventCreateTeamBlue(e.target.value) } } maxLength={60} className='event-modal-eventcreate-team-input' type="text" placeholder='Синяя команда' />
                     </div>
