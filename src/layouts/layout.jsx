@@ -18,6 +18,8 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
     const [noticeCount, setNoticeCount] = useState(0)
     const [notice, setNotice] = useState([])
 
+    const pause = true
+
     const host = "https://api.zgarma.ru"
     const STEAM_AUTH_URL = `https://api.zgarma.ru/api/developer/account/auth/steam`
 
@@ -101,6 +103,22 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
         const healthcheck = async () => { 
             try { 
                 const res = await axios.get('https://api.zgarma.ru/healthcheck')
+
+                if(pause) {
+                    const adminCheck = await axios.get('https://api.zgarma.ru/api/developer/adminlist/remote/isAdmin')
+
+                    if(adminCheck.data.status == 200) {
+                        if(!adminCheck.data.container) {
+                            return (
+                                <h1>На сайте проходят технические работы. Пожалуйста подождите</h1>
+                            ) 
+                        }
+                    } else {
+                        return (
+                            <h1>На сайте проходят технические работы. Ошибка определения прав администратора</h1>
+                        )
+                    }
+                }
             } catch {
                 alert('Сервер отключен. Функционал не доступен!')
             }
