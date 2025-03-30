@@ -104,10 +104,16 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
             try { 
                 const res = await axios.get('https://api.zgarma.ru/healthcheck')
 
+                console.log(pause)
+
                 if(pause) {
+                    console.log(currentUser)
+
                     if(!currentUser) return (<h1>На сайте проходят технические работы. Пожалуйста подождите</h1>)
 
                     const adminCheck = await axios.get(`https://api.zgarma.ru/api/developer/adminlist/remote/isAdmin?id=${currentUser.id}`)
+
+                    console.log(adminCheck)
 
                     if(adminCheck.data.status == 200) {
                         if(!adminCheck.data.container) {
