@@ -103,30 +103,6 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
         const healthcheck = async () => { 
             try { 
                 const res = await axios.get('https://api.zgarma.ru/healthcheck')
-
-                console.log(pause)
-
-                if(pause) {
-                    console.log(currentUser)
-
-                    if(!currentUser) return (<h1>На сайте проходят технические работы. Пожалуйста подождите</h1>)
-
-                    const adminCheck = await axios.get(`https://api.zgarma.ru/api/developer/adminlist/remote/isAdmin?id=${currentUser.id}`)
-
-                    console.log(adminCheck)
-
-                    if(adminCheck.data.status == 200) {
-                        if(!adminCheck.data.container) {
-                            return (
-                                <h1>На сайте проходят технические работы. Пожалуйста подождите</h1>
-                            ) 
-                        }
-                    } else {
-                        return (
-                            <h1>На сайте проходят технические работы. Ошибка определения прав администратора</h1>
-                        )
-                    }
-                }
             } catch {
                 alert('Сервер отключен. Функционал не доступен!')
             }
@@ -143,6 +119,34 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
             console.error(res.data.err)
         }
     }
+
+    const pausecheck = async () => {
+        console.log(pause)
+
+        if(pause) {
+            console.log(currentUser)
+
+            if(!currentUser) return (<h1>На сайте проходят технические работы. Пожалуйста подождите</h1>)
+
+            const adminCheck = await axios.get(`https://api.zgarma.ru/api/developer/adminlist/remote/isAdmin?id=${currentUser.id}`)
+
+            console.log(adminCheck)
+
+            if(adminCheck.data.status == 200) {
+                if(!adminCheck.data.container) {
+                    return (
+                        <h1>На сайте проходят технические работы. Пожалуйста подождите</h1>
+                    ) 
+                }
+            } else {
+                return (
+                    <h1>На сайте проходят технические работы. Ошибка определения прав администратора</h1>
+                )
+            }
+        }
+    }
+
+    pausecheck()
 
     return (
         <>
