@@ -18,7 +18,7 @@ function App() {
   const [userinfoMenu, setUserinfoMenu] = useState(false);
   const [notices, setNotices] = useState(false);
 
-  const pause = true
+  const pause = false
 
   useEffect(() => {
     if(!pause) return 
