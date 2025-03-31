@@ -127,7 +127,8 @@ router.get('/isAdmin', async(req, res) => {
         if(!foundAccount) {
             return res.json({
                 status: 404,
-                err: 'User id undefined'
+                err: 'User id undefined',
+                container: false
             })
         }
 
