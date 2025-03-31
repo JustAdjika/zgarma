@@ -9,8 +9,11 @@ server {
     listen 443 ssl;
     server_name dev.zgarma.ru;
 
-ssl_certificate /etc/letsencrypt/live/dev.zgarma.ru-0001/fullchain.pem;
-ssl_certificate_key /etc/letsencrypt/live/dev.zgarma.ru-0001/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/dev.zgarma.ru-0001/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/dev.zgarma.ru-0001/privkey.pem;
+
+    allow 147.30.205.107;  # Разрешённый IP (замени на свой)
+    deny all;               # Запрещаем всем остальным
 
     location / {
         proxy_pass http://127.0.0.1:5173;
