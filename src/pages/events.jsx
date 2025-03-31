@@ -12,7 +12,7 @@ import ModalCreateEvent from '../components/events/modalCreateEvent.jsx';
 import ModalRegister from '../components/events/modalRegister.jsx';
 import ModalRegList from '../components/events/modalRegList.jsx';
 
-const Events = () => {
+const Events = ({isDevBranch}) => {
     const host = 'https://api.zgarma.ru'
     const [events, setEvents] = useState([])
     const [eventList, eventListUpdate] = useState(0)

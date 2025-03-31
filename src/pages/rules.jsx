@@ -2,7 +2,7 @@ import React from "react";
 import './Style/rules.css';
 import rulesBunner from '../assets/rulesBunner.png';
 
-const RulesPage = () => {
+const RulesPage = ({isDevBranch}) => {
     return (
         <div className="main-container-rules">
             <div className="banner-container-rules">

@@ -18,6 +18,8 @@ function App() {
   const [userinfoMenu, setUserinfoMenu] = useState(false);
   const [notices, setNotices] = useState(false);
 
+  const [isDevBranch, setIsDevBranch] = useState(false)
+
   const pause = false
 
   useEffect(() => {
@@ -51,6 +53,17 @@ function App() {
     checkAdminAccess();
   }, []);
 
+
+  useEffect(() => {
+    const devBranch = window.location.hostname === 'dev.zgarma.ru'
+
+    console.log(`DEV BRANCH:`, devBranch)
+
+    setIsDevBranch(devBranch)
+  }, [])
+
+
+
   if (isAdmin === null && pause) {
     return <h1 style={{ color: '#D9D9D9' }}>Загрузка...</h1>; // Пока идет проверка, показываем загрузку
   }
@@ -62,13 +75,16 @@ function App() {
   return (
     <div className='div-main' onClick={() => { setUserinfoMenu(false); setNotices(false); }}>
       <Layouts setUserinfoMenu={setUserinfoMenu} userinfoMenu={userinfoMenu} notices={notices} setNotices={setNotices} />
+      <div className='devBranch-marker' style={{ display: isDevBranch ? 'flex' : 'none' }}>
+        Dev Branch
+      </div>
       <Router>
         <Routes>
-          <Route path='/announcement' element={<Announcement />} />
-          <Route path='/events' element={<Events />} />
+          <Route path='/announcement' element={<Announcement isDevBranch={isDevBranch} />} />
+          <Route path='/events' element={<Events isDevBranch={isDevBranch} />} />
           <Route path='/auth/discord/callback' element={<DiscordAuthCallback />} />
-          <Route path='/patches' element={<PathchesPage />} />
-          <Route path='/rules' element={<RulesPage />} />
+          <Route path='/patches' element={<PathchesPage isDevBranch={isDevBranch} />} />
+          <Route path='/rules' element={<RulesPage isDevBranch={isDevBranch} />} />
           <Route path="*" element={<h1 style={{ color: '#D9D9D9', margin: '0px', position: 'relative', top: '100px', left: '50px' }}>404. Page not found</h1>} />
         </Routes>
       </Router>

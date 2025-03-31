@@ -10,7 +10,7 @@ import './Style/annoucement.css';
 import './Style/fonts.css'
 
 
-const Announcement = () => {
+const Announcement = ({isDevBranch}) => {
     const host = "https://api.zgarma.ru"
 
     // Создание Объявления

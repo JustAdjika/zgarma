@@ -8,9 +8,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
     
 
-const PathchesPage = () => {
+const PathchesPage = ({isDevBranch}) => {
     const host = "https://api.zgarma.ru"
-
 
     const [isModal, setIsModal] = useState(false);
 
