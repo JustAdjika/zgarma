@@ -64,7 +64,8 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req,res) => {
         const container = await BUG_FIXES_TAB.create({
             title: data.title,
             content: data.content,
-            date: GetDateInfo.date
+            date: GetDateInfo.date,
+            devBranch: data.devBranch
         })
 
         const botData = {
@@ -72,7 +73,8 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req,res) => {
             content: data.content,
             date: GetDateInfo.date,
             id: container.id,
-            botKey: botKey
+            botKey: botKey,
+            devBranch: data.devBranch
         }
 
         axios.post('http://localhost:3000/api/developer/bot/patchnote', botData)

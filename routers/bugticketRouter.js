@@ -68,7 +68,8 @@ router.post('/add', AccountCheck, async(req,res) => {
             date: GetDateInfo.date,
             status: 'NOT CHECKED',
             author: user.id,
-            isRepeat: data.isRepeat
+            isRepeat: data.isRepeat,
+            devBranch: data.devBranch
         })
 
         const username = user.discord.username
@@ -81,7 +82,8 @@ router.post('/add', AccountCheck, async(req,res) => {
             author: username,
             isRepeat: data.isRepeat,
             id: container.id,
-            botKey: botKey
+            botKey: botKey,
+            devBranch: data.devBranch
         }
 
         axios.post(`${host}/api/developer/bot/bugtickets`, botData)

@@ -122,7 +122,8 @@ router.post('/status/:status', AccountCheck, PermissionsCheck, async(req, res) =
                 eventTeam2: currentEvent.dataValues.team2,
                 eventType: currentEvent.dataValues.type,
                 eventTitle: currentEvent.dataValues.title,
-                botKey: botKey
+                botKey: botKey,
+                devBranch: data.devBranch
             })
         } else if(req.params.status == "close") {
             await currentEvent.update({
@@ -133,7 +134,8 @@ router.post('/status/:status', AccountCheck, PermissionsCheck, async(req, res) =
                 eventTeam1: currentEvent.dataValues.team1,
                 eventTeam2: currentEvent.dataValues.team2,
                 eventTitle: currentEvent.dataValues.title,
-                botKey: botKey
+                botKey: botKey,
+                devBranch: data.devBranch
             })
         } else {
             res.json({

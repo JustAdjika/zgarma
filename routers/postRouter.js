@@ -47,9 +47,10 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
             option3: data.option3,
             option4: data.option4,
             votes: [],
+            devBranch: data.devBranch
         });
 
-        axios.post(`${host}/api/developer/bot/post`, { ...newPost.dataValues, botKey: botKey })
+        axios.post(`${host}/api/developer/bot/post`, { ...newPost.dataValues, botKey: botKey, devBranch: data.devBranch })
 
         res.json({
             status: 200

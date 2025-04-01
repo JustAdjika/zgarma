@@ -79,6 +79,7 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
             }],
             vehTeam1: [],
             vehTeam2: [],
+            devBranch: data.devBranch
         })
 
         axios.post(`${host}/api/developer/bot/eventAnnouncements/ready`, {
@@ -87,7 +88,8 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
             eventTeam2: data.team2,
             eventType: data.type,
             eventTitle: data.title,
-            botKey: botKey
+            botKey: botKey,
+            devBranch: data.devBranch
         })
 
         res.json({
