@@ -92,7 +92,7 @@ const Announcement = ({isDevBranch}) => {
             return;  // Прерываем выполнение функции
         };
 
-        // window.location.reload()
+        window.location.reload()
     };
 
 

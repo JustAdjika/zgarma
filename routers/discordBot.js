@@ -295,7 +295,7 @@ router.post('/post', BotPermissionsCheck, async(req, res) => {
             .setTimestamp()
             .setFooter({ text: 'ZG ARMA 3 | Администрация' });
 
-        await channel.send({ content: 'everyone', embeds: [embed] });
+        await channel.send({ content: data.devBranch ? 'everyone' : '@everyone', embeds: [embed] });
 
         res.end()
     }catch(e){
