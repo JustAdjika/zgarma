@@ -23,7 +23,11 @@ const BUG_TICKETS_TAB = sequelize.define('bugTickets', {
         type: DataTypes.STRING
     },
     isRepeat: {
-        type: DataTypes.BOOLEAN
+        type: DataTypes.BOOLEAN,
+    },
+    devBranch: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 });
 

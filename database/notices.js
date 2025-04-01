@@ -15,6 +15,10 @@ const NOTICES_TAB = sequelize.define('notices', {
     },
     date: {
         type: DataTypes.STRING
+    },
+    devBranch: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 });
 

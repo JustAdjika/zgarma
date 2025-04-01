@@ -62,6 +62,10 @@ function App() {
     setIsDevBranch(devBranch)
   }, [])
 
+  const getDevBranchStatus = () => {
+    return window.location.hostname === 'dev.zgarma.ru'
+  }
+
 
 
   if (isAdmin === null && pause) {
@@ -80,7 +84,7 @@ function App() {
       </div>
       <Router>
         <Routes>
-          <Route path='/announcement' element={<Announcement isDevBranch={isDevBranch} />} />
+          <Route path='/announcement' element={<Announcement isDevBranch={getDevBranchStatus()} />} />
           <Route path='/events' element={<Events isDevBranch={isDevBranch} />} />
           <Route path='/auth/discord/callback' element={<DiscordAuthCallback />} />
           <Route path='/patches' element={<PathchesPage isDevBranch={isDevBranch} />} />

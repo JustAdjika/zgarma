@@ -30,6 +30,10 @@ const POSTS_TAB = sequelize.define('posts', {
     },
     votes: {
         type: DataTypes.JSON
+    },
+    devBranch: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 });
 

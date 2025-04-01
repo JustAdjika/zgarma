@@ -12,6 +12,10 @@ const FAQ_TAB = sequelize.define('faqs', {
     },
     content: {
         type: DataTypes.JSON
+    },
+    devBranch: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 });
 

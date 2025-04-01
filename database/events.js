@@ -51,6 +51,10 @@ const EVENTS_TAB = sequelize.define('events', {
     },
     vehTeam2: {
         type: DataTypes.JSON
+    },
+    devBranch: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 });
 

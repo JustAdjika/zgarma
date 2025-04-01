@@ -31,6 +31,10 @@ const EVENT_REQUESTS_TAB = sequelize.define('eventRequests', {
     date: {
         type: DataTypes.STRING
     },
+    devBranch: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    }
 });
 
 export default EVENT_REQUESTS_TAB

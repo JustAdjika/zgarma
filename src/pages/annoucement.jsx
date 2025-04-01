@@ -74,6 +74,8 @@ const Announcement = ({isDevBranch}) => {
             }
         }
 
+        console.log(isDevBranch)
+
         const resPost = await axios.post(`${host}/api/developer/post/add`, {
             title: title,
             content: message,
@@ -81,7 +83,8 @@ const Announcement = ({isDevBranch}) => {
             option2: options?.[1]?.value || null,
             option3: options?.[2]?.value || null,
             option4: options?.[3]?.value || null,
-            key: currentUser.key
+            key: currentUser.key,
+            devBranch: isDevBranch
         });
         if(resPost.data.status !== 200) {
             setErrorMessage(resPost.data.err);
@@ -89,7 +92,7 @@ const Announcement = ({isDevBranch}) => {
             return;  // Прерываем выполнение функции
         };
 
-        window.location.reload()
+        // window.location.reload()
     };
 
 
@@ -104,12 +107,15 @@ const Announcement = ({isDevBranch}) => {
             const posts = resPosts.data.container;
 
             posts.forEach(e => {
-                if(e.option1 === null) {
-                    setAnnouncements(prev => [...prev, e]); 
+                console.log(isDevBranch, e)
+                if(isDevBranch == e.devBranch) {
+                    if(e.option1 === null) {
+                        setAnnouncements(prev => [...prev, e]); 
+                    }
+                    else {
+                        setOptionVote(prev => [...prev, e]); 
+                    };
                 }
-                else {
-                    setOptionVote(prev => [...prev, e]); 
-                };
             });
         }
         GetPosts();

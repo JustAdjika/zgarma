@@ -37,7 +37,7 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
             })
             return
         }
-
+        
         const newPost = await POSTS_TAB.create({
             title: data.title,
             content: data.content,

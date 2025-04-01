@@ -15,6 +15,10 @@ const BUG_FIXES_TAB = sequelize.define('bugFixes', {
     },
     date: {
         type: DataTypes.STRING
+    },
+    devBranch: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 });
 
