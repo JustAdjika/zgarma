@@ -20,7 +20,7 @@ function App() {
 
   const [isDevBranch, setIsDevBranch] = useState(false)
 
-  const pause = true
+  const pause = false
 
   useEffect(() => {
     if(!pause) return 
