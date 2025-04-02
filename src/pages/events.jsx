@@ -42,7 +42,7 @@ const Events = ({isDevBranch}) => {
         }
         const getEvents = async () => {
             const res = await axios.get(`${host}/api/developer/event/data/all`)
-            setEvents(res.data.container)
+            setEvents(res.data.container.filter(event => event.devBranch == isDevBranch))
         }
         const adminCheck = async () => {
             if(!JSON.parse(Cookies.get("userData"))) return
@@ -64,7 +64,7 @@ const Events = ({isDevBranch}) => {
     useEffect(() => {
         const getEvents = async () => {
             const res = await axios.get(`${host}/api/developer/event/data/all`)
-            setEvents(res.data.container)
+            setEvents(res.data.container.filter(event => event.devBranch == isDevBranch))
         }
 
         getEvents()
@@ -99,6 +99,7 @@ const Events = ({isDevBranch}) => {
                 modalRemoteEvent={modalRemoteEvent} 
                 setModalRemoteEvent={setModalRemoteEvent} 
                 setErrorMessage={setErrorMessage}
+                isDevBranch={isDevBranch}
             />
             
             <ModalCreateEvent 
@@ -106,6 +107,7 @@ const Events = ({isDevBranch}) => {
                 setIsModalEventCreate={setIsModalEventCreate}
                 host={host} 
                 setErrorMessage={setErrorMessage}
+                isDevBranch={isDevBranch}
             />
             <div className='event-main-container'>
                 <div className='event-ready-container'>
@@ -150,6 +152,7 @@ const Events = ({isDevBranch}) => {
                                 setModalRegisterEvent={setModalRegisterEvent} 
                                 setIsModalEventRegister={setIsModalEventRegister}
                                 setIsModalEventReglist={setIsModalEventReglist}
+                                isDevBranch={isDevBranch}
                                 setModalReglistEvent={setModalReglistEvent}/>
                             :
                             null

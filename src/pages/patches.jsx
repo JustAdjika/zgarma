@@ -54,7 +54,8 @@ const PathchesPage = ({isDevBranch}) => {
         title: title,
         content: message, 
         date: new Date().toISOString(), 
-        key: currentUser.key
+        key: currentUser.key,
+        devBranch: isDevBranch
     });
     if(resFixList.data.status !==200) {
         setErrorMessage(resFixList.data.err);
@@ -101,7 +102,8 @@ const PathchesPage = ({isDevBranch}) => {
             content: detailedDescription, 
             date: new Date().toISOString(), 
             key: currentUser.key,
-            isRepeat: document.getElementById('modal-input').checked 
+            isRepeat: document.getElementById('modal-input').checked,
+            devBranch: isDevBranch
         });
         if(resFixTicket.data.status !==200) {
             setErrorMessage(resFixTicket.data.err);
@@ -143,9 +145,11 @@ const PathchesPage = ({isDevBranch}) => {
                     return;
                 }
     
-                console.log("Полученные данные:", FixList); // Для проверки
+                const devFilterList = FixList.filter(e => e.devBranch == isDevBranch)
+
+                console.log("Полученные данные:", devFilterList); // Для проверки
     
-                setPatches(FixList); // Обновляем состояние
+                setPatches(devFilterList); // Обновляем состояние
             } catch (error) {
                 console.error("Ошибка загрузки данных:", error);
             }
@@ -170,9 +174,10 @@ const PathchesPage = ({isDevBranch}) => {
                     return;
                 }
 
-                console.log("Полученные тикеты:", FixTickets); 
-                setBugReports(FixTickets); 
+                const devFilterList = FixTickets.filter(e => e.devBranch == isDevBranch)
 
+                console.log("Полученные тикеты:", devFilterList); 
+                setBugReports(devFilterList); 
             } catch (error) {
                 console.error("Ошибка загрузки тикетов:", error);
             }

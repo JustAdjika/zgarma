@@ -417,7 +417,7 @@ router.post('/eventAnnouncements/ready', BotPermissionsCheck, async(req, res) =>
         .setTimestamp()
         .setFooter({ text: 'ZG ARMA 3 | Администрация' });
 
-        await channel.send({ content: 'everyone', embeds: [embed] });
+        await channel.send({ content: data.devBranch ? 'everyone' : '@everyone', embeds: [embed] });
         res.end()
     }catch(e){
         console.error(`\x1b[31mApi developer error: eventAnnouncements/ready - ${e} \x1b[31m`);
@@ -487,7 +487,7 @@ router.post('/eventAnnouncements/open', BotPermissionsCheck, async(req, res) => 
         .setTimestamp()
         .setFooter({ text: 'ZG ARMA 3 | Администрация' });
 
-        await channel.send({ content: 'everyone', embeds: [embed] });
+        await channel.send({ content: data.devBranch ? 'everyone' : '@everyone', embeds: [embed] });
         res.end()
     }catch(e){
         console.error(`\x1b[31mApi developer error: eventAnnouncements/open - ${e} \x1b[31m`);

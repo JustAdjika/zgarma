@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 
 import './Style/modalCreateEvent.css'
 
-const ModalCreateEvent = ({ isModalEventCreate, setIsModalEventCreate, host, setErrorMessage }) => {
+const ModalCreateEvent = ({ isModalEventCreate, setIsModalEventCreate, host, setErrorMessage, isDevBranch }) => {
     const [eventCreateType, setEventCreateType] = useState('PVP')
     const [eventCreateTitle, setEventCreateTitle] = useState("")
     const [eventCreateDay, setEventCreateDay] = useState("")
@@ -25,7 +25,8 @@ const ModalCreateEvent = ({ isModalEventCreate, setIsModalEventCreate, host, set
             team1: eventCreateTeamRed,
             team2: eventCreateTeamBlue,
             date: `${eventCreateDay}.${eventCreateMonth}.${eventCreateYear}`,
-            key: JSON.parse(Cookies.get("userData")).key
+            key: JSON.parse(Cookies.get("userData")).key,
+            devBranch: isDevBranch
         }
         
 

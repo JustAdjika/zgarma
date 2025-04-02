@@ -20,7 +20,7 @@ function App() {
 
   const [isDevBranch, setIsDevBranch] = useState(false)
 
-  const pause = false
+  const pause = true
 
   useEffect(() => {
     if(!pause) return 
@@ -87,7 +87,7 @@ function App() {
           <Route path='/announcement' element={<Announcement isDevBranch={getDevBranchStatus()} />} />
           <Route path='/events' element={<Events isDevBranch={isDevBranch} />} />
           <Route path='/auth/discord/callback' element={<DiscordAuthCallback />} />
-          <Route path='/patches' element={<PathchesPage isDevBranch={isDevBranch} />} />
+          <Route path='/patches' element={<PathchesPage isDevBranch={getDevBranchStatus()} />} />
           <Route path='/rules' element={<RulesPage isDevBranch={isDevBranch} />} />
           <Route path="*" element={<h1 style={{ color: '#D9D9D9', margin: '0px', position: 'relative', top: '100px', left: '50px' }}>404. Page not found</h1>} />
         </Routes>

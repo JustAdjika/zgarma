@@ -6,7 +6,7 @@ import './Style/openEvent.css'
 import '../../pages/Style/fonts.css'
 import triangle from '../../assets/triangle.svg'
 
-const OpenEvent = ({isAdmin, setModalReglistEvent, setIsModalEventReglist, eventData, setErrorMessage, host, eventListUpdate, setIsModalEventRegister, setModalRegisterEvent}) => {
+const OpenEvent = ({isAdmin, setModalReglistEvent, setIsModalEventReglist, eventData, setErrorMessage, host, eventListUpdate, setIsModalEventRegister, setModalRegisterEvent, isDevBranch}) => {
     const [rotated, setRotated] = useState(true);
     const [vehicle1, setVehicle1] = useState([])
     const [vehicle2, setVehicle2] = useState([])
@@ -33,7 +33,8 @@ const OpenEvent = ({isAdmin, setModalReglistEvent, setIsModalEventReglist, event
         if(window.confirm('Вы уверены, что хотите закончить событие?')){
             const data = {
                 eventId: eventData.id,
-                key: JSON.parse(Cookies.get("userData")).key
+                key: JSON.parse(Cookies.get("userData")).key,
+                devBranch: isDevBranch
             }
             
             const res = await axios.post(`${host}/api/developer/event/edit/status/close`, data)

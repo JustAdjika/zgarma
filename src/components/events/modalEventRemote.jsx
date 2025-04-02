@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 
 import './Style/modalEventRemote.css'
 
-const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, modalRemoteEvent, setErrorMessage }) => {
+const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, modalRemoteEvent, setErrorMessage, isDevBranch }) => {
     const [eventRemoteTitle, setEventRemoteTitle] = useState("")
     const [eventRemoteMetar, setEventRemoteMetar] = useState("")
     const [eventRemoteDescription, setEventRemoteDescription] = useState("")
@@ -80,7 +80,8 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
         if(window.confirm('Вы уверены, что хотите открыть событие?')){
             const res = await axios.post(`${host}/api/developer/event/edit/status/open`, {
                 eventId: modalRemoteEvent.id,
-                key: JSON.parse(Cookies.get("userData")).key
+                key: JSON.parse(Cookies.get("userData")).key,
+                devBranch: isDevBranch
             })
 
             if(res.data.status == 200) {
