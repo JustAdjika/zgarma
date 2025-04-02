@@ -74,6 +74,9 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
             
             if(teamId == team) {
                 setStyle('select')
+            } else {
+                if(slots[team][0].player != null) setStyle('close')
+                else setStyle('open')
             }
         }
 
@@ -82,6 +85,9 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
             
             if(teamId == team && reqests[currentRequest].slot == 0) {
                 setStyle('select')
+            } else {
+                if(slots[team][squad].slots[0].player != null) setStyle('close')
+                else setStyle('open')
             }
         }
 
@@ -90,6 +96,9 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
             
             if(teamId == team && reqests[currentRequest].squad == squad && reqests[currentRequest].slot == slot) {
                 setStyle('select')
+            } else {
+                if(slots[team][squad].slots[slot].player != null) setStyle('close')
+                else setStyle('open')
             }
         }
     }, [currentRequest])

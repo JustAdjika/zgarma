@@ -85,7 +85,7 @@ function App() {
       <Router>
         <Routes>
           <Route path='/announcement' element={<Announcement isDevBranch={getDevBranchStatus()} />} />
-          <Route path='/events' element={<Events isDevBranch={isDevBranch} />} />
+          <Route path='/events' element={<Events isDevBranch={getDevBranchStatus()} />} />
           <Route path='/auth/discord/callback' element={<DiscordAuthCallback />} />
           <Route path='/patches' element={<PathchesPage isDevBranch={getDevBranchStatus()} />} />
           <Route path='/rules' element={<RulesPage isDevBranch={isDevBranch} />} />

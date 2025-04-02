@@ -41,7 +41,7 @@ app.use(cors({
     origin: ["http://zgarma.ru", "https://zgarma.ru", "http://dev.zgarma.ru", "https://dev.zgarma.ru"], // Разрешаем запросы с этого домена
     credentials: true,           // Разрешаем передачу куков
     methods: "GET,POST,PUT,DELETE,PATCH", // Разрешённые методы
-    allowedHeaders: "Content-Type,Authorization", // Разрешённые заголовки
+    allowedHeaders: "*", // Разрешённые заголовки
 }));
 app.use(fileUpload())
 
