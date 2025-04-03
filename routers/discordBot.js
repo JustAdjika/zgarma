@@ -49,7 +49,7 @@ client.on('ready', async () => {
 
         const role = guild.roles.cache.get('1343535112373145610');
         if (!role) {
-            console.error("Роль с ID 1343535112373145610 не найдена!");
+            console.error(`[${GetDateInfo.all}] Роль с ID 1343535112373145610 не найдена!`);
             return;
         }
 
@@ -57,14 +57,14 @@ client.on('ready', async () => {
             try {
                 const member = await guild.members.fetch(id);
                 if (!member) {
-                    console.log(`Пользователь ${id} не найден в гильдии`);
+                    console.log(`[${GetDateInfo.all}] Пользователь ${id} не найден в гильдии`);
                     return;
                 }
 
                 await member.roles.add(role);
-                console.log(`Роль 'Authorized' выдана пользователю ${id}`);
+                console.log(`[${GetDateInfo.all}] Роль 'Authorized (1343535112373145610)' выдана пользователю ${id}`);
             } catch (error) {
-                console.error(`Ошибка при выдаче роли пользователю ${id}:`, error.message);
+                console.error(`[${GetDateInfo.all}] Ошибка при выдаче роли пользователю ${id}:`, error.message);
             }
         }));
 
@@ -76,7 +76,7 @@ client.on('ready', async () => {
             try {
                 const role = guild.roles.cache.get('1343548802455310358');
                 if (!role) {
-                    console.error("Роль с ID 1343548802455310358 не найдена!");
+                    console.error(`[${GetDateInfo.all}] Роль с ID 1343548802455310358 не найдена!`);
                     return;
                 }
 
@@ -87,21 +87,21 @@ client.on('ready', async () => {
                 })
 
                 if (!adminAcc) {
-                    console.log(`Администратор не найден в гильдии`);
+                    console.log(`[${GetDateInfo.all}] Администратор не найден в гильдии`);
                     return;
                 }
 
                 const member = await guild.members.fetch(adminAcc.dataValues.discord.id);
 
                 if (!member) {
-                    console.log(`Пользователь ${adminAcc.dataValues.discord.id} не найден в гильдии`);
+                    console.log(`[${GetDateInfo.all}] Пользователь ${adminAcc.dataValues.discord.id} не найден в гильдии`);
                     return;
                 }
 
                 await member.roles.add(role);
-                console.log(`Роль 'Web Administrator' выдана пользователю ${adminAcc.dataValues.discord.id}`);
+                console.log(`[${GetDateInfo.all}] Роль 'Web Administrator (1343548802455310358)' выдана пользователю ${adminAcc.dataValues.discord.id}`);
             } catch (error) {
-                console.error(`Ошибка при выдаче роли пользователю ${adminAcc.dataValues.discord.id}:`, error.message);
+                console.error(`[${GetDateInfo.all}] Ошибка при выдаче роли пользователю ${adminAcc.dataValues.discord.id}:`, error.message);
             }
         }));
     } catch (e) {
@@ -130,10 +130,11 @@ client.on('messageCreate', async(message) => {
 
         if (message.content.toLowerCase() === `${ prefix }${ command }`) {
             message.reply(`pong`);
+            console.log(`[${GetDateInfo.all}] ${message.author.id} executed command ${command}`)
         }
 
     } catch (e) {
-        console.log(`Bot error: ${command} - ${e}`)
+        console.log(`[${GetDateInfo.all}] Bot error: ${command} - ${e}`)
     }
 })
 
@@ -157,10 +158,12 @@ client.on('messageCreate', async(message) => {
             // const messagesid = messages.map(msg => msg.id)
 
             messages.map(msg => msg.delete())
+
+            console.log(`[${GetDateInfo.all}] ${message.author.id} executed command ${command}`)
         }
 
     } catch (e) {
-        console.log(`Bot error: ${command} - ${e}`)
+        console.log(`[${GetDateInfo.all}] Bot error: ${command} - ${e}`)
     }
 })
 
@@ -185,14 +188,14 @@ client.on('guildMemberAdd', async (member) => {
         try {
             const foundMember = await guild.members.fetch(member.id);
             if (!foundMember) {
-                console.log(`Пользователь ${member.id} не найден в гильдии`);
+                console.log(`[${GetDateInfo.all}] Пользователь ${member.id} не найден в гильдии`);
                 return;
             }
 
             await member.roles.add('1343535112373145610');
-            console.log(`Роль 'Authorized' выдана пользователю ${id}`);
+            console.log(`[${GetDateInfo.all}] Роль 'Authorized' выдана пользователю ${member.id}`);
         } catch (error) {
-            console.error(`Ошибка при выдаче роли пользователю ${id}:`, error.message);
+            console.error(`[${GetDateInfo.all}] Ошибка при выдаче роли пользователю ${member.id}:`, error.message);
         }
     }
 });
@@ -221,16 +224,16 @@ router.post('/role/add/authorized', BotPermissionsCheck, async(req,res) => {
 
         const foundMember = await guild.members.fetch(discordid);
         if (!foundMember) {
-            console.log(`Пользователь ${discordid} не найден в гильдии`);
+            console.log(`[${GetDateInfo.all}] Пользователь ${discordid} не найден в гильдии`);
             return;
         }
 
         await foundMember.roles.add('1343535112373145610');
-        console.log(`Роль 'Authorized' выдана пользователю ${discordid}`);
+        console.log(`[${GetDateInfo.all}] Роль 'Authorized' выдана пользователю ${discordid}`);
 
         res.end()
     }catch(e){
-        console.error(`\x1b[31mApi developer error: bot/role/add/authorized - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo.all}] Api developer error: bot/role/add/authorized - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: bot/role/add/authorized - ${e}`
@@ -252,13 +255,15 @@ router.get('/members/data/all', async(req, res) => {
             username: member.user.username
         }))
 
+        console.log(`[${GetDateInfo.all}] Список участников сервера выдан`)
+
         res.json({
             status: 200,
             container: memberList
         })
 
     }catch(e){
-        console.error(`\x1b[31mApi developer error: bot/members/data/all - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo.all}] Api developer error: bot/members/data/all - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: bot/members/data/all - ${e}`
@@ -297,9 +302,11 @@ router.post('/post', BotPermissionsCheck, async(req, res) => {
 
         await channel.send({ content: data.devBranch ? 'everyone' : '@everyone', embeds: [embed] });
 
+        console.log(`[${GetDateInfo.all}] Announcement send`)
+
         res.end()
     }catch(e){
-        console.error(`\x1b[31mApi developer error: bot/post - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo.all}] Api developer error: bot/post - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: bot/post - ${e}`
@@ -326,9 +333,12 @@ router.post('/patchnote', BotPermissionsCheck, async(req, res) => {
             .setFooter({ text: 'Системный Администратор ZG' });
 
         await channel.send({ embeds: [embed] });
+
+        console.log(`[${GetDateInfo.all}] Patchnote send`)
+
         res.end()
     }catch(e){
-        console.error(`\x1b[31mApi developer error: bot/patchnote - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo.all}] Api developer error: bot/patchnote - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: bot/patchnote - ${e}`
@@ -383,9 +393,12 @@ router.post('/bugtickets', BotPermissionsCheck, async(req, res) => {
             .setFooter({ text: 'Система ZG ARMA 3 WEBSITE ' });
 
         await channel.send({ embeds: [embed], content: '<@&1343515117819789382>' });
+
+        console.log(`[${GetDateInfo.all}] Ticket send`)
+
         res.end()
     }catch(e){
-        console.error(`\x1b[31mApi developer error: bot/bugtickets - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo.all}] Api developer error: bot/bugtickets - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: bot/bugtickets - ${e}`
@@ -418,9 +431,12 @@ router.post('/eventAnnouncements/ready', BotPermissionsCheck, async(req, res) =>
         .setFooter({ text: 'ZG ARMA 3 | Администрация' });
 
         await channel.send({ content: data.devBranch ? 'everyone' : '@everyone', embeds: [embed] });
+
+        console.log(`[${GetDateInfo.all}] Event notice send (READY)`)
+
         res.end()
     }catch(e){
-        console.error(`\x1b[31mApi developer error: eventAnnouncements/ready - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo.all}] Api developer error: eventAnnouncements/ready - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: eventAnnouncements/ready - ${e}`
@@ -452,9 +468,12 @@ router.post('/eventAnnouncements/close', BotPermissionsCheck, async(req, res) =>
         .setFooter({ text: 'ZG ARMA 3 | Администрация' });
 
         await channel.send({ embeds: [embed] });
+
+        console.log(`[${GetDateInfo.all}] Event notice send (CLOSE)`)
+
         res.end()
     }catch(e){
-        console.error(`\x1b[31mApi developer error: eventAnnouncements/close - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo.all}] Api developer error: eventAnnouncements/close - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: eventAnnouncements/close - ${e}`
@@ -488,9 +507,12 @@ router.post('/eventAnnouncements/open', BotPermissionsCheck, async(req, res) => 
         .setFooter({ text: 'ZG ARMA 3 | Администрация' });
 
         await channel.send({ content: data.devBranch ? 'everyone' : '@everyone', embeds: [embed] });
+
+        console.log(`[${GetDateInfo.all}] Event notice send (OPEN)`)
+
         res.end()
     }catch(e){
-        console.error(`\x1b[31mApi developer error: eventAnnouncements/open - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo.all}] Api developer error: eventAnnouncements/open - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: eventAnnouncements/open - ${e}`
