@@ -53,7 +53,7 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
 
         axios.post(`${host}/api/developer/bot/post`, { ...newPost.dataValues, botKey: botKey, devBranch: data.devBranch })
 
-        console.log(`[${GetDateInfo.all}] Пост ${newPost.id} успешно отправлен администратором ${user.id}`)
+        console.log(`[${GetDateInfo.all}] API Пост ${newPost.id} успешно отправлен администратором ${user.id}`)
 
         res.json({
             status: 200
@@ -84,7 +84,7 @@ router.get('/data/all', async(req, res) => {
             });
         }
 
-        console.log(`[${GetDateInfo.all}] Посты получены`)
+        console.log(`[${GetDateInfo.all}] API Посты получены`)
     }catch(e){
         console.error(`\x1b[31m[${GetDateInfo.all}] Api developer error: post/data/all - ${e} \x1b[0m`);
         res.json({
@@ -100,7 +100,7 @@ router.put('/vote/add', AccountCheck, async(req, res) => {
         const data = req.body;
 
         if(!data.key) {
-            console.log(`[${GetDateInfo.all}] Добавление голоса для голосования прервано. Ключа пользователя нет`)
+            console.log(`[${GetDateInfo.all}] API Добавление голоса для голосования прервано. Ключа пользователя нет`)
             return res.json({
                 status: 404,
                 err: 'You are not registered'
@@ -114,7 +114,7 @@ router.put('/vote/add', AccountCheck, async(req, res) => {
         });
 
         if(!user){
-            console.log(`[${GetDateInfo.all}] Добавление голоса для голосования прервано. Пользователь не найден`)
+            console.log(`[${GetDateInfo.all}] API Добавление голоса для голосования прервано. Пользователь не найден`)
             res.json({
                 status: 404,
                 err: 'Api developer error: post/vote/add - key undefined'
@@ -129,7 +129,7 @@ router.put('/vote/add', AccountCheck, async(req, res) => {
         });
 
         if(!post){
-            console.log(`[${GetDateInfo.all}] Добавление голоса для поста прервано. Пост не найден`)
+            console.log(`[${GetDateInfo.all}] API Добавление голоса для поста прервано. Пост не найден`)
 
             res.json({
                 status: 404,
@@ -155,7 +155,7 @@ router.put('/vote/add', AccountCheck, async(req, res) => {
             await post.update({ votes: updatedVotes })
         }
 
-        console.log(`[${GetDateInfo.all}] Добавлен новый голос для поста ${post.id}. Пользователь ${user.id}, вариант ${data.option}`)
+        console.log(`[${GetDateInfo.all}] API Добавлен новый голос для поста ${post.id}. Пользователь ${user.id}, вариант ${data.option}`)
 
         res.json({
             status: 200

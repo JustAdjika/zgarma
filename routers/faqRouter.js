@@ -9,6 +9,7 @@ import ACCOUNTS_TAB from '../database/accounts.js';
 
 import PermissionsCheck from '../modules/permissions.js'
 import AccountCheck from '../modules/accountCheck.js'
+import GetDateInfo from '../modules/dateInfo.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -32,6 +33,7 @@ router.post('/imgupload', AccountCheck, PermissionsCheck, async(req,res) => {
         })
 
         if(!user){
+            console.log(`[${GetDateInfo.all}] API Загрузка изображения в FAQ прервана. Пользователь не найден`)
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -40,6 +42,7 @@ router.post('/imgupload', AccountCheck, PermissionsCheck, async(req,res) => {
         }
 
         if(!req.files || !req.files.file) {
+            console.log(`[${GetDateInfo.all}] API Загрузка изображения в FAQ прервана. Изображения нет`)
             res.json({
                 status: 400,
                 err: 'File is not uploaded'
@@ -48,6 +51,7 @@ router.post('/imgupload', AccountCheck, PermissionsCheck, async(req,res) => {
         }
 
         if(Array.isArray(req.files.file)) {
+            console.log(`[${GetDateInfo.all}] API Загрузка изображения в FAQ прервана. Файлов несколько`)
             res.json({
                 status: 400,
                 err: 'More than one file has been uploaded'
@@ -61,6 +65,7 @@ router.post('/imgupload', AccountCheck, PermissionsCheck, async(req,res) => {
 
         file.mv(uploadPath, (err) => {
             if(err) {
+                console.log(`[${GetDateInfo.all}] API Загрузка изображения в FAQ прервана. ${err}`)
                 res.json({
                     status: 500,
                     err
@@ -69,12 +74,14 @@ router.post('/imgupload', AccountCheck, PermissionsCheck, async(req,res) => {
             }
         })
 
+        console.log(`[${GetDateInfo.all}] API Изображение успешно загружено в FAQ`)
+
         res.json({
             status: 200,
             container: uploadPath
         })
     } catch(e) {
-        console.error(`\x1b[31mApi developer error: faq/imgupload - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo.all}] Api developer error: faq/imgupload - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: faq/imgupload - ${e}`
@@ -96,6 +103,7 @@ router.put('/upload', AccountCheck, PermissionsCheck, async(req,res) => {
         })
 
         if(!user){
+            console.log(`[${GetDateInfo.all}] API загрузка объекта FAQ на сервер прервана. Пользователь не найден`)
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -107,6 +115,7 @@ router.put('/upload', AccountCheck, PermissionsCheck, async(req,res) => {
             where: {},
             truncate: true
         });
+        console.log(`[${GetDateInfo.all}] API при загрузке нового объекта FAQ, старый был уничтожен`)
 
         data.faqs.forEach(async (element) => {
             await FAQ_TAB.create({
@@ -115,11 +124,13 @@ router.put('/upload', AccountCheck, PermissionsCheck, async(req,res) => {
             })
         });
 
+        console.log(`[${GetDateInfo.all}] API новый объект FAQ загружен на сервер`)
+
         res.json({
             status: 200
         })
     } catch(e) {
-        console.error(`\x1b[31mApi developer error: faq/upload - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo.all}] Api developer error: faq/upload - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: faq/upload - ${e}`
@@ -134,12 +145,14 @@ router.get('/data/all', async(req,res) => {
     try {
         const container = await FAQ_TAB.findAll()
 
+        console.log(`[${GetDateInfo.all}] API Объект FAQ получен`)
+
         res.json({
             status: 200,
             container
         })
     } catch(e) {
-        console.error(`\x1b[31mApi developer error: faq/upload - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo.all}] Api developer error: faq/upload - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: faq/upload - ${e}`
