@@ -16,4 +16,4 @@ const GetDateInfo = () => {
     };
 }
 
-export default GetDateInfo();
+export default GetDateInfo;

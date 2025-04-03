@@ -215,7 +215,7 @@ router.get('/data/discord', async(req,res) => {
                 key: hashedKey,
                 steam: null,
                 discord: userResponse.data,
-                date: GetDateInfo.all
+                date: GetDateInfo().all
             })
 
             axios.post(`${host}/api/developer/bot/role/add/authorized`, {

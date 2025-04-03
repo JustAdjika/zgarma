@@ -204,7 +204,7 @@ router.post('/add', SteamCheck, async(req, res) => {
             slot: data.slot,
             maybeSL: data.maybeSL,
             maybeTL: data.maybeTL,
-            date: GetDateInfo.all
+            date: GetDateInfo().all
         })
 
         res.json({
@@ -274,7 +274,7 @@ router.post('/cancel', AccountCheck, PermissionsCheck, async(req, res) => {
         await NOTICES_TAB.create({
             destination: foundDestination.id,
             content: `Ваша заявка в регистрации на игру была отклонена управляющим составом, по причине: ${data.reason}`,
-            date: GetDateInfo.all
+            date: GetDateInfo().all
         })
 
         await foundRequest.destroy()
@@ -379,7 +379,7 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
         await NOTICES_TAB.create({
             destination: foundDestination.id,
             content: `Ваша заявка в регистрации на роль "${data.eventSlot}" в игре "${data.eventTitle}" была одобрена`,
-            date: GetDateInfo.all
+            date: GetDateInfo().all
         })
 
         await foundRequest.destroy()

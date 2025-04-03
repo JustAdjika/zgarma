@@ -64,14 +64,14 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req,res) => {
         const container = await BUG_FIXES_TAB.create({
             title: data.title,
             content: data.content,
-            date: GetDateInfo.date,
+            date: GetDateInfo().date,
             devBranch: data.devBranch
         })
 
         const botData = {
             title: data.title,
             content: data.content,
-            date: GetDateInfo.date,
+            date: GetDateInfo().date,
             id: container.id,
             botKey: botKey,
             devBranch: data.devBranch

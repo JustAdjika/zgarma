@@ -65,7 +65,7 @@ router.post('/add', AccountCheck, async(req,res) => {
         const container = await BUG_TICKETS_TAB.create({
             title: data.title,
             content: data.content,
-            date: GetDateInfo.date,
+            date: GetDateInfo().date,
             status: 'NOT CHECKED',
             author: user.id,
             isRepeat: data.isRepeat,
@@ -77,7 +77,7 @@ router.post('/add', AccountCheck, async(req,res) => {
         const botData = {
             title: data.title,
             content: data.content,
-            date: GetDateInfo.date,
+            date: GetDateInfo().date,
             status: 'NOT CHECKED',
             author: username,
             isRepeat: data.isRepeat,
