@@ -1,4 +1,5 @@
 import ADMINS_TAB from "../database/adminList.js";
+import GetDateInfo from './dateInfo.js'
 
 const PermissionsCheck = async(req, res, next) => {
     try {
@@ -11,6 +12,8 @@ const PermissionsCheck = async(req, res, next) => {
         })
 
         if(!foundAdministrator) {
+            console.log(`[${GetDateInfo.all}] MIDDLEWARE PermissionsCheck прерван при выполнении запроса ${req.url}. Администиратор ${data.key} не найден в списке`)
+
             return res.json({
                 status: 403,
                 err: 'Not enough permits'
@@ -20,7 +23,7 @@ const PermissionsCheck = async(req, res, next) => {
         next()
         
     } catch (e) {
-        console.error(`\x1b[31mApi developer error: Permissions error - ${e} \x1b[0m`);
+        console.error(`\x1b[31m[${GetDateInfo.all}] Api developer error: Permissions error - ${e} \x1b[0m`);
         return res.json({
             status: 500,
             err: `Api developer error: Permissions error - ${e}`
