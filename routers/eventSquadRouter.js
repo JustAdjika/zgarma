@@ -6,6 +6,7 @@ import EVENTS_TAB from '../database/events.js';
 
 import PermissionsCheck from '../modules/permissions.js'
 import AccountCheck from '../modules/accountCheck.js'
+import GetDateInfo from '../modules/dateInfo.js';
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -25,6 +26,8 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API добавление отряда прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -39,6 +42,8 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API добавление отряда прервано. Событие не найдено`)
+
             res.json({
                 status: 404,
                 err: 'Current event undefined'
@@ -62,6 +67,8 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
         if(data.team == 'Red') { oldSquadList = currentEvent.dataValues.slotsTeam1 }
         else if(data.team == 'Blue') { oldSquadList = currentEvent.dataValues.slotsTeam2 }
         else {
+            console.log(`[${GetDateInfo().all}] API добавление отряда прервано. Команда указана неверно`)
+
             res.json({
                 status: 404,
                 err: 'You can only indicate the Blue and Red command'
@@ -78,6 +85,8 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
         if(data.team == 'Red') { await currentEvent.update({slotsTeam1: updateSquadList}) }
         else if(data.team == 'Blue') { await currentEvent.update({slotsTeam2: updateSquadList}) }
         else {
+            console.log(`[${GetDateInfo().all}] API добавление отряда прервано. Команда указана неверно`)
+
             res.json({
                 status: 404,
                 err: 'You can only indicate the Blue and Red command (2lvl)'
@@ -85,11 +94,13 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
             return
         }
 
+        console.log(`[${GetDateInfo().all}] API слот отряда успешно добавлен в событие ${currentEvent.id} команды ${data.team} администратором ${user.id}`)
+
         res.json({
             status: 200
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/edit/squad/add - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/squad/add - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/edit/squad/add - ${e}`
@@ -112,6 +123,8 @@ router.delete('/delete', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API удаление отряда прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -126,6 +139,8 @@ router.delete('/delete', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API удаление отряда прервано. Событие не найдено`)
+
             res.json({
                 status: 404,
                 err: 'Current event undefined'
@@ -139,6 +154,8 @@ router.delete('/delete', AccountCheck, PermissionsCheck, async(req, res) => {
         if(data.team == 'Red') { squadList = currentEvent.slotsTeam1 }
         else if(data.team == 'Blue') { squadList = currentEvent.slotsTeam2 }
         else {
+            console.log(`[${GetDateInfo().all}] API удаление отряда прервано. Команда указана неверно`)
+
             res.json({
                 status: 404,
                 err: 'You can only indicate the Blue and Red command'
@@ -147,6 +164,8 @@ router.delete('/delete', AccountCheck, PermissionsCheck, async(req, res) => {
         }
 
         if(!squadList[squadId]){
+            console.log(`[${GetDateInfo().all}] API удаление отряда прервано. Отряд не найден`)
+
             res.json({
                 status: 404,
                 err: 'Squad by id undefined'
@@ -154,7 +173,10 @@ router.delete('/delete', AccountCheck, PermissionsCheck, async(req, res) => {
             return
         }
 
-        if(squadId == 0) return res.json({ status: 400, err: 'You can\'t delete squad with id 0' })
+        if(squadId == 0) {
+            console.log(`[${GetDateInfo().all}] API удаление отряда прервано. Попытка удалить отряд 0`)
+            return res.json({ status: 400, err: 'You can\'t delete squad with id 0' })
+        }
 
         squadList.splice(squadId, 1)
 
@@ -165,11 +187,13 @@ router.delete('/delete', AccountCheck, PermissionsCheck, async(req, res) => {
         currentEvent.changed('slotsTeam2', true);
         await currentEvent.save();
 
+        console.log(`[${GetDateInfo().all}] API слот отряда в событии ${currentEvent.id} команды ${data.team} успешно удален администратором ${user.id}`)
+
         res.json({
             status: 200
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/edit/squad/delete - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/squad/delete - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/edit/squad/delete - ${e}`
@@ -193,6 +217,8 @@ router.post('/slots/add', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API Добавление слота прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -207,6 +233,8 @@ router.post('/slots/add', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API Добавление слота прервано. Событие не найдено`)
+
             res.json({
                 status: 404,
                 err: 'Current event undefined'
@@ -226,6 +254,8 @@ router.post('/slots/add', AccountCheck, PermissionsCheck, async(req, res) => {
         if(data.team == 'Red') { oldSquadList = currentEvent.dataValues.slotsTeam1 }
         else if(data.team == 'Blue') { oldSquadList = currentEvent.dataValues.slotsTeam2 }
         else {
+            console.log(`[${GetDateInfo().all}] API Добавление слота прервано. Команда указана неверно`)
+
             res.json({
                 status: 404,
                 err: 'You can only indicate the Blue and Red command'
@@ -234,9 +264,11 @@ router.post('/slots/add', AccountCheck, PermissionsCheck, async(req, res) => {
         }
 
         let squadListParsed = oldSquadList
-        const findedSquad = squadListParsed[squadId]
+        const foundSquad = squadListParsed[squadId]
 
-        if(!findedSquad) {
+        if(!foundSquad) {
+            console.log(`[${GetDateInfo().all}] API Добавление слота прервано. Отряд не найден`)
+
             res.json({
                 status: 404,
                 err: 'Squad by id is undefined'
@@ -244,7 +276,10 @@ router.post('/slots/add', AccountCheck, PermissionsCheck, async(req, res) => {
             return
         }
 
-        if(squadId == 0) return res.json({status: 400, err: 'You can\'t add new slot to squad with id 0'})
+        if(squadId == 0) {
+            console.log(`[${GetDateInfo().all}] API Добавление слота прервано. Попытка добавления слота в отряд 0`)
+            return res.json({status: 400, err: 'You can\'t add new slot to squad with id 0'})
+        }
 
         const oldSlots = squadListParsed[squadId].slots
         squadListParsed[squadId].slots = [...oldSlots, newSlot]
@@ -258,11 +293,13 @@ router.post('/slots/add', AccountCheck, PermissionsCheck, async(req, res) => {
         currentEvent.changed('slotsTeam2', true);
         await currentEvent.save();
 
+        console.log(`[${GetDateInfo().all}] API слот успешно добавлен в отряд ${squadId} команды ${data.team} события ${currentEvent.id} администратором ${user.id}`)
+
         res.json({
             status: 200
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/edit/squad/slots/add - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/squad/slots/add - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/edit/squad/slots/add - ${e}`
@@ -273,7 +310,7 @@ router.post('/slots/add', AccountCheck, PermissionsCheck, async(req, res) => {
 
 
 
-// DELETE SQUAD SLOT
+// DELETE KIT SLOT
 router.delete('/slots/delete', AccountCheck, PermissionsCheck, async(req, res) => {
     try{
         const data = req.body
@@ -285,6 +322,8 @@ router.delete('/slots/delete', AccountCheck, PermissionsCheck, async(req, res) =
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API удаление слота прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -299,6 +338,8 @@ router.delete('/slots/delete', AccountCheck, PermissionsCheck, async(req, res) =
         })
 
         if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API удаление слота прервано. Событие не найдено`)
+
             res.json({
                 status: 404,
                 err: 'Current event undefined'
@@ -313,6 +354,8 @@ router.delete('/slots/delete', AccountCheck, PermissionsCheck, async(req, res) =
         if(data.team == 'Red') { squadList = currentEvent.slotsTeam1 }
         else if(data.team == 'Blue') { squadList = currentEvent.slotsTeam2 }
         else {
+            console.log(`[${GetDateInfo().all}] API удаление слота прервано. Команда указана неверно`)
+
             res.json({
                 status: 404,
                 err: 'You can only indicate the Blue and Red command'
@@ -323,6 +366,8 @@ router.delete('/slots/delete', AccountCheck, PermissionsCheck, async(req, res) =
 
 
         if(!squadList[squadId]){
+            console.log(`[${GetDateInfo().all}] API удаление слота прервано. Отряд не найден`)
+
             res.json({
                 status: 404,
                 err: 'Squad by id undefined'
@@ -330,9 +375,14 @@ router.delete('/slots/delete', AccountCheck, PermissionsCheck, async(req, res) =
             return
         }
 
-        if(squadId == 0) return res.json({ status: 400, err: 'You can\'t delete slots from squad with id 0' })
+        if(squadId == 0) {
+            console.log(`[${GetDateInfo().all}] API удаление слота прервано. Попытка удалить слот отряда 0)`)
+            return res.json({ status: 400, err: 'You can\'t delete slots from squad with id 0' })
+        }
 
         if(!squadList[squadId].slots[slotId]) {
+            console.log(`[${GetDateInfo().all}] API удаление слота прервано. Слот не найден`)
+
             res.json({
                 status: 404,
                 err: 'Slot by id undefined'
@@ -340,7 +390,10 @@ router.delete('/slots/delete', AccountCheck, PermissionsCheck, async(req, res) =
             return
         }
 
-        if(slotId == 0) return res.json({ status: 400, err: 'You can\'t delete slot with id 0' })
+        if(slotId == 0) {
+            console.log(`[${GetDateInfo().all}] API удаление слота прервано. Попытка удалить слот 0`)
+            return res.json({ status: 400, err: 'You can\'t delete slot with id 0' })
+        }
 
         squadList[squadId].slots.splice(slotId, 1)
 
@@ -351,11 +404,13 @@ router.delete('/slots/delete', AccountCheck, PermissionsCheck, async(req, res) =
         currentEvent.changed('slotsTeam2', true);
         await currentEvent.save();
 
+        console.log(`[${GetDateInfo().all}] API слот успешно удален из отряда ${squadId} команды ${data.team} события ${currentEvent.id} администратором ${user.id}`)
+
         res.json({
             status: 200
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/edit/squad/slots/delete - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/squad/slots/delete - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/edit/squad/slots/delete - ${e}`
@@ -378,6 +433,8 @@ router.patch('/rename', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API Изменение названия отряда прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -392,6 +449,8 @@ router.patch('/rename', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API Изменение названия отряда прервано. Событие не найдено`)
+
             res.json({
                 status: 404,
                 err: 'Current event undefined'
@@ -405,6 +464,8 @@ router.patch('/rename', AccountCheck, PermissionsCheck, async(req, res) => {
         if(data.team == 'Red') { squadList = currentEvent.slotsTeam1 }
         else if(data.team == 'Blue') { squadList = currentEvent.slotsTeam2 }
         else {
+            console.log(`[${GetDateInfo().all}] API Изменение названия отряда прервано. Команда указана неверно`)
+
             res.json({
                 status: 404,
                 err: 'You can only indicate the Blue and Red command'
@@ -413,6 +474,8 @@ router.patch('/rename', AccountCheck, PermissionsCheck, async(req, res) => {
         }
 
         if(!squadList[squadId]){
+            console.log(`[${GetDateInfo().all}] API Изменение названия отряда прервано. Отряд не найден`)
+
             res.json({
                 status: 404,
                 err: 'Squad by id undefined'
@@ -420,7 +483,10 @@ router.patch('/rename', AccountCheck, PermissionsCheck, async(req, res) => {
             return
         }
 
-        if(squadId == 0) return res.json({ status: 400, err: 'You can\'t rename squad with id 0' })
+        if(squadId == 0) {
+            console.log(`[${GetDateInfo().all}] API Изменение названия отряда прервано. Попытка изменения отряда 0`)
+            return res.json({ status: 400, err: 'You can\'t rename squad with id 0' })
+        }
 
         squadList[squadId].title = data.title
 
@@ -431,11 +497,13 @@ router.patch('/rename', AccountCheck, PermissionsCheck, async(req, res) => {
         currentEvent.changed('slotsTeam2', true);
         await currentEvent.save();
 
+        console.log(`[${GetDateInfo().all}] API название отряда ${squadId} команды ${data.team} в событии ${currentEvent.id} успешно изменено администратором ${user.id}`)
+
         res.json({
             status: 200
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/edit/squad/rename - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/squad/rename - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/edit/squad/rename - ${e}`
@@ -458,6 +526,8 @@ router.patch('/slots/rename', AccountCheck, PermissionsCheck, async(req, res) =>
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API изменение названия слота прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -472,6 +542,8 @@ router.patch('/slots/rename', AccountCheck, PermissionsCheck, async(req, res) =>
         })
 
         if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API изменение названия слота прервано. Событие не найдено`)
+
             res.json({
                 status: 404,
                 err: 'Current event undefined'
@@ -487,6 +559,8 @@ router.patch('/slots/rename', AccountCheck, PermissionsCheck, async(req, res) =>
         if(data.team == 'Red') { squadList = currentEvent.slotsTeam1 }
         else if(data.team == 'Blue') { squadList = currentEvent.slotsTeam2 }
         else {
+            console.log(`[${GetDateInfo().all}] API изменение названия слота прервано. Команда указана неверно`)
+
             res.json({
                 status: 404,
                 err: 'You can only indicate the Blue and Red command'
@@ -495,6 +569,8 @@ router.patch('/slots/rename', AccountCheck, PermissionsCheck, async(req, res) =>
         }
 
         if(!squadList[squadId]){
+            console.log(`[${GetDateInfo().all}] API изменение названия слота прервано. Отряд не найден`)
+
             res.json({
                 status: 404,
                 err: 'Squad by id undefined'
@@ -502,9 +578,14 @@ router.patch('/slots/rename', AccountCheck, PermissionsCheck, async(req, res) =>
             return
         }
 
-        if(squadId == 0) return res.json({ status: 400, err: 'You can\'t rename slots in squad with id 0' })
+        if(squadId == 0) {
+            console.log(`[${GetDateInfo().all}] API изменение названия слота прервано. Попытка изменения отряда 0`)
+            return res.json({ status: 400, err: 'You can\'t rename slots in squad with id 0' })
+        }
 
         if(!squadList[squadId].slots[slotId]){
+            console.log(`[${GetDateInfo().all}] API изменение названия слота прервано. Слот не найден`)
+
             res.json({
                 status: 404,
                 err: 'Slot by id undefined'
@@ -522,12 +603,13 @@ router.patch('/slots/rename', AccountCheck, PermissionsCheck, async(req, res) =>
         currentEvent.changed('slotsTeam2', true);
         await currentEvent.save();
 
+        console.log(`[${GetDateInfo().all}] API название слота ${slotId} в отряде ${squadId} команды ${data.team} в событии ${currentEvent.id} успешно изменено администратором ${user.id}`)
 
         res.json({
             status: 200
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/edit/squad/slots/rename - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/squad/slots/rename - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/edit/squad/slots/rename - ${e}`
