@@ -13,6 +13,7 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/dev.zgarma.ru-0001/privkey.pem;
 
     allow 147.30.205.107;  # Разрешённый IP (замени на свой)
+    allow 2.133.178.62;
     deny all;               # Запрещаем всем остальным
 
     location / {
