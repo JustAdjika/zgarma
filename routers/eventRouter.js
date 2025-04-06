@@ -35,6 +35,8 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API создание события прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -43,6 +45,8 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
         }
 
         if(data.title == '') {
+            console.log(`[${GetDateInfo().all}] API создание события прервано. Заголовок пуст`)
+
             res.json({
                 status: 400,
                 err: 'The title is incorrectly filled'
@@ -51,6 +55,8 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
         }
 
         if(data.date == '..') {
+            console.log(`[${GetDateInfo().all}] API создание события прервано. Дата указана некорректно`)
+            
             res.json({
                 status: 400,
                 err: 'The date is incorrectly filled'
@@ -92,11 +98,13 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
             devBranch: data.devBranch
         })
 
+        console.log(`[${GetDateInfo().all}] API событие ${newEvent.id} успешно создано администратором ${user.id}`)
+
         res.json({
             status: 200
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/add - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/add - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/add - ${e}`
@@ -111,6 +119,8 @@ router.get('/data/all', async(req, res) => {
         const container = await EVENTS_TAB.findAll()
 
         if(!container){
+            console.log(`[${GetDateInfo().all}] API выдан список ивентов`)
+
             res.json({
                 status: 200,
                 container: []
@@ -118,12 +128,14 @@ router.get('/data/all', async(req, res) => {
             return
         }
 
+        console.log(`[${GetDateInfo().all}] API выдан список ивентов`)
+
         res.json({
             status: 200,
             container
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/add - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/add - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/add - ${e}`
@@ -144,12 +156,16 @@ router.get('/data/download/modpack/:eventId', async (req, res) => {
         })
 
         if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API выдача модпака прервана. Событие не найдено`)
+
             res.json({
                 status: 404,
                 err: 'Current event undefined'
             })
             return
         }
+
+        console.log(`[${GetDateInfo().all}] API выдан модпак события ${currentEvent.id}`)
 
         const filePath = currentEvent.dataValues.modsPath
         res.download(filePath, (err) => {
@@ -159,7 +175,7 @@ router.get('/data/download/modpack/:eventId', async (req, res) => {
             }
         });
     } catch(e) {
-        console.error(`\x1b[31mApi developer error: /data/download/modpack/ - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: /data/download/modpack/ - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: /data/download/modpack/ - ${e}`
