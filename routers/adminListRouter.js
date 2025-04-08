@@ -19,13 +19,6 @@ router.post('/add', async(req, res) => {
     try {
         const data = req.body
 
-        if(data.masterKey !== process.env.MASTER_KEY) {
-            return res.json({
-                status: 403,
-                err: 'ACCESS DENIED. MASTER KEY IS NOT SUITABLE'
-            })
-        }
-
         const foundAccount = await ACCOUNTS_TAB.findOne({
             where: {
                 key: data.key
@@ -33,9 +26,21 @@ router.post('/add', async(req, res) => {
         })
 
         if(!foundAccount) {
+            console.log(`[${GetDateInfo().all}] Выдача прав администратора прервана. Аккаунт не найден`)
+
             return res.json({
                 status: 404,
                 err: 'Account key undefined'
+            })
+        }
+
+
+        if(data.masterKey !== process.env.MASTER_KEY) {
+            console.log(`[${GetDateInfo().all}] ВНИМАНИЕ! ПОПЫТКА ВЫДАЧИ ПРАВ АДМИНИСТРАТОРА ПОЛЬЗОВАТЕЛЮ ${foundAccount.id}. МАСТЕР КЛЮЧ НЕВЕРНЫЙ`)
+
+            return res.json({
+                status: 403,
+                err: 'ACCESS DENIED. MASTER KEY IS NOT SUITABLE'
             })
         }
 
@@ -46,6 +51,8 @@ router.post('/add', async(req, res) => {
         })
 
         if(foundConsilience) {
+            console.log(`[${GetDateInfo().all}] Выдача прав администратора прервана. Этот пользователь уже администратор`)
+
             return res.json({
                 status: 409,
                 err: 'This user is already an administrator'
@@ -57,11 +64,13 @@ router.post('/add', async(req, res) => {
             role: 'Administrator'
         })
 
+        console.log(`[${GetDateInfo().all}] Права администратора успешно выданы пользователю ${foundAccount.id}`)
+
         res.json({
             status: 200
         })
     } catch (e) {
-        console.error(`\x1b[31mApi developer error: adminlist/remote/add - ${e} \x1b[0m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: adminlist/remote/add - ${e} \x1b[0m`);
         res.json({
             status: 500,
             err: `Api developer error: adminlist/remote/add - ${e}`
@@ -77,6 +86,8 @@ router.delete('/delete', async(req, res) => {
         const data = req.body
 
         if(data.masterKey !== process.env.MASTER_KEY) {
+            console.log(`[${GetDateInfo().all}] ВНИМАНИЕ! ПОПЫТКА УДАЛЕНИЯ ПРАВ АДМИНИСТРАТОРА. МАСТЕР КЛЮЧ НЕВЕРНЫЙ`)
+
             return res.json({
                 status: 403,
                 err: 'ACCESS DENIED. MASTER KEY IS NOT SUITABLE'
@@ -90,6 +101,8 @@ router.delete('/delete', async(req, res) => {
         })
 
         if(!foundAdministrator) {
+            console.log(`[${GetDateInfo().all}] Удаление прав администратора прервано. Администратор не найден`)
+
             return res.json({
                 status: 404,
                 err: 'Administrator undefined'
@@ -98,11 +111,13 @@ router.delete('/delete', async(req, res) => {
 
         await foundAdministrator.destroy()
 
+        console.log(`[${GetDateInfo().all}] Права администратора успешно удалены`)
+
         res.json({
             status: 200
         })
     } catch (e) {
-        console.error(`\x1b[31mApi developer error: adminlist/remote/delete - ${e} \x1b[0m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: adminlist/remote/delete - ${e} \x1b[0m`);
         res.json({
             status: 500,
             err: `Api developer error: adminlist/remote/delete - ${e}`
@@ -125,6 +140,8 @@ router.get('/isAdmin', async(req, res) => {
         })
 
         if(!foundAccount) {
+            console.log(`[${GetDateInfo().all}] API Проверка прав администратора прервана. Пользователь не найден`)
+
             return res.json({
                 status: 404,
                 err: 'User id undefined',
@@ -139,18 +156,22 @@ router.get('/isAdmin', async(req, res) => {
         })
 
         if(foundAdministrator) {
+            console.log(`[${GetDateInfo().all}] API Права администратора у пользователя ${userid} проверены. TRUE`)
+
             res.json({
                 status: 200,
                 container: true
             })
         }else{
+            console.log(`[${GetDateInfo().all}] API Права администратора у пользователя ${userid} проверены. FALSE`)
+
             res.json({
                 status: 200,
                 container: false
             })
         }
     } catch (e) {
-        console.error(`\x1b[31mApi developer error: adminlist/remote/isAdmin - ${e} \x1b[0m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: adminlist/remote/isAdmin - ${e} \x1b[0m`);
         res.json({
             status: 500,
             err: `Api developer error: adminlist/remote/isAdmin - ${e}`
@@ -166,6 +187,8 @@ router.post('/newAccount', async(req, res) => {
         const data = req.body
 
         if(data.masterKey !== process.env.MASTER_KEY) {
+            console.log(`[${GetDateInfo().all}] ВНИМАНИЕ! ПОПЫТКА СОЗДАНИЯ DEV АККАУНТА. МАСТЕР КЛЮЧ НЕВЕРНЫЙ`)
+
             return res.json({
                 status: 403,
                 err: 'ACCESS DENIED. MASTER KEY IS NOT SUITABLE'
@@ -192,11 +215,13 @@ router.post('/newAccount', async(req, res) => {
             steam: steamDevAcc
         })
 
+        console.log(`[${GetDateInfo().all}] Новый DEV аккаунт успешно создан`)
+
         res.json({
             status: 200
         })
     } catch (e) {
-        console.error(`\x1b[31mApi developer error: adminlist/remote/newAccount - ${e} \x1b[0m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: adminlist/remote/newAccount - ${e} \x1b[0m`);
         res.json({
             status: 500,
             err: `Api developer error: adminlist/remote/newAccount - ${e}`
