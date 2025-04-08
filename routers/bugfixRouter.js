@@ -22,6 +22,8 @@ router.get('/data/all', async(req,res) => {
         const container = await BUG_FIXES_TAB.findAll()
 
         if(!container){
+            console.log(`[${GetDateInfo().all}] API выдан список патч ноутов`)
+
             res.json({
                 status: 200,
                 container: []
@@ -29,12 +31,14 @@ router.get('/data/all', async(req,res) => {
             return
         }
 
+        console.log(`[${GetDateInfo().all}] API выдан список патч ноутов`)
+
         res.json({
             status: 200,
             container
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: bugfix/notes/data/all - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: bugfix/notes/data/all - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: bugfix/notes/data/all - ${e}`
@@ -54,6 +58,8 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req,res) => {
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API добавление патч ноута прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -77,13 +83,15 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req,res) => {
             devBranch: data.devBranch
         }
 
+        console.log(`[${GetDateInfo().all}] API патч ноут ${container.id} успешно добавлен администратором ${user.id}`)
+
         axios.post('http://localhost:3000/api/developer/bot/patchnote', botData)
 
         res.json({
             status: 200
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: bugfix/notes/add - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: bugfix/notes/add - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: bugfix/notes/add - ${e}`

@@ -11,6 +11,7 @@ import ACCOUNTS_TAB from '../database/accounts.js';
 
 import PermissionsCheck from '../modules/permissions.js'
 import AccountCheck from '../modules/accountCheck.js'
+import GetDateInfo from '../modules/dateInfo.js';
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -37,6 +38,8 @@ router.patch('/info', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API изменение информации события прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -51,6 +54,8 @@ router.patch('/info', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API изменение информации события прервано. Событие не найдено`)
+
             res.json({
                 status: 404,
                 err: 'Current event undefined'
@@ -62,11 +67,13 @@ router.patch('/info', AccountCheck, PermissionsCheck, async(req, res) => {
             fields: ['title', 'description', 'time', 'date', 'metar', 'team1', 'team2']
         })
 
+        console.log(`[${GetDateInfo().all}] API информация о событии ${currentEvent.id} успешно изменена администратором ${user.id}`)
+
         res.json({
             status: 200
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/edit/info - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/info - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/edit/info - ${e}`
@@ -88,6 +95,8 @@ router.post('/status/:status', AccountCheck, PermissionsCheck, async(req, res) =
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API изменение статуса события прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -102,6 +111,8 @@ router.post('/status/:status', AccountCheck, PermissionsCheck, async(req, res) =
         })
 
         if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API изменение статуса события прервано. Событие не найдено`)
+
             res.json({
                 status: 404,
                 err: 'Current event undefined'
@@ -138,6 +149,8 @@ router.post('/status/:status', AccountCheck, PermissionsCheck, async(req, res) =
                 devBranch: data.devBranch
             })
         } else {
+            console.log(`[${GetDateInfo().all}] API изменение статуса события прервано. Статус указан неверно`)
+
             res.json({
                 status: 404,
                 err: 'Bad request'
@@ -145,11 +158,13 @@ router.post('/status/:status', AccountCheck, PermissionsCheck, async(req, res) =
             return
         }
 
+        console.log(`[${GetDateInfo().all}] API статус события ${currentEvent.id} успешно изменен на ${req.params.status} администратором ${user.id}`)
+
         res.json({
             status: 200
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/edit/status/open - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/status/open - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/edit/status/open - ${e}`
@@ -170,6 +185,8 @@ router.delete('/delete', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API удаление события прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -184,6 +201,8 @@ router.delete('/delete', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API удаление события прервано. Событие не найдено`)
+
             res.json({
                 status: 404,
                 err: 'Current event undefined'
@@ -193,11 +212,13 @@ router.delete('/delete', AccountCheck, PermissionsCheck, async(req, res) => {
 
         await currentEvent.destroy()
 
+        console.log(`[${GetDateInfo().all}] API событие успешно удалено администратором ${user.id}`)
+
         res.json({
             status: 200
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/edit/delete - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/delete - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/edit/delete - ${e}`
@@ -219,6 +240,8 @@ router.patch('/type', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API изменение типа события прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -233,6 +256,8 @@ router.patch('/type', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API изменение типа события прервано. Событие не найдено`)
+
             res.json({
                 status: 404,
                 err: 'Current event undefined'
@@ -250,11 +275,13 @@ router.patch('/type', AccountCheck, PermissionsCheck, async(req, res) => {
             })
         }
 
+        console.log(`[${GetDateInfo().all}] API тип события ${currentEvent.id} успешно изменен на IS_PVP_ON: ${data.isPvpOn} администратором ${user.id}`)
+
         res.json({
             status: 200
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/edit/type - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/type - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/edit/type - ${e}`
@@ -278,6 +305,8 @@ router.post('/imgupload', AccountCheck, PermissionsCheck, async(req,res) => {
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API загрузка изображения на событие прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -292,6 +321,8 @@ router.post('/imgupload', AccountCheck, PermissionsCheck, async(req,res) => {
         })
 
         if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API загрузка изображения на событие прервано. Событие не найдено`)
+
             res.json({
                 status: 404,
                 err: 'Current event undefined'
@@ -300,6 +331,8 @@ router.post('/imgupload', AccountCheck, PermissionsCheck, async(req,res) => {
         }
 
         if(!req.files || !req.files.file) {
+            console.log(`[${GetDateInfo().all}] API загрузка изображения на событие прервано. Файл не загружен`)
+
             res.json({
                 status: 400,
                 err: 'File is not uploaded'
@@ -308,6 +341,8 @@ router.post('/imgupload', AccountCheck, PermissionsCheck, async(req,res) => {
         }
 
         if(Array.isArray(req.files.file)) {
+            console.log(`[${GetDateInfo().all}] API загрузка изображения на событие прервано. Больше одного файла`)
+
             res.json({
                 status: 400,
                 err: 'More than one file has been uploaded'
@@ -321,6 +356,8 @@ router.post('/imgupload', AccountCheck, PermissionsCheck, async(req,res) => {
 
         file.mv(uploadPath, (err) => {
             if(err) {
+                console.log(`[${GetDateInfo().all}] API непредвиденная ошибка загрузки изображения на событие: ${err}`)
+
                 res.json({
                     status: 500,
                     err
@@ -333,11 +370,13 @@ router.post('/imgupload', AccountCheck, PermissionsCheck, async(req,res) => {
             imgPath: `eventImages/${newFileName}`
         })
 
+        console.log(`[${GetDateInfo().all}] API изображение успешно загружено на событие ${currentEvent.id} администратором ${user.id} по индексу ${newFileName}`)
+
         res.json({
             status: 200
         })
     } catch(e) {
-        console.error(`\x1b[31mApi developer error: event/edit/imgupload - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/imgupload - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/edit/imgupload - ${e}`
@@ -361,6 +400,8 @@ router.post('/modsupload', AccountCheck, PermissionsCheck, async(req,res) => {
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API загрузка модпака прервана. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -375,6 +416,8 @@ router.post('/modsupload', AccountCheck, PermissionsCheck, async(req,res) => {
         })
 
         if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API загрузка модпака прервана. Событие не найдено`)
+
             res.json({
                 status: 404,
                 err: 'Current event undefined'
@@ -383,6 +426,8 @@ router.post('/modsupload', AccountCheck, PermissionsCheck, async(req,res) => {
         }
 
         if(!req.files || !req.files.file) {
+            console.log(`[${GetDateInfo().all}] API загрузка модпака прервана. Файл не загружен`)
+
             res.json({
                 status: 400,
                 err: 'File is not uploaded'
@@ -391,6 +436,8 @@ router.post('/modsupload', AccountCheck, PermissionsCheck, async(req,res) => {
         }
 
         if(Array.isArray(req.files.file)) {
+            console.log(`[${GetDateInfo().all}] API загрузка модпака прервана. Больше одного файла`)
+
             res.json({
                 status: 400,
                 err: 'More than one file has been uploaded'
@@ -404,6 +451,8 @@ router.post('/modsupload', AccountCheck, PermissionsCheck, async(req,res) => {
 
         file.mv(uploadPath, (err) => {
             if(err) {
+                console.log(`[${GetDateInfo().all}] API непредвиденная ошибка загрузки модпака на событие: ${err}`)
+
                 res.json({
                     status: 500,
                     err
@@ -416,11 +465,13 @@ router.post('/modsupload', AccountCheck, PermissionsCheck, async(req,res) => {
             modsPath: uploadPath
         })
 
+        console.log(`[${GetDateInfo().all}] API модпак на событие ${currentEvent.id} успешно загружен администратором ${user.id} по индексу ${newFileName}`)
+
         res.json({
             status: 200
         })
     } catch(e) {
-        console.error(`\x1b[31mApi developer error: event/edit/modsupload - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/modsupload - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/edit/modsupload - ${e}`

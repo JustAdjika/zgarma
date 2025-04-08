@@ -23,6 +23,8 @@ router.get('/data/all', async(req,res) => {
         const container = await BUG_TICKETS_TAB.findAll()
 
         if(!container){
+            console.log(`[${GetDateInfo().all}] API выдан список тикетов`)
+
             res.json({
                 status: 200,
                 container: []
@@ -30,12 +32,14 @@ router.get('/data/all', async(req,res) => {
             return
         }
 
+        console.log(`[${GetDateInfo().all}] API выдан список тикетов`)
+
         res.json({
             status: 200,
             container
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: bugfix/tickets/data/all - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: bugfix/tickets/data/all - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: bugfix/tickets/data/all - ${e}`
@@ -55,6 +59,8 @@ router.post('/add', AccountCheck, async(req,res) => {
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API добавление нового тикета прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -86,13 +92,15 @@ router.post('/add', AccountCheck, async(req,res) => {
             devBranch: data.devBranch
         }
 
+        console.log(`[${GetDateInfo().all}] API новый тикет успешно добавлен пользователем ${user.id} (${username})`)
+
         axios.post(`${host}/api/developer/bot/bugtickets`, botData)
 
         res.json({
             status: 200
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: bugfix/tickets/add - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: bugfix/tickets/add - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: bugfix/tickets/add - ${e}`
@@ -112,6 +120,8 @@ router.patch('/status/set', AccountCheck, PermissionsCheck, async(req,res) => {
         })
 
         if(!user){
+            console.log(`[${GetDateInfo().all}] API изменение статуса тикета прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -126,6 +136,8 @@ router.patch('/status/set', AccountCheck, PermissionsCheck, async(req,res) => {
         })
 
         if(!ticket){
+            console.log(`[${GetDateInfo().all}] API изменение статуса тикета прервано. Тикет не найден`)
+
             res.json({
                 status: 404,
                 err: 'Ticket undefined'
@@ -134,12 +146,14 @@ router.patch('/status/set', AccountCheck, PermissionsCheck, async(req,res) => {
         }
 
         ticket.update({ status: data.status })
+        
+        console.log(`[${GetDateInfo().all}] API статус тикета ${data.ticketId} успешно изменен на ${data.status} администратором ${user.id}`)
 
         res.json({
             status: 200
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: bugfix/tickets/status/set - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: bugfix/tickets/status/set - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: bugfix/tickets/status/set - ${e}`
