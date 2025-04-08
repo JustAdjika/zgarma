@@ -29,6 +29,8 @@ router.post('/data/all', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!user) {
+            console.log(`[${GetDateInfo().all}] API получение всех заявок прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -42,12 +44,14 @@ router.post('/data/all', AccountCheck, PermissionsCheck, async(req, res) => {
             container = []
         }
 
+        console.log(`[${GetDateInfo().all}] API выдан список всех заявок для администратора ${user.id}`)
+
         res.json({
             status: 200,
             container
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/request/data/all - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/request/data/all - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/request/data/all - ${e}`
@@ -69,6 +73,8 @@ router.post('/data/id', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!user) {
+            console.log(`[${GetDateInfo().all}] API получение заявок события по ID прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -86,12 +92,14 @@ router.post('/data/id', AccountCheck, PermissionsCheck, async(req, res) => {
             container = []
         }
 
+        console.log(`[${GetDateInfo().all}] API выдан список всех заявок на событие ${data.id} для администратора ${user.id}`)
+
         res.json({
             status: 200,
             container
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/request/data/all - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/request/data/all - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/request/data/all - ${e}`
@@ -115,6 +123,8 @@ router.post('/add', SteamCheck, async(req, res) => {
         })
 
         if(!user) {
+            console.log(`[${GetDateInfo().all}] API добавление заявки на событие прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -129,6 +139,8 @@ router.post('/add', SteamCheck, async(req, res) => {
         })
 
         if(!foundEvent) {
+            console.log(`[${GetDateInfo().all}] API добавление заявки на событие прервано. Событие не найдено`)
+
             res.json({
                 status: 404,
                 err: 'Event undefined'
@@ -137,6 +149,8 @@ router.post('/add', SteamCheck, async(req, res) => {
         }
 
         if( !data.team || data.squad === null || data.slot === null || data.maybeSL === null || data.maybeTL === null ) {
+            console.log(`[${GetDateInfo().all}] API добавление заявки на событие прервано. Не все данные указаны`)
+
             res.json({
                 status: 400,
                 err: 'One of the parameters is not specified'
@@ -151,6 +165,8 @@ router.post('/add', SteamCheck, async(req, res) => {
             : "Undefined"
 
         if(slots === 'Undefined') {
+            console.log(`[${GetDateInfo().all}] API добавление заявки на событие прервано. Команда указана неверно`)
+
             res.json({
                 status: 400,
                 err: 'The team can only be Blue and Red'
@@ -164,12 +180,17 @@ router.post('/add', SteamCheck, async(req, res) => {
         if(data.squad === 0) {
             slot = squad
         }else{
-            if(!squad) return res.json({status: 404, err: 'This squad is undefined'})
+            if(!squad) {
+                console.log(`[${GetDateInfo().all}] API добавление заявки на событие прервано. Отряд не найден`)
+                return res.json({status: 404, err: 'This squad is undefined'})
+            }
 
             slot = squad.slots[data.slot]
         }
 
         if(!slot) {
+            console.log(`[${GetDateInfo().all}] API добавление заявки на событие прервано. Слот не найден`)
+
             res.json({
                 status: 404,
                 err: 'This slot is undefined',
@@ -178,6 +199,8 @@ router.post('/add', SteamCheck, async(req, res) => {
         }
 
         if(slot.player != null) {
+            console.log(`[${GetDateInfo().all}] API добавление заявки на событие прервано. Слот занят другим пользователем`)
+
             res.json({
                 status: 400,
                 err: 'This slot is now busy with another player'
@@ -196,7 +219,7 @@ router.post('/add', SteamCheck, async(req, res) => {
             await userRegisterList.destroy()
         }
 
-        await EVENT_REQUESTS_TAB.create({
+        const newRequest = await EVENT_REQUESTS_TAB.create({
             userId: user.id,
             eventId: foundEvent.id,
             team: data.team,
@@ -207,11 +230,13 @@ router.post('/add', SteamCheck, async(req, res) => {
             date: GetDateInfo().all
         })
 
+        console.log(`[${GetDateInfo().all}] API заявка на событие ${foundEvent.id} успешно отправлена игроком ${user.id} под ID ${newRequest.id}`)
+
         res.json({
             status: 200
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/request/add - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/request/add - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/request/add - ${e}`
@@ -234,6 +259,8 @@ router.post('/cancel', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!user) {
+            console.log(`[${GetDateInfo().all}] API отклонение заявки прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -248,6 +275,8 @@ router.post('/cancel', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!foundRequest) {
+            console.log(`[${GetDateInfo().all}] API отклонение заявки прервано. Заявка не найдена`)
+
             res.json({
                 status: 404,
                 err: 'Request undefined'
@@ -262,6 +291,8 @@ router.post('/cancel', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!foundDestination) {
+            console.log(`[${GetDateInfo().all}] API отклонение заявки прервано. Отправитель заявки не найден`)
+
             res.json({
                 status: 404,
                 err: 'Destionation undefined'
@@ -279,12 +310,14 @@ router.post('/cancel', AccountCheck, PermissionsCheck, async(req, res) => {
 
         await foundRequest.destroy()
 
+        console.log(`[${GetDateInfo().all}] API заявка ${foundRequest.id} на игру ${foundRequest.eventId} от пользователя ${foundRequest.userId} отклонена администратором ${user.id}`)
+
         res.json({
             status: 200
         })
 
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/request/cancel - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/request/cancel - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/request/cancel - ${e}`
@@ -309,6 +342,8 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!user) {
+            console.log(`[${GetDateInfo().all}] API принятие заявки прервано. Пользователь не найден`)
+
             res.json({
                 status: 404,
                 err: 'User undefined'
@@ -323,6 +358,8 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!foundRequest) {
+            console.log(`[${GetDateInfo().all}] API принятие заявки прервано. Заявка не найдена`)
+
             res.json({
                 status: 404,
                 err: 'Request undefined'
@@ -337,6 +374,8 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!foundDestination) {
+            console.log(`[${GetDateInfo().all}] API принятие заявки прервано. Отправить заявки не найден`)
+
             res.json({
                 status: 404,
                 err: 'Destionation undefined'
@@ -384,13 +423,14 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
 
         await foundRequest.destroy()
 
+        console.log(`[${GetDateInfo().all}] API заявка ${foundRequest.id} от игрока ${foundRequest.userId} на игру ${foundRequest.eventId} принята администратором ${user.id}`)
 
         res.json({
             status: 200
         })
 
     }catch(e){
-        console.error(`\x1b[31mApi developer error: event/request/accept - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/request/accept - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/request/accept - ${e}`

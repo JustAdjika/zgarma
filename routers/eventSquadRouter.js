@@ -76,11 +76,7 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
             return
         }
 
-        console.log(oldSquadList)
-
         const updateSquadList = [...oldSquadList, newSquad]
-
-        console.log(updateSquadList)
 
         if(data.team == 'Red') { await currentEvent.update({slotsTeam1: updateSquadList}) }
         else if(data.team == 'Blue') { await currentEvent.update({slotsTeam2: updateSquadList}) }
