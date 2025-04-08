@@ -87,6 +87,7 @@ router.get(
             })
 
             if(!foundAccount) {
+                console.log(`[${GetDateInfo().all}] AUTH PROCESS: Steam Callback. Процесс прерван. Аккаунт не найден`)
                 return res.end("Ошибка аутентификации")
             }
 
@@ -102,6 +103,8 @@ router.get(
                 domain: ".zgarma.ru",
                 maxAge: 60 * 24 * 60 * 60 * 1000, 
             });
+
+            console.log(`[${GetDateInfo().all}] AUTH PROCESS: Steam Callback. Steam успешно привязан`)
 
             res.redirect("https://zgarma.ru/announcement")
         } catch (e) {
@@ -123,11 +126,15 @@ router.get('/data/id', async(req,res) => {
         });
 
         if(!account){ 
+            console.log(`[${GetDateInfo().all}] API выдача аккаунта по ID прервано. Аккаунт не найден`)
+
             res.json({
                 status: 404,
                 err: 'Api developer error: account/data/id - user undefined'
             });
         }else{
+            console.log(`[${GetDateInfo().all}] API пользователь ${req.query.id} выдан по ID`)
+
             res.json({
                 status: 200,
                 container: {
@@ -138,7 +145,7 @@ router.get('/data/id', async(req,res) => {
             });
         };
     }catch(e){
-        console.error(`\x1b[31mApi developer error: account/data/id - ${e} \x1b[0m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: account/data/id - ${e} \x1b[0m`);
         res.json({
             status: 500,
             err: `Api developer error: account/data/id - ${e}`
@@ -156,18 +163,22 @@ router.get('/data/key', async(req,res) => {
         });
 
         if(!account){ 
+            console.log(`[${GetDateInfo().all}] API выдача аккаунта пользователя по KEY прервана. Аккаунт не найден`)
+
             res.json({
                 status: 404,
                 err: 'Api developer error: account/data/key - user undefined'
             });
         }else{
+            console.log(`[${GetDateInfo().all}] API пользователь ${account.id} выдан по KEY`)
+
             res.json({
                 status: 200,
                 container: account
             });
         };
     }catch(e){
-        console.error(`\x1b[31mApi developer error: account/data/key - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: account/data/key - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: account/data/key - ${e}`
@@ -180,10 +191,14 @@ router.get('/data/key', async(req,res) => {
 router.get('/data/discord', async(req,res) => {
     const code = req.query.code
 
-    if(!code) return res.json({
-        status: 400,
-        err: 'Discord auth code undefined'
-    })
+    if(!code) {
+        console.log(`[${GetDateInfo().all}] AUTH PROCESS: Discord Callback. Процесс прерван, auth code не найден`)
+
+        return res.json({
+            status: 400,
+            err: 'Discord auth code undefined'
+        })
+    }
 
     try {
         const tokenResponse = await axios.post("https://discord.com/api/oauth2/token", new URLSearchParams({
@@ -230,6 +245,8 @@ router.get('/data/discord', async(req,res) => {
                 maxAge: 60 * 24 * 60 * 60 * 1000, 
             });
 
+            console.log(`[${GetDateInfo().all}] AUTH PROCESS: Discord Callback. Новый пользователь зарегистрирован`)
+
             res.json({
                 status: 200,
                 container: newUser
@@ -243,8 +260,6 @@ router.get('/data/discord', async(req,res) => {
                 discordid: parsedData.discord.id
             })
 
-            console.log(parsedData)
-
             res.cookie("userData", JSON.stringify(parsedData), {
                 secure: true, // Должно быть true, если используешь HTTPS
                 sameSite: "None", // Разрешает передачу куков между разными доменами
@@ -252,13 +267,15 @@ router.get('/data/discord', async(req,res) => {
                 maxAge: 60 * 24 * 60 * 60 * 1000, 
             });
 
+            console.log(`[${GetDateInfo().all}] AUTH PROCESS: Discord Callback. Вход в аккаунт произведен`)
+
             res.json({
                 status: 200,
                 container: parsedData
             })
         }
     } catch (e) {
-        console.error(`\x1b[31mApi developer error: account/data/discord - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: account/data/discord - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: account/data/discord - ${e}`
@@ -278,7 +295,10 @@ router.post('/notices/data/all', AccountCheck, async(req, res) => {
             }
         })
 
-        if(!foundAccount) return res.json({ status: 404, err: 'Account undefined' })
+        if(!foundAccount) {
+            console.log(`[${GetDateInfo().all}] API получение уведомлений пользователя прервано. Пользователь не найден`)
+            return res.json({ status: 404, err: 'Account undefined' })
+        }
 
         const notices = await NOTICES_TAB.findAll({
             where: {
@@ -286,12 +306,14 @@ router.post('/notices/data/all', AccountCheck, async(req, res) => {
             }
         })
 
+        console.log(`[${GetDateInfo().all}] API выдан список уведомлений пользователя ${foundAccount.id}`)
+
         res.json({
             status: 200,
             container: notices
         })
     }catch(e){
-        console.error(`\x1b[31mApi developer error: account/notices/data/all - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: account/notices/data/all - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: account/notices/data/all - ${e}`
@@ -309,11 +331,13 @@ router.get('/logout', async (req, res) => {
             sameSite: "None"
         });
 
+        console.log(`[${GetDateInfo().all}] API пользователь вышел из аккаунта`)
+
         res.json({
             status: 200
         })
     } catch (e) {
-        console.error(`\x1b[31mApi developer error: account/logout - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: account/logout - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: account/logout - ${e}`
