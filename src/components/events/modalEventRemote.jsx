@@ -66,12 +66,10 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
         if(modalRemoteEvent.slotsTeam1) {
             const tempSlots = modalRemoteEvent.slotsTeam1.filter((_, i) => i != 0)
             setEventRemoteSlots1(tempSlots)
-            console.log(tempSlots)
         }
         if(modalRemoteEvent.slotsTeam2) {
             const tempSlots = modalRemoteEvent.slotsTeam2.filter((_, i) => i != 0)
             setEventRemoteSlots2(tempSlots)
-            console.log(tempSlots)
         }
     }, [modalRemoteEvent])
 
@@ -96,7 +94,6 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
 
     const handleDeleteEvent = async () => {
         if(window.confirm('Вы уверены, что хотите удалить событие?')){
-            console.log(JSON.parse(Cookies.get("userData")).key)
             const res = await axios.delete(`${host}/api/developer/event/edit/delete`, {
                 data: {
                     eventId: modalRemoteEvent.id,

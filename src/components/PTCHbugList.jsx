@@ -17,7 +17,6 @@ const PTCHbug = ({ date, description, detailedDescription, currentUser,id, host,
             case "COMPLETE": setSelectedStatus("Решён"); break;
             case "NOT CHECKED" : setSelectedStatus("Не отмечен"); break;
         }
-        console.log(defaultStatus);
     },[defaultStatus]);
 
     useEffect(() => {
@@ -76,8 +75,6 @@ const PTCHbug = ({ date, description, detailedDescription, currentUser,id, host,
                 status: serverStatus,
                 key:  currentUser.key
             });
-
-            console.log("Статус обновлён:", response.data);
         } catch (error) {
             console.error("Ошибка при обновлении статуса:", error);
         }

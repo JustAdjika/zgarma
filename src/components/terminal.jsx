@@ -29,10 +29,6 @@ const Terminal = ({ setErrorMessage, host }) => {
 
             let data = parts.slice(2).join(" "); // Всё остальное объединяем в строку
 
-            console.log(type)
-            console.log(address)
-            console.log(data)
-
             try {
                 data = data ? JSON.parse(data) : null; // Парсим JSON, если есть данные
             } catch (e) {

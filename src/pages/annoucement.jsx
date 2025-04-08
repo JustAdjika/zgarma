@@ -74,8 +74,6 @@ const Announcement = ({isDevBranch}) => {
             }
         }
 
-        console.log(isDevBranch)
-
         const resPost = await axios.post(`${host}/api/developer/post/add`, {
             title: title,
             content: message,
@@ -107,7 +105,6 @@ const Announcement = ({isDevBranch}) => {
             const posts = resPosts.data.container;
 
             posts.forEach(e => {
-                console.log(isDevBranch, e)
                 if(isDevBranch == e.devBranch) {
                     if(e.option1 === null) {
                         setAnnouncements(prev => [...prev, e]); 

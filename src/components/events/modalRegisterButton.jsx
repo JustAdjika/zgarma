@@ -24,7 +24,6 @@ const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOrigina
             const tempData = res.data.container.steam
             setRegisteredUsername(tempData.personaname)
         } else {
-            console.log(`error id:`,id)
             console.error(res.data.err)
         }
     }
@@ -64,7 +63,6 @@ const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOrigina
                         setTeam(0); 
                         setSquad(squadIndex); 
                         setSlot(slotIndex)
-                        setTimeout(() => {console.log(team, squad, slot)}, 1000)
                     }
                 }} 
                 style={{

@@ -56,8 +56,6 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
             setErrorMessage("Команда не выбрана")
             setTimeout(() => { setErrorMessage("") }, 3000)
         }else {
-            console.log(`Slots`, team, squad, slot)
-            
             const res = await axios.post(`${host}/api/developer/event/request/add`, {
                 key: JSON.parse(Cookies.get("userData")).key,
                 eventId: modalRegisterEvent.id,

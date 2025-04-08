@@ -42,7 +42,6 @@ const Events = ({isDevBranch}) => {
         }
         const getEvents = async () => {
             const res = await axios.get(`${host}/api/developer/event/data/all`)
-            console.log(isDevBranch)
             setEvents(res.data.container.filter(event => event.devBranch == isDevBranch))
         }
         const adminCheck = async () => {

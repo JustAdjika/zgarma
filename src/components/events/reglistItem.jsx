@@ -39,19 +39,13 @@ const ReglistItem = ({ host, requestIndex, selectedRequest, setSelectedRequest, 
         }
 
         if( requestItem.team == 'Red' ) {
-            console.log(event)
             const slots = event.slotsTeam1
 
-            console.log(`requestItem:`, requestItem)
-            console.log(`requestItem.squad:`, requestItem.squad)
-            console.log(`slots:`, slots)
-            console.log(`slots[requestItem.squad]:`, slots[requestItem.squad])
             setSquad(slots[requestItem.squad].title)
             setSlot(slots[requestItem.squad].slots[requestItem.slot].title)
         } else {
             const slots = event.slotsTeam2
 
-            console.log(slots)
             setSquad(slots[requestItem.squad].title)
             setSlot(slots[requestItem.squad].slots[requestItem.slot].title)
         }

@@ -27,17 +27,14 @@ function App() {
 
     const checkAdminAccess = async () => {
       if (!Cookies.get("userData")) {
-        console.log("Куков нет");
         setIsAdmin(false);
         return;
       }
 
       try {
         const currentUser = JSON.parse(Cookies.get("userData"));
-        console.log("Пользователь:", currentUser);
 
         const adminCheck = await axios.get(`https://api.zgarma.ru/api/developer/adminlist/remote/isAdmin?id=${currentUser.id}`);
-        console.log("Ответ сервера:", adminCheck.data);
 
         if (adminCheck.data.status === 200 && adminCheck.data.container) {
           setIsAdmin(true);
@@ -45,7 +42,6 @@ function App() {
           setIsAdmin(false);
         }
       } catch (error) {
-        console.error("Ошибка проверки прав администратора:", error);
         setIsAdmin(false);
       }
     };
@@ -56,8 +52,6 @@ function App() {
 
   useEffect(() => {
     const devBranch = window.location.hostname === 'dev.zgarma.ru'
-
-    console.log(`DEV BRANCH:`, devBranch)
 
     setIsDevBranch(devBranch)
   }, [])

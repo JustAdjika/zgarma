@@ -26,9 +26,7 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
     const DISCORD_AUTH_URL = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify%20email`;
 
     useEffect(() => {
-        if(!Cookies.get("userData")) return console.log('куков нет')
-
-        console.log(Cookies.get("userData"))
+        if(!Cookies.get("userData")) return
 
         setCurrentUser(JSON.parse(Cookies.get("userData")))
     }, [])
@@ -36,7 +34,6 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
     useEffect(() => {
         if(!currentUser.id) return
 
-        console.log(currentUser.steam)
         setDiscordName(currentUser.discord.username)
 
         setAvatarUrl(currentUser.discord.avatar 
@@ -59,7 +56,6 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
 
             if(res.data.status == 200) {
                 setNotice(res.data.container)
-                console.log(res.data.container)
             } else {
                 console.error(res.data.err)
             }

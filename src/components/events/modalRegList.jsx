@@ -53,8 +53,6 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
 
         if(!event.id) return
 
-        console.log(123)
-
         setSlotsRed(event.slotsTeam1.filter((item, index) => index != 0))
         setSlotsBlue(event.slotsTeam2.filter((item, index) => index != 0))
     }, [event])

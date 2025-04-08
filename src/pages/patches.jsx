@@ -46,7 +46,6 @@ const PathchesPage = ({isDevBranch}) => {
         setTimeout(() => setErrorMessage(""), 5000);
         return;
     }
-    console.log(currentUser);
     
 
     //POST Запрос на добавление сообщения администратора
@@ -90,9 +89,6 @@ const PathchesPage = ({isDevBranch}) => {
         
         setDetailedDescription("");
         setDescription("");
-
-        console.log(description);
-        console.log(detailedDescription);
 
         
 
@@ -141,13 +137,10 @@ const PathchesPage = ({isDevBranch}) => {
     
                 if (!FixList) {
                     console.error("Ошибка: Пустой ответ от сервера");
-                    console.log(FixList);
                     return;
                 }
     
                 const devFilterList = FixList.filter(e => e.devBranch == isDevBranch)
-
-                console.log("Полученные данные:", devFilterList); // Для проверки
     
                 setPatches(devFilterList); // Обновляем состояние
             } catch (error) {
@@ -176,7 +169,6 @@ const PathchesPage = ({isDevBranch}) => {
 
                 const devFilterList = FixTickets.filter(e => e.devBranch == isDevBranch)
 
-                console.log("Полученные тикеты:", devFilterList); 
                 setBugReports(devFilterList); 
             } catch (error) {
                 console.error("Ошибка загрузки тикетов:", error);
