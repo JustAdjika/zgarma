@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -7,6 +7,7 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
     const [slots, setSlots] = useState([])
     const [style, setStyle] = useState("open")
     const [user, setUser] = useState({})
+    const [slotName, setSlotName] = useState('')
 
     const getUser = async (id) => {
         const res = await axios.get(`${host}/api/developer/account/data/id?id=${id}`)
@@ -34,33 +35,45 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
         if(slots.length < 1) return
 
         if(type == 'CMD') {
-            if( slots[team][0].player != null ) {
+            if( slots[team][0].player !== null ) {
+                setIsKitOccupied(true)
                 getUser(slots[team][0].player).then(user => setSlotTitle(user.steam.personaname))
                 setStyle('close')
             } else {
+                setIsKitOccupied(false)
                 setSlotTitle("Командир стороны")
                 setStyle('open')
             }
+
+            setSlotName(slots[team][0].title)
         }
 
         if(type == 'SL') {
-            if( slots[team][squad].slots[0].player != null ) {
+            if( slots[team][squad].slots[0].player !== null ) {
+                setIsKitOccupied(true)
                 getUser(slots[team][squad].slots[0].player).then(user => setSlotTitle(user.steam.personaname))
                 setStyle('close')
             } else {
+                setIsKitOccupied(false)
                 setSlotTitle(slots[team][squad].slots[0].title)
                 setStyle('open')
             }
+
+            setSlotName(slots[team][squad].slots[0].title)
         }
 
         if(type == 'classic') {
-            if( slots[team][squad].slots[slot].player != null ) {
+            if( slots[team][squad].slots[slot].player !== null ) {
+                setIsKitOccupied(true)
                 getUser(slots[team][squad].slots[slot].player).then(user => setSlotTitle(user.steam.personaname))
                 setStyle('close')
             } else {
+                setIsKitOccupied(false)
                 setSlotTitle(slots[team][squad].slots[slot].title)
                 setStyle('open')
             }
+
+            setSlotName(slots[team][squad].slots[slot].title)
         }
     }, [slots])
 
@@ -103,9 +116,36 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
         }
     }, [currentRequest])
 
+
+
+    const [kitTooltip, setKitTooltip] = useState(false)
+    const [isKitOccupied, setIsKitOccupied] = useState(false)
+    const timerRef = useRef(null)
+
+    const handleButtonAcceptMouseEnter = () => {
+        timerRef.current = setTimeout(() => {
+            setKitTooltip(true)
+        }, 300)
+    }
+
+    const handleButtonAcceptMouseLeave = () => {
+        clearTimeout(timerRef.current);
+        setKitTooltip(false);
+    }
+
     return (
-        <div className={`reglistSlot-main-container-${style}`}>
-            { slotTitle }
+        <div style={{ position: 'relative' }}>
+            <div
+                onMouseEnter={ isKitOccupied ? handleButtonAcceptMouseEnter : null } 
+                onMouseLeave={ handleButtonAcceptMouseLeave } 
+            >
+                <div className={`reglistSlot-main-container-${style}`}>
+                    { slotTitle }
+                </div>
+            </div>
+            <div className={`event-modal-eventreg-slot-tooltip ${kitTooltip ? 'visible' : ''}`}>
+                { slotName }
+            </div>
         </div>
     );
 };

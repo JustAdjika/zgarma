@@ -227,7 +227,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                             <div style={{backgroundColor: '#0B94E0'}}/>
                         </div>
                     </div>
-                    <div className='event-modal-reglist-slots-main' style={{ overflowX: 'hidden', overflowY: 'scroll' }}>
+                    <div className='event-modal-reglist-slots-main' style={{ overflowX: 'hidden', overflowY: 'scroll', overflow: 'visible' }}>
                         <div className='event-modal-reglist-slots-container' style={{ marginRight: '30px' }}>
                             <ReglistSlot 
                                 host={host}
