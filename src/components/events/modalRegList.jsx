@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -18,6 +18,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
     const [selectedRequest, setSelectedRequest] = useState(null)
 
     const [reason, setReason] = useState("")
+    const [isSlotOccupied, setIsSlotOccupied] = useState(false)
 
     const getRequests = async () => {
         const res = await axios.post(`${host}/api/developer/event/request/data/id`, {
@@ -121,6 +122,49 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         setSelectedRequest(null)
     }, [event])
 
+    useEffect(() => {
+        if(selectedRequest === null) return
+        const requestInfo = reqests[selectedRequest]
+
+        console.log(requestInfo)
+        console.log(event)
+
+        const isDefault = requestInfo.squad === 0 ? false : true
+
+        if(requestInfo.team == 'Red') {
+            if(isDefault) {
+                if(event.slotsTeam1[requestInfo.squad].slots[requestInfo.slot].player !== null) setIsSlotOccupied(true)
+                else setIsSlotOccupied(false)
+            } else {
+                if(event.slotsTeam1[requestInfo.squad].player !== null) setIsSlotOccupied(true)
+                else setIsSlotOccupied(false)
+            }
+        } else {
+            if(isDefault) {
+                if(event.slotsTeam2[requestInfo.squad].slots[requestInfo.slot].player !== null) setIsSlotOccupied(true)
+                else setIsSlotOccupied(false)
+            } else {
+                if(event.slotsTeam2[requestInfo.squad].player !== null) setIsSlotOccupied(true)
+                else setIsSlotOccupied(false)
+            }
+        }
+    }, [selectedRequest])
+
+    
+    const [isOccupiedTooltip, setIsOccupiedTooltip] = useState(false)
+    const timerRef = useRef(null)
+
+    const handleButtonAcceptMouseEnter = () => {
+        timerRef.current = setTimeout(() => {
+            setIsOccupiedTooltip(true)
+        }, 550)
+    }
+
+    const handleButtonAcceptMouseLeave = () => {
+        clearTimeout(timerRef.current);
+        setIsOccupiedTooltip(false);
+    }
+
     return (
         <div onClick={ () => { setIsModalReglist(false) } } className='event-modal-reglist-main' style={{ display: isModalReglist ? 'flex' : 'none' }}>
             <div onClick={(e) => { e.stopPropagation()}} className='event-modal-reglist-container'>
@@ -147,7 +191,26 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                 setErrorMessage={setErrorMessage}
                             />
                             
-                            <button className='event-modal-reglist-report-button-a' onClick={ handleRequestAccept }>Одобрить заявку</button>
+                            <div style={{ position: 'relative' }}>
+                                <div className='event-modal-reglist-report-button-a-wrapper'
+                                    onMouseEnter={ isSlotOccupied ? handleButtonAcceptMouseEnter : null } 
+                                    onMouseLeave={ handleButtonAcceptMouseLeave } 
+                                >
+                                    <button className='event-modal-reglist-report-button-a'
+                                        disabled={isSlotOccupied} 
+                                        style={ isSlotOccupied ? { 
+                                            cursor: 'not-allowed', 
+                                            opacity: '0.5' 
+                                        } : null} 
+                                        onClick={ handleRequestAccept }
+                                    >
+                                        Одобрить заявку
+                                    </button>
+                                </div>
+                                <div className={`event-modal-reglist-report-button-a-alert ${isOccupiedTooltip ? 'visible' : ''}`}>
+                                    Слот уже занят!
+                                </div>
+                            </div>
                             <button className='event-modal-reglist-report-button-r' onClick={ handleRequestReject }>Отклонить заявку</button>
                             <textarea placeholder='Причина' value={ reason } onChange={(e) => { setReason(e.target.value) }} className='event-modal-reglist-report-reason-input'></textarea>
                         </div>
