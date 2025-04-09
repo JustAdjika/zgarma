@@ -253,15 +253,17 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                             )) }
                         </div>
                         <div className='event-modal-reglist-slots-container'>
-                            <ReglistSlot 
-                                host={host}
-                                setErrorMessage={setErrorMessage}
-                                event={event}
-                                currentRequest={selectedRequest}
-                                reqests={reqests}
-                                type={'CMD'}
-                                team={1}
-                            />
+                            { event.type == 'PVP' ? (
+                                <ReglistSlot 
+                                    host={host}
+                                    setErrorMessage={setErrorMessage}
+                                    event={event}
+                                    currentRequest={selectedRequest}
+                                    reqests={reqests}
+                                    type={'CMD'}
+                                    team={1}
+                                />
+                            ) : null}
                             { slotsBlue.map((squadItem, squadIndex ) => (
                                 <ReglistSquad 
                                     host={host}

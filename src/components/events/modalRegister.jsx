@@ -85,7 +85,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
             <div onClick={(e) => e.stopPropagation()} className='event-modal-eventreg-container'>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <h2 className='event-modal-eventreg-title' style={{ fontSize: modalRegisterEvent?.title?.length > 23 ? '23px' : '30px' }}>{modalRegisterEvent.title}</h2>
-                    <p className='event-modal-eventreg-slots-value'>Количество слотов {slotCount.red}х{slotCount.blue}</p>
+                    <p className='event-modal-eventreg-slots-value'>{ modalRegisterEvent.type == 'PVP' ? `Количество слотов ${slotCount.red}х${slotCount.blue}` : `Количество слотов ${slotCount.red}` }</p>
                     
                     <h3 className='event-modal-eventreg-h3-title'>Иллюстрация к миссии</h3>
                     <div className='event-modal-eventreg-img-container' style={{ backgroundImage: `url("https://api.zgarma.ru/${modalRegisterEvent.imgPath}")` }}></div>
