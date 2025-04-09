@@ -26,7 +26,7 @@ const EVENTS_TAB = sequelize.define('events', {
         type: DataTypes.STRING
     },
     description: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING(500)
     },
     team1: {
         type: DataTypes.STRING
