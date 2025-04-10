@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { DateTime } from 'luxon'
 import Cookies from "js-cookie";
 import axios from "axios";
 
@@ -87,6 +88,9 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
                 } catch (e) {
                     console.error(e)
                 }
+
+                const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                console.log('Часовой пояс пользователя:', userTimeZone);
 
                 setNotice(notices)
             } else {
