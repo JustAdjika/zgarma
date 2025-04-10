@@ -90,7 +90,6 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
                 }
 
                 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                console.log('Часовой пояс пользователя:', userTimeZone);
 
                 setNotice(notices)
             } else {

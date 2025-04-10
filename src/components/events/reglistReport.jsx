@@ -19,7 +19,45 @@ const ReglistReport = ({ host, currentRequest, setErrorMessage }) => {
                 setSteamName(res.data.container.steam.personaname)
                 setDiscordName(res.data.container.discord.username)
                 setDiscordid(res.data.container.discord.id)
-                setRegDate(res.data.container.date)
+
+
+                let notices = res.data.container.date
+
+                try {
+                    notices.forEach((notice, index) => {
+                        const moscowDate = notice.date 
+                        const parts = moscowDate.match(/(\d{2})\.(\d{2})\.(\d{2}) \((\d{2}):(\d{2})\)/)
+
+                        if(parts) {
+                            const [_, day, month, year, hour, minute] = parts;
+
+                            const fullYear = 2000 + parseInt(year);
+
+                            const ISOmoscowDate = DateTime.fromObject(
+                                {
+                                day: parseInt(day),
+                                month: parseInt(month),
+                                year: fullYear,
+                                hour: parseInt(hour),
+                                minute: parseInt(minute),
+                                },
+                                { zone: 'Europe/Moscow' }
+                            );
+
+                            const localDate = ISOmoscowDate.setZone(DateTime.local().zoneName);
+                            const displayTime = localDate.toFormat('dd.MM.yy (HH:mm)');
+                            
+                            notices[index].date = displayTime
+                        }
+                    })
+                } catch (e) {
+                    console.error(e)
+                }
+
+                const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+
+                setRegDate(notices)
             } else {
                 setErrorMessage(res.data.err)
                 setTimeout(() => { setErrorMessage("") }, 3000)
