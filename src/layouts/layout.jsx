@@ -55,7 +55,40 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
             })
 
             if(res.data.status == 200) {
-                setNotice(res.data.container)
+                let notices = res.data.container
+
+                try {
+                    notices.forEach((notice, index) => {
+                        const moscowDate = notice.date 
+                        const parts = moscowDate.match(/(\d{2})\.(\d{2})\.(\d{2}) \((\d{2}):(\d{2})\)/)
+
+                        if(parts) {
+                            const [_, day, month, year, hour, minute] = parts;
+
+                            const fullYear = 2000 + parseInt(year);
+
+                            const ISOmoscowDate = DateTime.fromObject(
+                                {
+                                day: parseInt(day),
+                                month: parseInt(month),
+                                year: fullYear,
+                                hour: parseInt(hour),
+                                minute: parseInt(minute),
+                                },
+                                { zone: 'Europe/Moscow' }
+                            );
+
+                            const localDate = ISOmoscowDate.setZone(DateTime.local().zoneName);
+                            const displayTime = localDate.toFormat('dd.MM.yy (HH:mm)');
+                            
+                            notices[index].date = displayTime
+                        }
+                    })
+                } catch (e) {
+                    console.error(e)
+                }
+
+                setNotice(notices)
             } else {
                 console.error(res.data.err)
             }
