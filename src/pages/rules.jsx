@@ -1,5 +1,7 @@
 import React from "react";
 import './Style/rules.css';
+import '../App.css'
+import './Style/annoucement.css'
 import rulesBunner from '../assets/rulesBunner.png';
 
 const RulesPage = ({isDevBranch}) => {

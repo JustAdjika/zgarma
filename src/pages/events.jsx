@@ -4,6 +4,8 @@ import Cookies from 'js-cookie';
 
 import './Style/events.css'
 import './Style/fonts.css'
+import '../App.css'
+import './Style/annoucement.css'
 
 import ReadyEvent from '../components/events/readyEvent.jsx';
 import OpenEvent from '../components/events/openEvent.jsx';

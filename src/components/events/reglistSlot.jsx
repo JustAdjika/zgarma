@@ -2,23 +2,29 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, type, team, squad, slot }) => {
+const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, type, team, squad, slot, handleLoadChange }) => {
     const [slotTitle, setSlotTitle] = useState("")
     const [slots, setSlots] = useState([])
     const [style, setStyle] = useState("open")
     const [user, setUser] = useState({})
     const [slotName, setSlotName] = useState('')
 
+
     const getUser = async (id) => {
+        handleLoadChange(true)
         const res = await axios.get(`${host}/api/developer/account/data/id?id=${id}`)
 
         if(res.data.status == 200) {
             setUser(res.data.container)
 
+            handleLoadChange(false)
+            
             return res.data.container
         } else {
             setErrorMessage(res.data.err)
             setTimeout(() => setErrorMessage(""), 3000)
+
+            handleLoadChange(false)
         }
     }
 

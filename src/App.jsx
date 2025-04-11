@@ -74,23 +74,6 @@ function App() {
     return <h1 style={{ color: '#D9D9D9' }}>На сайте проходят технические работы. Пожалуйста, подождите</h1>;
   }
 
-  // const [loading, setLoading] = useState(true)
-
-  // useEffect(() => {
-  //     const handleLoad = () => {
-  //         setLoading(false);
-  //     };
-      
-  //     if (document.readyState === 'complete') {
-  //         handleLoad();
-  //     } else {
-  //         window.addEventListener('load', handleLoad);
-  //         return () => window.removeEventListener('load', handleLoad);
-  //     }
-  // }, [])
-
-  // if(loading) return <h1>Loading</h1>
-
   return (
     <div className='div-main' onClick={() => { setUserinfoMenu(false); setNotices(false); }}>
       <Layouts setUserinfoMenu={setUserinfoMenu} userinfoMenu={userinfoMenu} notices={notices} setNotices={setNotices} />

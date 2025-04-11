@@ -20,7 +20,10 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
     const [reason, setReason] = useState("")
     const [isSlotOccupied, setIsSlotOccupied] = useState(false)
 
+    const [loadCount, setLoadCount] = useState(0)
+
     const getRequests = async () => {
+        handleLoadChange(true)
         const res = await axios.post(`${host}/api/developer/event/request/data/id`, {
             key: JSON.parse(Cookies.get("userData")).key,
             id: event.id
@@ -28,9 +31,11 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
 
         if(res.data.status == 200) {
             setRequests(res.data.container)
+            handleLoadChange(false)
         } else {
             setErrorMessage(res.data.err)
             setTimeout(() => {setErrorMessage("")}, 3000)
+            handleLoadChange(false)
         }
     }
 
@@ -165,6 +170,10 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         setIsOccupiedTooltip(false);
     }
 
+    const handleLoadChange = (isLoading) => {
+        setLoadCount(prev => isLoading ? prev + 1 : prev - 1)
+    }
+
     return (
         <div onClick={ () => { setIsModalReglist(false) } } className='event-modal-reglist-main' style={{ display: isModalReglist ? 'flex' : 'none' }}>
             <div onClick={(e) => { e.stopPropagation()}} className='event-modal-reglist-container'>
@@ -172,16 +181,19 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                     <h2 className='event-modal-reglist-title' style={{ fontSize: event?.title?.length > 23 ? '23px' : '30px'}}>{event.title}</h2>
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '650px', height: '100%' }}>
                         <div className='event-modal-reglist-req-main-container'>
+                            <div class="loader" style={{ marginLeft: '100px', marginTop: '220px', display: loadCount > 0 ? 'block' : 'none' }}></div>
                             { reqests.map((requestItem, requestIndex) => ( 
-                                <ReglistItem 
-                                    requestIndex={requestIndex}
-                                    requestItem={requestItem}
-                                    setSelectedRequest={setSelectedRequest}
-                                    selectedRequest={selectedRequest}
-                                    host={host}
-                                    setErrorMessage={setErrorMessage}
-                                    event={event}
-                                />
+                                <div style={{ display: loadCount > 0 ? 'none' : 'block' }}>
+                                    <ReglistItem 
+                                        requestIndex={requestIndex}
+                                        requestItem={requestItem}
+                                        setSelectedRequest={setSelectedRequest}
+                                        selectedRequest={selectedRequest}
+                                        host={host}
+                                        setErrorMessage={setErrorMessage}
+                                        event={event}
+                                    />
+                                </div>
                             ))}
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: '', width: '275px', height: '100%' }}>
@@ -227,7 +239,8 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                             <div style={{backgroundColor: '#0B94E0'}}/>
                         </div>
                     </div>
-                    <div className='event-modal-reglist-slots-main' style={{ overflowX: 'hidden', overflowY: 'scroll', overflow: 'visible' }}>
+                    <div class="loader" style={{ marginLeft: '290px', marginTop: '250px', display: loadCount > 0 ? 'block' : 'none' }}></div>
+                    <div className='event-modal-reglist-slots-main' style={{ overflowX: 'hidden', overflowY: 'scroll', overflow: 'visible', display: loadCount > 0 ? 'none' : 'flex' }}>
                         <div className='event-modal-reglist-slots-container' style={{ marginRight: '30px' }}>
                             <ReglistSlot 
                                 host={host}
@@ -237,6 +250,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                 reqests={reqests}
                                 type={'CMD'}
                                 team={0}
+                                handleLoadChange={handleLoadChange}
                             />
                             { slotsRed.map((squadItem, squadIndex ) => (
                                 <ReglistSquad 
@@ -249,6 +263,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                     squad={squadItem}
                                     squadIndex={squadIndex}
                                     slots={slotsRed}
+                                    handleLoadChange={handleLoadChange}
                                 />
                             )) }
                         </div>
@@ -262,6 +277,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                     reqests={reqests}
                                     type={'CMD'}
                                     team={1}
+                                    handleLoadChange={handleLoadChange}
                                 />
                             ) : null}
                             { slotsBlue.map((squadItem, squadIndex ) => (
@@ -275,6 +291,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                     squad={squadItem}
                                     squadIndex={squadIndex}
                                     slots={slotsBlue}
+                                    handleLoadChange={handleLoadChange}
                                 />
                             )) }
                         </div>
