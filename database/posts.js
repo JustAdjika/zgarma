@@ -11,7 +11,7 @@ const POSTS_TAB = sequelize.define('posts', {
         type: DataTypes.STRING
     },
     content: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING(2000)
     },
     date: {
         type: DataTypes.STRING

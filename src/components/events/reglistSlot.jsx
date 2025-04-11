@@ -149,7 +149,7 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
                     { slotTitle }
                 </div>
             </div>
-            <div className={`event-modal-eventreg-slot-tooltip ${kitTooltip ? 'visible' : ''}`}>
+            <div className={`event-modal-eventreg-slot-tooltip${ team == 1 ? '2' : '' } ${kitTooltip ? 'visible' : ''}`}>
                 { slotName }
             </div>
         </div>

@@ -242,3 +242,35 @@
     opacity: 1;
     visibility: visible;
 }
+
+
+.event-modal-eventreg-slot-tooltip2 {
+    background-color: #4D4D4D;
+    white-space: nowrap;
+    padding-left: 12px;
+    padding-right: 12px;
+    color: #AEAEAE;
+    min-width: 80px;
+    max-width: 240px;
+    overflow: hidden;
+    height: 35px;
+    position: absolute;
+    bottom: 10px;
+    right: 250px;
+    z-index: 35;
+    pointer-events: none;
+    box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    font-family: 'My Open Sans';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.event-modal-eventreg-slot-tooltip2.visible {
+    opacity: 1;
+    visibility: visible;
+}

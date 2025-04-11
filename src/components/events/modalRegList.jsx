@@ -240,7 +240,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                         </div>
                     </div>
                     <div class="loader" style={{ marginLeft: '290px', marginTop: '250px', display: loadCount > 0 ? 'block' : 'none' }}></div>
-                    <div className='event-modal-reglist-slots-main' style={{ overflowX: 'hidden', overflowY: 'scroll', overflow: 'visible', display: loadCount > 0 ? 'none' : 'flex' }}>
+                    <div className='event-modal-reglist-slots-main' style={{ display: loadCount > 0 ? 'none' : 'flex' }}>
                         <div className='event-modal-reglist-slots-container' style={{ marginRight: '30px' }}>
                             <ReglistSlot 
                                 host={host}

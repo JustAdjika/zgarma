@@ -11,7 +11,7 @@ const BUG_FIXES_TAB = sequelize.define('bugFixes', {
         type: DataTypes.STRING
     },
     content: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING(2000)
     },
     date: {
         type: DataTypes.STRING
