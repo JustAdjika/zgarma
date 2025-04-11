@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
 
 import ArmaZgMain from './pages/armaZgMain.jsx';
-import Announcement from './pages/annoucement.jsx';
+const Announcement = lazy(() => import('./pages/annoucement.jsx'))
+const Events = lazy(() => import('./pages/events.jsx'))
+const PathchesPage = lazy(() => import('./pages/patches.jsx'))
+const RulesPage = lazy(() => import('./pages/rules.jsx'))
 import DiscordAuthCallback from './pages/discordAuthCallback.jsx';
-import Events from './pages/events.jsx';
-import PathchesPage from './pages/patches.jsx';
-import RulesPage from './pages/rules.jsx';
+// import PathchesPage from './pages/patches.jsx';
+// import RulesPage from './pages/rules.jsx';
 import Layouts from "./layouts/layout";
+import ProgressBar from './layouts/ProgressBar.jsx';
 
 import './App.css';
 import axios from 'axios';
@@ -70,13 +74,32 @@ function App() {
     return <h1 style={{ color: '#D9D9D9' }}>На сайте проходят технические работы. Пожалуйста, подождите</h1>;
   }
 
+  // const [loading, setLoading] = useState(true)
+
+  // useEffect(() => {
+  //     const handleLoad = () => {
+  //         setLoading(false);
+  //     };
+      
+  //     if (document.readyState === 'complete') {
+  //         handleLoad();
+  //     } else {
+  //         window.addEventListener('load', handleLoad);
+  //         return () => window.removeEventListener('load', handleLoad);
+  //     }
+  // }, [])
+
+  // if(loading) return <h1>Loading</h1>
+
   return (
     <div className='div-main' onClick={() => { setUserinfoMenu(false); setNotices(false); }}>
       <Layouts setUserinfoMenu={setUserinfoMenu} userinfoMenu={userinfoMenu} notices={notices} setNotices={setNotices} />
+
       <div className='devBranch-marker' style={{ display: isDevBranch ? 'flex' : 'none' }}>
         Dev Branch
       </div>
-      <Router>
+      <ProgressBar />
+      <Suspense fallback={null}>
         <Routes>
           <Route path='/announcement' element={<Announcement isDevBranch={getDevBranchStatus()} />} />
           <Route path='/events' element={<Events isDevBranch={getDevBranchStatus()} />} />
@@ -85,7 +108,7 @@ function App() {
           <Route path='/rules' element={<RulesPage isDevBranch={isDevBranch} />} />
           <Route path="*" element={<h1 style={{ color: '#D9D9D9', margin: '0px', position: 'relative', top: '100px', left: '50px' }}>404. Page not found</h1>} />
         </Routes>
-      </Router>
+      </Suspense>
     </div>
   );
 }

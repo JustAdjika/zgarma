@@ -29,6 +29,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.11.5",
     "nodemon": "^3.1.9",
+    "nprogress": "^0.2.0",
     "passport": "^0.7.0",
     "passport-steam": "^1.0.18",
     "react": "^18.3.1",
