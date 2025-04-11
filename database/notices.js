@@ -19,6 +19,11 @@ const NOTICES_TAB = sequelize.define('notices', {
     devBranch: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
+    },
+    isRead: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false
     }
 });
 
