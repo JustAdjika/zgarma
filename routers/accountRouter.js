@@ -323,6 +323,58 @@ router.post('/notices/data/all', AccountCheck, async(req, res) => {
 
 
 
+// SET READ STATUS
+router.patch('/notices/setRead', AccountCheck, async(req, res) => {
+    try{
+        const data = req.body
+
+        const foundAccount = await ACCOUNTS_TAB.findOne({
+            where: {
+                key: data.key
+            }
+        })
+
+        if(!foundAccount) {
+            console.log(`[${GetDateInfo().all}] API процесс смены статуса оповещения прерван. Пользователь не найден`)
+            return res.json({ status: 404, err: 'Account undefined' })
+        }
+
+        const foundNotice = await NOTICES_TAB.findOne({
+            where: {
+                id: data.noticeid
+            }
+        })
+
+        if(!foundNotice) {
+            console.log(`[${GetDateInfo().all}] API процесс смены статуса оповещения прерван. Оповещение не найдено`)
+            return res.json({ status: 404, err: 'Notice undefined' })
+        }
+
+        if(foundAccount.id != foundNotice.destination) {
+            console.log(foundAccount.id)
+            console.log(foundNotice.destination)
+            console.log(`[${GetDateInfo().all}] API процесс смены статуса оповещения прерван. Пользователь не получатель указанного оповещения`)
+            return res.json({ status: 403, err: 'Not allowed' })
+        }
+
+        await foundNotice.update({
+            isRead: true
+        })
+
+        res.json({
+            status: 200
+        })
+    }catch(e){
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: account/notices/setRead - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: account/notices/setRead - ${e}`
+        });
+    };
+})
+
+
+
 router.get('/logout', async (req, res) => {
     try {
         res.clearCookie("userData", {
