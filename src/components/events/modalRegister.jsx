@@ -24,6 +24,8 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
 
     const [reqState, setReqState] = useState(false)
 
+    const [loadCount, setLoadCount] = useState(0)
+
     useEffect(() => {
         if(modalRegisterEvent.slotsTeam1) {
             const tempSlots = modalRegisterEvent.slotsTeam1.filter((_, i) => i != 0)
@@ -80,6 +82,14 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
         setReqState(false)
     }, [modalRegisterEvent])
 
+    const handleLoadChange = (isLoading) => {
+        setLoadCount(prev => isLoading ? prev + 1 : prev - 1)
+    }
+
+    useEffect(() => {loadCount ? console.log(loadCount) : null}, [loadCount])
+
+    const [imgLoading, setImgLoading] = useState(true)
+
     return (
         <div onClick={ () => { setIsModalEventRegister(false) } } className='event-modal-eventreg-main' style={{ display: isModalEventRegister ? 'flex' : 'none' }}>
             <div onClick={(e) => e.stopPropagation()} className='event-modal-eventreg-container'>
@@ -87,8 +97,11 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                     <h2 className='event-modal-eventreg-title' style={{ fontSize: modalRegisterEvent?.title?.length > 23 ? '23px' : '30px' }}>{modalRegisterEvent.title}</h2>
                     <p className='event-modal-eventreg-slots-value'>{ modalRegisterEvent.type == 'PVP' ? `Количество слотов ${slotCount.red}х${slotCount.blue}` : `Количество слотов ${slotCount.red}` }</p>
                     
-                    <h3 className='event-modal-eventreg-h3-title'>Иллюстрация к миссии</h3>
-                    <div className='event-modal-eventreg-img-container' style={{ backgroundImage: `url("https://api.zgarma.ru/${modalRegisterEvent.imgPath}")` }}></div>
+                    <h3 className='event-modal-eventreg-h3-title' style={{ display: modalRegisterEvent.imgPath ? 'inline' : 'none' }}>Иллюстрация к миссии</h3>
+                    <div className='event-modal-eventreg-img-container' style={{ display: imgLoading && modalRegisterEvent.imgPath ? 'flex' : 'none', justifyContent: 'center', alignItems: 'center' }}>
+                        <div class="loader" style={{ display: imgLoading ? 'block' : 'none' }}></div>
+                    </div>
+                    <img className='event-modal-eventreg-img-container' onLoad={() => setImgLoading(false)} src={`https://api.zgarma.ru/${modalRegisterEvent.imgPath}`} style={{ display: imgLoading || !modalRegisterEvent.imgPath ? 'none' : 'flex' }}></img>
                     <div style={{ display: 'flex', marginTop: '20px' }}>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <h3 style={{ marginTop: '0px', width: '300px' }} className='event-modal-eventreg-h3-title'>Регистрация</h3>
@@ -133,7 +146,10 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                     <p style={{ color: '#C0712B', display: isAccount ? 'none' : 'flex' }}>Чтобы отправить заявку, войдите в аккаунт и привяжите Steam!</p>
                     <p style={{ display: reqState ? 'flex' : 'none' }} id='event-modal-eventreg-sendRequest-p-callback'>Заявка успешно отправлена. Ожидайте ответа администрации, подробности ответа вы сможете увидеть в уведомлениях профиля</p>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div>
+                    <div class="loader" style={{ marginRight: '330px', marginTop: '250px', display: loadCount > 0 ? 'block' : 'none' }}></div>
+                </div>
+                <div style={{ display: loadCount > 0 ? 'none' : 'flex', flexDirection: 'column' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', height: '120px', width: '700px' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '330px' }}>
                             <h2 className='event-modal-eventreg-slots-h2' style={{ color: '#C0392B' }}>Красная команда</h2>
@@ -148,6 +164,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                                 team={team}
                                 squad={squad}
                                 host={host}
+                                handleLoadChange={handleLoadChange}
                             />
                         </div>
                         <div style={{ display: modalRegisterEvent.type == 'PVP' ? 'flex' : 'none', flexDirection: 'column', alignItems: 'center', width: '330px' }}>
@@ -163,6 +180,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                                 team={team}
                                 squad={squad}
                                 host={host}
+                                handleLoadChange={handleLoadChange}
                             />
                         </div>
                     </div>
@@ -190,6 +208,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                                                         team={team}
                                                         squad={squad}
                                                         host={host}
+                                                        handleLoadChange={handleLoadChange}
                                                     />
                                                 )
                                             } else {
@@ -208,6 +227,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                                                         team={team}
                                                         squad={squad}
                                                         host={host}
+                                                        handleLoadChange={handleLoadChange}
                                                     />
                                                 )
                                             }
@@ -238,6 +258,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                                                         team={team}
                                                         squad={squad}
                                                         host={host}
+                                                        handleLoadChange={handleLoadChange}
                                                     />
                                                 )
                                             } else {
@@ -256,6 +277,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                                                         team={team}
                                                         squad={squad}
                                                         host={host}
+                                                        handleLoadChange={handleLoadChange}
                                                     />
                                                 )
                                             }

@@ -4,7 +4,7 @@ import axios from 'axios';
 import './Style/modalRegister.css'
 import '../../pages/Style/fonts.css'
 
-const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOriginal, squadIndex, squadItem, slotIndex, slotItem, slot, team, squad, host }) => {
+const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOriginal, squadIndex, squadItem, slotIndex, slotItem, slot, team, squad, host, handleLoadChange }) => {
 
     const [registeredUsername, setRegisteredUsername] = useState('')
 
@@ -18,14 +18,19 @@ const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOrigina
         
         if(id == null) return setIsKitOccupied(false)
 
+        handleLoadChange(true)
+
         const res = await axios.get(`${host}/api/developer/account/data/id?id=${id}`)
 
         if(res.data.status == 200) {
             setIsKitOccupied(true)
             const tempData = res.data.container.steam
             setRegisteredUsername(tempData.personaname)
+
+            handleLoadChange(false)
         } else {
             console.error(res.data.err)
+            handleLoadChange(false)
         }
     }
 
