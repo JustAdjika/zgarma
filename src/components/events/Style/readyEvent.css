@@ -124,15 +124,13 @@
 }
 .readyevent-info-team-content {
     text-align: center;
+    max-width: 275px;
 }
 .readyevent-info-blueteam-title {
     color: #066DA7;
     font-size: 15pt;
     margin: 0px;
     margin-bottom: 5px;
-}
-.readyevent-info-team-content {
-    text-align: center;
 }
 .readyevent-hide-info-team-content {
     margin: 0px;

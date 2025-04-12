@@ -124,15 +124,13 @@
 }
 .openevent-info-team-content {
     text-align: center;
+    max-width: 275px;
 }
 .openevent-info-blueteam-title {
     color: #066DA7;
     font-size: 15pt;
     margin: 0px;
     margin-bottom: 5px;
-}
-.openevent-info-team-content {
-    text-align: center;
 }
 .openevent-hide-info-team-content {
     margin: 0px;
@@ -150,7 +148,7 @@
     text-decoration: none;
 }
 .openevent-info-team-vehicle {
-    width: 100%;
+    width: 275px;
     display: flex;
     flex-direction: column;
 }
@@ -191,4 +189,9 @@
 }
 .openevent-button-close-game:hover {
     background-color: #a12f22;
+}
+.openevent-vehicles-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
 }

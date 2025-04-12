@@ -73,21 +73,23 @@ const OpenEvent = ({isAdmin, setModalReglistEvent, setIsModalEventReglist, event
                             <p className='openevent-info-redteam-title'>Красная команда</p>
                             <div className='openevent-team-decorative-line'/>
                             <p className='openevent-info-team-content'>{ eventData.team1 }</p>
-                            <div className='openevent-info-team-vehicle'>
-                                { vehicle1.map((element, index) => (
-                                    <p key={index}>{ `${element.count}x ${element.title}` }</p>
-                                ))}
-                            </div>
                         </div>
                         <div className='openevent-team-info-container'>
                             <p className='openevent-info-blueteam-title'>Синяя команда</p>
                             <div className='openevent-team-decorative-line' style={{ backgroundColor: '#066DA7' }}/>
                             <p className='openevent-info-team-content'>{ eventData.team2 }</p>
-                            <div className='openevent-info-team-vehicle'>
-                                { vehicle2.map((element, index) => (
-                                    <p key={index}>{ `${element.count}x ${element.title}` }</p>
-                                ))}
-                            </div>
+                        </div>
+                    </div>
+                    <div className='openevent-vehicles-container'>
+                        <div className='openevent-info-team-vehicle'>
+                            { vehicle1.map((element, index) => (
+                                <p key={index}>{ `${element.count}x ${element.title}` }</p>
+                            ))}
+                        </div>
+                        <div className='openevent-info-team-vehicle'>
+                            { vehicle2.map((element, index) => (
+                                <p key={index}>{ `${element.count}x ${element.title}` }</p>
+                            ))}
                         </div>
                     </div>
                     <button className='openevent-button-register' onClick={ () => { setIsModalEventRegister(true); setModalRegisterEvent(eventData) } }>Информация и слоты</button>
