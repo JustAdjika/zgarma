@@ -94,6 +94,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         })
 
         if(res.data.status == 200) {
+            setSelectedRequest(null)
             getRequests()
             updateEvent()
         } else {
@@ -114,6 +115,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         })
 
         if(res.data.status == 200) {
+            setSelectedRequest(null)
             getRequests()
         } else {
             setErrorMessage(res.data.err)
@@ -205,12 +207,12 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                             
                             <div style={{ position: 'relative' }}>
                                 <div className='event-modal-reglist-report-button-a-wrapper'
-                                    onMouseEnter={ isSlotOccupied ? handleButtonAcceptMouseEnter : null } 
+                                    onMouseEnter={ isSlotOccupied || selectedRequest === null ? handleButtonAcceptMouseEnter : null } 
                                     onMouseLeave={ handleButtonAcceptMouseLeave } 
                                 >
                                     <button className='event-modal-reglist-report-button-a'
-                                        disabled={isSlotOccupied} 
-                                        style={ isSlotOccupied ? { 
+                                        disabled={isSlotOccupied || selectedRequest === null} 
+                                        style={ isSlotOccupied || selectedRequest === null ? { 
                                             cursor: 'not-allowed', 
                                             opacity: '0.5' 
                                         } : null} 
@@ -220,10 +222,25 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                     </button>
                                 </div>
                                 <div className={`event-modal-reglist-report-button-a-alert ${isOccupiedTooltip ? 'visible' : ''}`}>
-                                    Слот уже занят!
+                                    { selectedRequest === null ? 'Выберите слот!' : isSlotOccupied ? 'Слот уже занят!' : null }
                                 </div>
                             </div>
-                            <button className='event-modal-reglist-report-button-r' onClick={ handleRequestReject }>Отклонить заявку</button>
+                            <div className='event-modal-reglist-report-button-a-wrapper'
+                                onMouseEnter={ selectedRequest === null ? handleButtonAcceptMouseEnter : null } 
+                                onMouseLeave={ handleButtonAcceptMouseLeave } 
+                            >
+                                <button 
+                                    className='event-modal-reglist-report-button-r' 
+                                    onClick={ handleRequestReject }
+                                    disabled={selectedRequest === null} 
+                                    style={selectedRequest === null ? { 
+                                        cursor: 'not-allowed', 
+                                        opacity: '0.5' 
+                                    } : null} 
+                                >
+                                    Отклонить заявку
+                                </button>
+                            </div>
                             <textarea placeholder='Причина' value={ reason } onChange={(e) => { setReason(e.target.value) }} className='event-modal-reglist-report-reason-input'></textarea>
                         </div>
                     </div>

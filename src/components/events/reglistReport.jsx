@@ -10,7 +10,14 @@ const ReglistReport = ({ host, currentRequest, setErrorMessage }) => {
     const [regDate, setRegDate] = useState("Undefined")
 
     useEffect(() => {
-        if(!currentRequest) return
+        if(!currentRequest) {
+            setSteamName("Undefined")
+            setDiscordName("Undefined")
+            setDiscordid("Undefined")
+            setRegDate("Undefined")
+            
+            return
+        }
         
         const getUser = async () => {
             const res = await axios.get(`${host}/api/developer/account/data/id?id=${currentRequest.userId}`)
