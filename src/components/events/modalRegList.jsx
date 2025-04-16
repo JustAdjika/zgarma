@@ -5,10 +5,10 @@ import Cookies from 'js-cookie';
 import './Style/modalRegList.css'
 import '../../pages/Style/fonts.css'
 
-import ReglistItem from './reglistItem';
-import ReglistReport from './reglistReport';
-import ReglistSquad from './reglistSquad';
-import ReglistSlot from './reglistSlot';
+import ReglistItem from './reglist/reglistItem.jsx';
+import ReglistReport from './reglist/reglistReport.jsx';
+import ReglistSquad from './reglist/reglistSquad.jsx';
+import ReglistSlot from './reglist/reglistSlot.jsx';
 
 const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event, setErrorMessage }) => {
     const [reqests, setRequests] = useState([])
@@ -257,6 +257,8 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                         </div>
                     </div>
                     <div class="loader" style={{ marginLeft: '290px', marginTop: '250px', display: loadCount > 0 ? 'block' : 'none' }}></div>
+
+
                     <div className='event-modal-reglist-slots-main' style={{ display: loadCount > 0 ? 'none' : 'flex' }}>
                         <div className='event-modal-reglist-slots-container' style={{ marginRight: '30px' }}>
                             <ReglistSlot 
@@ -313,6 +315,9 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                             )) }
                         </div>
                     </div>
+
+
+                    
                 </div>
             </div>
         </div>

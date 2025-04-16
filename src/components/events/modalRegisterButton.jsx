@@ -145,7 +145,7 @@ const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOrigina
                         { slotsOriginal[squadIndex].slots[0].player == null ? slotItem.title : registeredUsername }
                     </button>
                 </div>
-                <div className={`event-modal-eventreg-slot-tooltip ${kitTooltip ? 'visible' : ''}`}>
+                <div className={`event-modal-eventreg-slot-tooltip2 ${kitTooltip ? 'visible' : ''}`}>
                     { slotItem.title }
                 </div>
             </div>
@@ -177,7 +177,7 @@ const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOrigina
                         { slotsOriginal[squadIndex].slots[slotIndex].player == null ? slotItem.title : registeredUsername }
                     </button>
                 </div>
-                <div className={`event-modal-eventreg-slot-tooltip ${kitTooltip ? 'visible' : ''}`}>
+                <div className={`event-modal-eventreg-slot-tooltip2 ${kitTooltip ? 'visible' : ''}`}>
                     { slotItem.title }
                 </div>
             </div>
@@ -241,7 +241,7 @@ const ModalRegisterButton = ({ butType, setTeam, setSquad, setSlot, slotsOrigina
                         { slotsOriginal.player == null ? 'Командир стороны' : registeredUsername }
                     </button>
                 </div>
-                <div className={`event-modal-eventreg-slot-tooltip ${kitTooltip ? 'visible' : ''}`}>
+                <div className={`event-modal-eventreg-slot-tooltip2 ${kitTooltip ? 'visible' : ''}`}>
                     { 'Командир стороны' }
                 </div>
             </div>

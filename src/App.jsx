@@ -8,8 +8,6 @@ const Events = lazy(() => import('./pages/events.jsx'))
 const PathchesPage = lazy(() => import('./pages/patches.jsx'))
 const RulesPage = lazy(() => import('./pages/rules.jsx'))
 import DiscordAuthCallback from './pages/discordAuthCallback.jsx';
-// import PathchesPage from './pages/patches.jsx';
-// import RulesPage from './pages/rules.jsx';
 import Layouts from "./layouts/layout";
 import ProgressBar from './layouts/ProgressBar.jsx';
 
