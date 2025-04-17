@@ -205,7 +205,7 @@ const Layouts = ({ setUserinfoMenu, userinfoMenu, notices, setNotices }) => {
             <header className="main-header" onClick={ (e) => e.stopPropagation() }>
                 {/* Название проекта в левом углу */}
                 <div style={{ display: 'flex' }}>
-                <div className="project-title" style={{ marginRight: '130px' }}>ZG <div style={{ width: '6px', height: '40px', borderRadius: '5px', backgroundColor: 'black' }} /> ARMA 3</div>
+                <a href="/announcement" className="project-title" style={{ marginRight: '130px', textDecoration: 'none' }}>ZG <div style={{ width: '6px', height: '40px', borderRadius: '5px', backgroundColor: 'black' }} /> ARMA 3</a>
 
                     {/* Навигационное меню */}
                     <nav className="nav-menu" style={{ display: 'flex', alignItems: 'center' }}>
