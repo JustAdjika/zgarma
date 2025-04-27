@@ -122,7 +122,8 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                             fontFamily: 'My Open Sans', 
                             width: '550px', 
                             marginLeft: '10px',
-                            display: slot !== null ? 'inline' : 'none'
+                            display: slot !== null ? 'inline' : 'none',
+                            marginBottom: '0px'
                     }}>
                         Выбранный слот: 
                         { squad === 0 ?
@@ -137,7 +138,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                     </p>
                     <input type="checkbox" id='event-modal-eventreg-checkbox-1' style={{ display: 'none' }} onChange={() => setCheckbox1(prev => !prev)} />
                     <input type="checkbox" id='event-modal-eventreg-checkbox-2' style={{ display: 'none' }} onChange={() => setCheckbox2(prev => !prev)} />
-                    <label className='event-modal-eventreg-checkbox-container' htmlFor="event-modal-eventreg-checkbox-1">
+                    <label className='event-modal-eventreg-checkbox-container' htmlFor="event-modal-eventreg-checkbox-1" style={{ marginTop: '16px' }}>
                         <p>Я хочу быть командиром стороны, если эту роль никто не займет</p>
                         <div>
                             <div style={{ backgroundColor: checkbox1 ? '#28272E' : '#969696' }} />
@@ -164,18 +165,6 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '330px' }}>
                             <h2 className='event-modal-eventreg-slots-h2' style={{ color: '#C0392B' }}>Красная команда</h2>
                             <div className='event-modal-eventreg-slots-decorative-line' style={{ backgroundColor: '#C0392B' }}/>
-                            {/* <ModalRegisterButton 
-                                butType={ 'CMD_red' } 
-                                setTeam={setTeam} 
-                                setSquad={setSquad} 
-                                setSlot={setSlot} 
-                                slotsOriginal={cmdSlotRed} 
-                                slot={slot}
-                                team={team}
-                                squad={squad}
-                                host={host}
-                                handleLoadChange={handleLoadChange}
-                            /> */}
                             <RegisterSlot 
                                 slotItem={{title: 'Командир стороны'}}
                                 mapData={{team: 0}}
@@ -184,7 +173,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                                 setSlot={setSlot}
                                 host={host}
                                 handleLoadChange={handleLoadChange}
-                                slotsOriginal={[slots1, slots2]}
+                                slotsOriginal={[modalRegisterEvent.slotsTeam1 || [], modalRegisterEvent.slotsTeam2 || []]}
                                 setErrorMessage={setErrorMessage}
                                 isCMDtype={true}
                                 team={team}
@@ -195,74 +184,29 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                         <div style={{ display: modalRegisterEvent.type == 'PVP' ? 'flex' : 'none', flexDirection: 'column', alignItems: 'center', width: '330px' }}>
                             <h2 className='event-modal-eventreg-slots-h2' style={{ color: '#0B94E0' }}>Синяя команда</h2>
                             <div className='event-modal-eventreg-slots-decorative-line' style={{ backgroundColor: '#0B94E0' }}/>
-                            <ModalRegisterButton 
-                                butType={ 'CMD_blue' } 
-                                setTeam={setTeam} 
-                                setSquad={setSquad} 
-                                setSlot={setSlot} 
-                                slotsOriginal={cmdSlotBlue} 
-                                slot={slot}
-                                team={team}
-                                squad={squad}
+                            <RegisterSlot 
+                                slotItem={{title: 'Командир стороны'}}
+                                mapData={{team: 1}}
+                                setTeam={setTeam}
+                                setSquad={setSquad}
+                                setSlot={setSlot}
                                 host={host}
                                 handleLoadChange={handleLoadChange}
+                                slotsOriginal={[modalRegisterEvent.slotsTeam1 || [], modalRegisterEvent.slotsTeam2 || []]}
                                 setErrorMessage={setErrorMessage}
+                                isCMDtype={true}
+                                team={team}
+                                squad={squad}
+                                slot={slot}
                             />
                         </div>
                     </div>
-
 
                     
                     <div className="event-modal-eventreg-slots-main-container">
                         <div style={{ display: 'flex', justifyContent: 'space-between', width: '700px' }}>
                             <div style={{ width: '330px' }}>
                                 { slots1.map((squadItem, squadIndex) => (
-                                    // <div className='event-modal-eventreg-squad-container'>
-                                    //     <h3>{squadItem.title}</h3>
-
-                                    //     { squadItem.slots.map((slotItem, slotIndex) => {
-                                    //         if( slotItem.SL == true ) { 
-                                    //             return (
-                                    //                 <ModalRegisterButton 
-                                    //                     butType={ 'SL_red' } 
-                                    //                     setTeam={setTeam} 
-                                    //                     setSquad={setSquad} 
-                                    //                     setSlot={setSlot} 
-                                    //                     slotsOriginal={slots1} 
-                                    //                     squadIndex={squadIndex} 
-                                    //                     squadItem={squadItem} 
-                                    //                     slotIndex={slotIndex} 
-                                    //                     slotItem={slotItem} 
-                                    //                     slot={slot}
-                                    //                     team={team}
-                                    //                     squad={squad}
-                                    //                     host={host}
-                                    //                     handleLoadChange={handleLoadChange}
-                                    //                 />
-                                    //             )
-                                    //         } else {
-                                    //             return (
-                                    //                 <ModalRegisterButton 
-                                    //                     butType={ 'red' } 
-                                    //                     setTeam={setTeam} 
-                                    //                     setSquad={setSquad} 
-                                    //                     setSlot={setSlot} 
-                                    //                     slotsOriginal={slots1} 
-                                    //                     squadIndex={squadIndex} 
-                                    //                     squadItem={squadItem} 
-                                    //                     slotIndex={slotIndex} 
-                                    //                     slotItem={slotItem} 
-                                    //                     slot={slot}
-                                    //                     team={team}
-                                    //                     squad={squad}
-                                    //                     host={host}
-                                    //                     handleLoadChange={handleLoadChange}
-                                    //                 />
-                                    //             )
-                                    //         }
-                                    //     })}
-                                            
-                                    // </div>
                                     <RegisterSquad 
                                         squadItem={squadItem}
                                         squadIndex={squadIndex}
@@ -281,51 +225,20 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                             </div>
                             <div style={{ width: '330px' }}>
                                 { slots2.map((squadItem, squadIndex) => (
-                                    <div className='event-modal-eventreg-squad-container'>
-                                        <h3>{squadItem.title}</h3>
-
-                                        { squadItem.slots.map((slotItem, slotIndex) => {
-                                            if( slotItem.SL == true ) { 
-                                                return (
-                                                    <ModalRegisterButton 
-                                                        butType={ 'SL_blue' } 
-                                                        setTeam={setTeam} 
-                                                        setSquad={setSquad} 
-                                                        setSlot={setSlot} 
-                                                        slotsOriginal={slots2} 
-                                                        squadIndex={squadIndex} 
-                                                        squadItem={squadItem} 
-                                                        slotIndex={slotIndex} 
-                                                        slotItem={slotItem} 
-                                                        slot={slot}
-                                                        team={team}
-                                                        squad={squad}
-                                                        host={host}
-                                                        handleLoadChange={handleLoadChange}
-                                                    />
-                                                )
-                                            } else {
-                                                return (
-                                                    <ModalRegisterButton 
-                                                        butType={ 'blue' } 
-                                                        setTeam={setTeam} 
-                                                        setSquad={setSquad} 
-                                                        setSlot={setSlot} 
-                                                        slotsOriginal={slots2} 
-                                                        squadIndex={squadIndex} 
-                                                        squadItem={squadItem} 
-                                                        slotIndex={slotIndex} 
-                                                        slotItem={slotItem} 
-                                                        slot={slot}
-                                                        team={team}
-                                                        squad={squad}
-                                                        host={host}
-                                                        handleLoadChange={handleLoadChange}
-                                                    />
-                                                )
-                                            }
-                                        })}
-                                    </div>
+                                    <RegisterSquad 
+                                        squadItem={squadItem}
+                                        squadIndex={squadIndex}
+                                        slotsOriginal={[slots1, slots2]}
+                                        teamIndex={1}
+                                        setSlot={setSlot}
+                                        setSquad={setSquad}
+                                        setTeam={setTeam}
+                                        host={host}
+                                        handleLoadChange={handleLoadChange}
+                                        team={team}
+                                        squad={squad}
+                                        slot={slot}
+                                    />
                                 ))}
                             </div>
                         </div>

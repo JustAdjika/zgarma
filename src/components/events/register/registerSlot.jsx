@@ -38,7 +38,7 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
             const res = await axios.get(`${host}/api/developer/account/data/id?id=${id}`)
 
             if(res.data.status == 200) {
-                setRegisteredUser(res.data.container)
+                setTitle(res.data.container.steam.personaname)
                 handleLoadChange(false)
             } else {
                 setTimeout(() => setErrorMessage(res.data.err), 3000)
@@ -52,7 +52,6 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
 
             if(slotsOriginal[mapData.team][0].player) {
                 getRegUser(slotsOriginal[mapData.team][0].player)
-                    .then(() => setTitle(registeredUser))
                     
                 setIsKitOccupied(true)
             } else {
@@ -62,7 +61,6 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
         } else {
             if(slotsOriginal[mapData.team][mapData.squadIndex].slots[mapData.slotIndex].player) {
                 getRegUser(slotsOriginal[mapData.team][mapData.squadIndex].slots[mapData.slotIndex].player)
-                    .then(() => setTitle(registeredUser))
 
                 setIsKitOccupied(true)
             } else {
@@ -107,7 +105,7 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
         if(!slotItem) return
 
         updateStyle()
-    }, [team, squad, slot])
+    }, [team, squad, slot, slotsOriginal])
 
     const handleSelectSlot = () => {
         if(isCMDtype) {
@@ -158,7 +156,7 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
                     { title }
                 </button>
             </div>
-            <div className={`event-modal-eventreg-slot-tooltip2 ${kitTooltip ? 'visible' : ''}`}>
+            <div className={`event-modal-eventreg-slot-tooltip${ mapData.team === 0 ? '' : '2' } ${kitTooltip ? 'visible' : ''}`}>
                 { slotItem.title }
             </div>
         </div>
