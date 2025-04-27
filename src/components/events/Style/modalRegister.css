@@ -167,6 +167,10 @@
 .event-modal-eventreg-slot-container:hover {
     background-color: #b1b1b1;
 }
+.event-modal-eventreg-slot-container>span {
+    margin-right: 20px;
+    overflow: hidden;
+}
 .event-modal-eventreg-slots-main-container {
     display: flex;
     width: 724px;
@@ -273,4 +277,22 @@
 .event-modal-eventreg-slot-tooltip2.visible {
     opacity: 1;
     visibility: visible;
+}
+
+.event-modal-eventreg-slot-marker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 17px;
+    border-radius: 5px;  
+    font-family: 'Outist';
+}
+.event-modal-eventreg-slot-marker.mtl {
+    border: solid 3px #FF9F1A; 
+    color: #FF9F1A;
+}
+.event-modal-eventreg-slot-marker.msl {
+    border: solid 3px #30762D; 
+    color: #30762D;
 }

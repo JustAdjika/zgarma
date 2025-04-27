@@ -153,7 +153,9 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
                     className='event-modal-eventreg-slot-container'
                     style={ currentStyle }
                 >
-                    { title }
+                    {/* { title } */}
+                    <span>DSASAFOPSJAOPFSASDSADSADASDSADSAA</span>
+                    {/* <div className='event-modal-eventreg-slot-marker msl'>MSL</div> */}
                 </button>
             </div>
             <div className={`event-modal-eventreg-slot-tooltip${ mapData.team === 0 ? '' : '2' } ${kitTooltip ? 'visible' : ''}`}>
