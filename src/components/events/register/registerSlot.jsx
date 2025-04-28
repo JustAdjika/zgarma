@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 
-const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squad, slot, host, handleLoadChange, slotsOriginal, setErrorMessage, isCMDtype }) => {
+const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squad, slot, host, handleLoadChange, slotsOriginal, setErrorMessage, isCMDtype, eventid }) => {
 
     const [title, setTitle] = useState('')
     const [registeredUser, setRegisteredUser] = useState(null)
+    const [MTL, setMTL] = useState(false)
+    const [MSL, setMSL] = useState(false)
+    const [BTH, setBTH] = useState(false)
 
     const blockedStyle = {
         color: '#000000',
@@ -45,6 +48,25 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
                 handleLoadChange(false)
             }
         }
+
+        const getMarkers = async (playerid) => {
+            handleLoadChange(true)
+            const res = await axios.get(`${host}/api/developer/event/request/data/accepted/id?id=${eventid}`)
+
+            if(res.data.status == 200) {
+                const playerRequestData = res.data.container.filter(item => item.userId === playerid )
+                console.log(playerRequestData)
+
+                if(playerRequestData[0].maybeTL && playerRequestData[0].maybeSL) setBTH(true)
+                else if(playerRequestData[0].maybeTL) setMTL(true)
+                else if(playerRequestData[0].maybeSL) setMSL(true)
+                
+                handleLoadChange(false)
+            } else {
+                setTimeout(() => setErrorMessage(res.data.err), 3000)
+                handleLoadChange(false)
+            }
+        }
         
         // Назначение заголовка слота в зависимости от типа
         if(isCMDtype) {
@@ -52,6 +74,7 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
 
             if(slotsOriginal[mapData.team][0].player) {
                 getRegUser(slotsOriginal[mapData.team][0].player)
+                getMarkers(slotsOriginal[mapData.team][0].player)
                     
                 setIsKitOccupied(true)
             } else {
@@ -61,6 +84,7 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
         } else {
             if(slotsOriginal[mapData.team][mapData.squadIndex].slots[mapData.slotIndex].player) {
                 getRegUser(slotsOriginal[mapData.team][mapData.squadIndex].slots[mapData.slotIndex].player)
+                getMarkers(slotsOriginal[mapData.team][mapData.squadIndex].slots[mapData.slotIndex].player)
 
                 setIsKitOccupied(true)
             } else {
@@ -72,7 +96,6 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
 
 
     }, [slotItem])
-
 
     const updateStyle = () => {
         // Назначение стилей слота в зависимости от типа и условий
@@ -153,9 +176,8 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
                     className='event-modal-eventreg-slot-container'
                     style={ currentStyle }
                 >
-                    {/* { title } */}
-                    <span>DSASAFOPSJAOPFSASDSADSADASDSADSAA</span>
-                    {/* <div className='event-modal-eventreg-slot-marker msl'>MSL</div> */}
+                    { title }
+                    <div style={{ display: BTH || MTL || MSL ? 'flex' : 'none' }} className={`event-modal-eventreg-slot-marker ${ BTH ? 'bth' : MTL ? 'mtl' : MSL ? 'msl' : '' }`}>{ BTH ? 'BTH' : MTL ? 'MTL' : MSL ? 'MSL' : '' }</div>
                 </button>
             </div>
             <div className={`event-modal-eventreg-slot-tooltip${ mapData.team === 0 ? '' : '2' } ${kitTooltip ? 'visible' : ''}`}>

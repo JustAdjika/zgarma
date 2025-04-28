@@ -30,7 +30,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         })
 
         if(res.data.status == 200) {
-            setRequests(res.data.container)
+            setRequests(res.data.container.filter((item) => item.status == true))
             handleLoadChange(false)
         } else {
             setErrorMessage(res.data.err)
@@ -85,7 +85,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         }
 
 
-        const res = await axios.post(`${host}/api/developer/event/request/accept`, {
+        const res = await axios.post(`${host}/api/developer/event/request/accept/test`, {
             key: JSON.parse(Cookies.get("userData")).key,
             requestId: thisRequest.id,
             dest: thisRequest.userId,
@@ -107,7 +107,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         if(selectedRequest == null) return
         const thisRequest = reqests[selectedRequest] 
 
-        const res = await axios.post(`${host}/api/developer/event/request/cancel`, {
+        const res = await axios.post(`${host}/api/developer/event/request/cancel/test`, {
             key: JSON.parse(Cookies.get("userData")).key,
             requestId: thisRequest.id,
             dest: thisRequest.userId,
@@ -132,9 +132,6 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
     useEffect(() => {
         if(selectedRequest === null) return
         const requestInfo = reqests[selectedRequest]
-
-        console.log(requestInfo)
-        console.log(event)
 
         const isDefault = requestInfo.squad === 0 ? false : true
 

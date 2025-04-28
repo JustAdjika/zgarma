@@ -163,6 +163,7 @@
     border: none;
     outline: none;
     border: solid 3px #30762D;
+    justify-content: space-between;
 }
 .event-modal-eventreg-slot-container:hover {
     background-color: #b1b1b1;
@@ -287,6 +288,7 @@
     height: 17px;
     border-radius: 5px;  
     font-family: 'Outist';
+    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.171);
 }
 .event-modal-eventreg-slot-marker.mtl {
     border: solid 3px #FF9F1A; 
@@ -295,4 +297,8 @@
 .event-modal-eventreg-slot-marker.msl {
     border: solid 3px #30762D; 
     color: #30762D;
+}
+.event-modal-eventreg-slot-marker.bth {
+    border: solid 3px #7B370D; 
+    color: #7B370D;
 }

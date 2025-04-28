@@ -89,13 +89,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
         setLoadCount(prev => isLoading ? prev + 1 : prev - 1)
     }
 
-    useEffect(() => {loadCount ? console.log(loadCount) : null}, [loadCount])
-
     const [imgLoading, setImgLoading] = useState(true)
-
-    useEffect(() => {
-        console.log(squad)
-    }, [slot, squad, team])
 
     return (
         <div onClick={ () => { setIsModalEventRegister(false) } } className='event-modal-eventreg-main' style={{ display: isModalEventRegister ? 'flex' : 'none' }}>
@@ -179,6 +173,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                                 team={team}
                                 squad={squad}
                                 slot={slot}
+                                eventid={modalRegisterEvent.id}
                             />
                         </div>
                         <div style={{ display: modalRegisterEvent.type == 'PVP' ? 'flex' : 'none', flexDirection: 'column', alignItems: 'center', width: '330px' }}>
@@ -198,6 +193,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                                 team={team}
                                 squad={squad}
                                 slot={slot}
+                                eventid={modalRegisterEvent.id}
                             />
                         </div>
                     </div>
@@ -220,6 +216,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                                         team={team}
                                         squad={squad}
                                         slot={slot}
+                                        eventid={modalRegisterEvent.id}
                                     />
                                 ))}
                             </div>
@@ -238,6 +235,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                                         team={team}
                                         squad={squad}
                                         slot={slot}
+                                        eventid={modalRegisterEvent.id}
                                     />
                                 ))}
                             </div>
