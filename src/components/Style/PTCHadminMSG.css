@@ -13,6 +13,7 @@ body {
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 10px;
+    white-space: pre-wrap;
 }
 
 .container-dop-info {

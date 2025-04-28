@@ -3,6 +3,10 @@ import './Style/ANNadminMSG.css';
 import '../pages/Style/fonts.css'
 
 function ANNadminMSG({ title, content, date, options, postIndex }) {
+    const formatText = (text) => {
+        return text.replace(/\n/g, "br").repalce(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp")
+    }
+
     return (
         <div className="main-ANN-div" id={`postAnchor-${postIndex}`}>
             <div className="container-dop-info">

@@ -40,6 +40,7 @@ body {
     min-height: 30px;
     overflow-wrap: break-word;
     padding-bottom: 5px;
+    white-space: pre-wrap;
 }
 
 .message-container {
