@@ -228,6 +228,7 @@ const Announcement = ({isDevBranch}) => {
                                 date={announcement.date}
                                 title={announcement.title}
                                 content={announcement.content}
+                                postIndex={announcement.id}
                             />
                         ))}
                     </div>

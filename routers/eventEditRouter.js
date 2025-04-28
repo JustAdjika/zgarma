@@ -133,6 +133,7 @@ router.post('/status/:status', AccountCheck, PermissionsCheck, async(req, res) =
                 eventTeam2: currentEvent.dataValues.team2,
                 eventType: currentEvent.dataValues.type,
                 eventTitle: currentEvent.dataValues.title,
+                eventid: currentEvent.dataValues.id,
                 botKey: botKey,
                 devBranch: data.devBranch
             })

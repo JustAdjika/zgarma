@@ -295,7 +295,7 @@ router.post('/post', BotPermissionsCheck, async(req, res) => {
                     data.option3 && { name: 'Вариант 3', value: `${data.option3}`, inline: true },
                     data.option4 && { name: 'Вариант 4', value: `${data.option4}`, inline: true },
                 ].filter(Boolean), // Убираем `undefined`
-                { name: '', value: '*Чтобы проголосовать, [зарегистрируйтесь на сайте](https://zgarma.ru/announcement).*', inline: false }
+                { name: '', value: `*Чтобы проголосовать, [зарегистрируйтесь на сайте](https://zgarma.ru/announcement#postAnchor-${data.postid}).*`, inline: false }
             )
             .setTimestamp()
             .setFooter({ text: 'ZG ARMA 3 | Администрация' });
@@ -425,7 +425,7 @@ router.post('/eventAnnouncements/ready', BotPermissionsCheck, async(req, res) =>
             { name: 'Красные', value: `${data.eventTeam1}`, inline: true },
             { name: 'Синие', value: `${data.eventTeam2}`, inline: true },
             { name: '', value: ``, inline: false },
-            { name: '', value: `*[Подробнее на странице сайта](https://zgarma.ru/events)*`, inline: false },
+            { name: '', value: `*[Подробнее на странице сайта](https://zgarma.ru/events#anchor-${data.eventid})*`, inline: false },
         )
         .setTimestamp()
         .setFooter({ text: 'ZG ARMA 3 | Администрация' });
@@ -501,7 +501,7 @@ router.post('/eventAnnouncements/open', BotPermissionsCheck, async(req, res) => 
             { name: 'Красные', value: `${data.eventTeam1}`, inline: true },
             { name: 'Синие', value: `${data.eventTeam2}`, inline: true },
             { name: '', value: ``, inline: false },
-            { name: '', value: `*[Подробнее на странице сайта](https://zgarma.ru/events)*`, inline: false },
+            { name: '', value: `*[Подробнее на странице сайта](https://zgarma.ru/events#anchor-${data.eventid})*`, inline: false },
         )
         .setTimestamp()
         .setFooter({ text: 'ZG ARMA 3 | Администрация' });

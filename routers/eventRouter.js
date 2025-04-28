@@ -95,7 +95,8 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
             eventType: data.type,
             eventTitle: data.title,
             botKey: botKey,
-            devBranch: data.devBranch
+            devBranch: data.devBranch,
+            eventid: newEvent.id
         })
 
         console.log(`[${GetDateInfo().all}] API событие ${newEvent.id} успешно создано администратором ${user.id}`)

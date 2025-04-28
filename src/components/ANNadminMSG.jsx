@@ -2,9 +2,9 @@ import React from "react";
 import './Style/ANNadminMSG.css';
 import '../pages/Style/fonts.css'
 
-function ANNadminMSG({ title, content, date, options }) {
+function ANNadminMSG({ title, content, date, options, postIndex }) {
     return (
-        <div className="main-ANN-div">
+        <div className="main-ANN-div" id={`postAnchor-${postIndex}`}>
             <div className="container-dop-info">
                 <div className="author-div">Администранция ZG</div>
                 <div className="time-ANN-div">{ date }</div>

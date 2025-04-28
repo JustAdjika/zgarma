@@ -50,7 +50,7 @@ const OpenEvent = ({isAdmin, setModalReglistEvent, setIsModalEventReglist, event
     }
 
     return (
-        <div className='openevent-main-container'>
+        <div className='openevent-main-container' id={`anchor-${eventData.id}`}>
             <div className='openevent-header-container'>
                 <h2 className='openevent-title'>{ eventData.title }</h2>
                 <div className='openevent-type' style={{ backgroundColor: eventData.type == "PVP" ? '#30762D' : "#7B370D"}}>{ eventData.type }</div>

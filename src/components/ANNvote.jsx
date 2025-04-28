@@ -39,7 +39,7 @@ function AnnVote({ title, content, date, options, voteIndex, currentUser, votes,
     };
 
     return (
-        <div className="main-div-ANNvote">
+        <div className="main-div-ANNvote" id={`postAnchor-${voteIndex}`}>
             <div className="obert-ANNvote-div">
                 <div className="time-ANNvote">{date}</div>
                 <div className="author-div2">{title}</div>

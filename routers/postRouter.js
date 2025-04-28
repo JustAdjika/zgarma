@@ -51,7 +51,7 @@ router.post('/add', AccountCheck, PermissionsCheck, async(req, res) => {
             devBranch: data.devBranch
         });
 
-        axios.post(`${host}/api/developer/bot/post`, { ...newPost.dataValues, botKey: botKey, devBranch: data.devBranch })
+        axios.post(`${host}/api/developer/bot/post`, { ...newPost.dataValues, botKey: botKey, devBranch: data.devBranch, postid: newPost.id })
 
         console.log(`[${GetDateInfo().all}] API Пост ${newPost.id} успешно отправлен администратором ${user.id}`)
 

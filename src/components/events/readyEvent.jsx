@@ -12,7 +12,7 @@ const ReadyEvent = ({isAdmin, eventData, setIsModalEventRemote, setModalRemoteEv
     }
 
     return (
-        <div className='readyevent-main-container'>
+        <div className='readyevent-main-container' id={`anchor-${eventData.id}`}>
             <div className='readyevent-header-container'>
                 <h2 className='readyevent-title'>{ eventData.title }</h2>
                 <div className='readyevent-type' style={{ backgroundColor: eventData.type == 'PVE' ? '#7B370D' : '#30762D' }}>{ eventData.type }</div>
