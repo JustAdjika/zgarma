@@ -22,7 +22,9 @@ const client = new Client({
       GatewayIntentBits.GuildMessages,
       GatewayIntentBits.MessageContent,
       GatewayIntentBits.GuildMembers,
-    ]
+      GatewayIntentBits.DirectMessages,
+    ],
+    partials: ['CHANNEL']
 })
 
 const token = process.env.DISCORD_BOT_TOKEN
@@ -436,10 +438,10 @@ router.post('/eventAnnouncements/ready', BotPermissionsCheck, async(req, res) =>
 
         res.end()
     }catch(e){
-        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: eventAnnouncements/ready - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: bot/eventAnnouncements/ready - ${e} \x1b[31m`);
         res.json({
             status: 500,
-            err: `Api developer error: eventAnnouncements/ready - ${e}`
+            err: `Api developer error: bot/eventAnnouncements/ready - ${e}`
         });
     };
 })
@@ -473,10 +475,10 @@ router.post('/eventAnnouncements/close', BotPermissionsCheck, async(req, res) =>
 
         res.end()
     }catch(e){
-        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: eventAnnouncements/close - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: bot/eventAnnouncements/close - ${e} \x1b[31m`);
         res.json({
             status: 500,
-            err: `Api developer error: eventAnnouncements/close - ${e}`
+            err: `Api developer error: bot/eventAnnouncements/close - ${e}`
         });
     };
 })
@@ -512,13 +514,43 @@ router.post('/eventAnnouncements/open', BotPermissionsCheck, async(req, res) => 
 
         res.end()
     }catch(e){
-        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: eventAnnouncements/open - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: bot/eventAnnouncements/open - ${e} \x1b[31m`);
         res.json({
             status: 500,
-            err: `Api developer error: eventAnnouncements/open - ${e}`
+            err: `Api developer error: bot/eventAnnouncements/open - ${e}`
         });
     };
 })
+
+
+
+router.post('/notice/send', BotPermissionsCheck, async(req, res) => {
+    try {
+        const data = req.body
+
+        const targetUser = await client.users.fetch(data.discordid)
+
+        const embed = new EmbedBuilder()
+        .setTitle(`Вам пришло оповещение на сайте!`)
+        .setDescription(`**${data.content}**`)
+        .setColor(0xbe7713)
+        .setTimestamp()
+        .setFooter({ text: 'ZG ARMA 3 | Система оповещения' });
+
+        await targetUser.send({ embeds: [embed] });
+
+        console.log(`[${GetDateInfo().all}] Direct Message notice send ${data.noticeid}`)
+
+        res.end()
+    }catch(e){
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: bot//notice/send - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: bot/eventAnnouncements/open - ${e}`
+        });
+    };
+})
+
 
 
 client.login(token)

@@ -55,7 +55,8 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
 
             if(res.data.status == 200) {
                 const playerRequestData = res.data.container.filter(item => item.userId === playerid )
-                console.log(playerRequestData)
+                
+                if(playerRequestData.length === 0) return handleLoadChange(false)
 
                 if(playerRequestData[0].maybeTL && playerRequestData[0].maybeSL) setBTH(true)
                 else if(playerRequestData[0].maybeTL) setMTL(true)

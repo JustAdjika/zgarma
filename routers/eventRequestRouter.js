@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import axios from 'axios';
 
 import EVENTS_TAB from '../database/events.js';
 import ACCOUNTS_TAB from '../database/accounts.js';
@@ -13,6 +14,9 @@ import SteamCheck from '../modules/steamCheck.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
+
+const host = process.env.BASIC_URL
+const botKey = process.env.BOT_ACCESS_KEY
 
 console.log(`\x1b[34m |!|   EVENT_R ROUTER READY   |!|\x1b[0m`);
 
@@ -578,10 +582,17 @@ router.post('/accept/test', AccountCheck, PermissionsCheck, async(req, res) => {
         await event.save();
 
 
-        await NOTICES_TAB.create({
+        const newNotice = await NOTICES_TAB.create({
             destination: foundDestination.id,
             content: `Ваша заявка в регистрации на роль "${data.eventSlot}" в игре "${data.eventTitle}" была одобрена`,
             date: GetDateInfo().all
+        })
+
+        axios.post(`${host}/api/developer/bot/notice/send`, {
+            discordid: user.discord.id,
+            noticeid: newNotice.id,
+            content: newNotice.content,
+            botKey: botKey
         })
 
         await foundRequest.update({status: false})
@@ -658,10 +669,17 @@ router.post('/cancel/test', AccountCheck, PermissionsCheck, async(req, res) => {
 
 
 
-        await NOTICES_TAB.create({
+        const newNotice = await NOTICES_TAB.create({
             destination: foundDestination.id,
             content: `Ваша заявка в регистрации на игру была отклонена управляющим составом, по причине: ${data.reason}`,
             date: GetDateInfo().all
+        })
+
+        axios.post(`${host}/api/developer/bot/notice/send`, {
+            discordid: user.discord.id,
+            noticeid: newNotice.id,
+            content: newNotice.content,
+            botKey: botKey
         })
 
         await foundRequest.update({status: false})
