@@ -85,7 +85,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         }
 
 
-        const res = await axios.post(`${host}/api/developer/event/request/accept/test`, {
+        const res = await axios.post(`${host}/api/developer/event/request/accept`, {
             key: JSON.parse(Cookies.get("userData")).key,
             requestId: thisRequest.id,
             dest: thisRequest.userId,
@@ -107,7 +107,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         if(selectedRequest == null) return
         const thisRequest = reqests[selectedRequest] 
 
-        const res = await axios.post(`${host}/api/developer/event/request/cancel/test`, {
+        const res = await axios.post(`${host}/api/developer/event/request/cancel`, {
             key: JSON.parse(Cookies.get("userData")).key,
             requestId: thisRequest.id,
             dest: thisRequest.userId,
