@@ -9,6 +9,10 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
     const [user, setUser] = useState({})
     const [slotName, setSlotName] = useState('')
 
+    const [MTL, setMTL] = useState(false)
+    const [MSL, setMSL] = useState(false)
+    const [BTH, setBTH] = useState(false)
+
 
     const getUser = async (id) => {
         handleLoadChange(true)
@@ -24,6 +28,26 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
             setErrorMessage(res.data.err)
             setTimeout(() => setErrorMessage(""), 3000)
 
+            handleLoadChange(false)
+        }
+    }
+
+    const getMarkers = async (playerid) => {
+        handleLoadChange(true)
+        const res = await axios.get(`${host}/api/developer/event/request/data/accepted/id?id=${event.id}`)
+
+        if(res.data.status == 200) {
+            const playerRequestData = res.data.container.filter(item => item.userId === playerid )
+            
+            if(playerRequestData.length === 0) return handleLoadChange(false)
+
+            if(playerRequestData[0].maybeTL && playerRequestData[0].maybeSL) setBTH(true)
+            else if(playerRequestData[0].maybeTL) setMTL(true)
+            else if(playerRequestData[0].maybeSL) setMSL(true)
+            
+            handleLoadChange(false)
+        } else {
+            setTimeout(() => setErrorMessage(res.data.err), 3000)
             handleLoadChange(false)
         }
     }
@@ -44,6 +68,7 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
             if( slots[team][0].player !== null ) {
                 setIsKitOccupied(true)
                 getUser(slots[team][0].player).then(user => setSlotTitle(user.steam.personaname))
+                getMarkers(slots[team][0].player)
                 setStyle('close')
             } else {
                 setIsKitOccupied(false)
@@ -58,6 +83,7 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
             if( slots[team][squad].slots[0].player !== null ) {
                 setIsKitOccupied(true)
                 getUser(slots[team][squad].slots[0].player).then(user => setSlotTitle(user.steam.personaname))
+                getMarkers(slots[team][squad].slots[0].player)
                 setStyle('close')
             } else {
                 setIsKitOccupied(false)
@@ -72,6 +98,7 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
             if( slots[team][squad].slots[slot].player !== null ) {
                 setIsKitOccupied(true)
                 getUser(slots[team][squad].slots[slot].player).then(user => setSlotTitle(user.steam.personaname))
+                getMarkers(slots[team][squad].slots[slot].player)
                 setStyle('close')
             } else {
                 setIsKitOccupied(false)
@@ -145,8 +172,9 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
                 onMouseEnter={ isKitOccupied ? handleButtonAcceptMouseEnter : null } 
                 onMouseLeave={ handleButtonAcceptMouseLeave } 
             >
-                <div className={`reglistSlot-main-container-${style}`}>
-                    { slotTitle }
+                <div className={`reglistSlot-main-container-${style}`} style={{ justifyContent: 'space-between', paddingRight: '10px' }}>
+                    <span style={{ overflow: 'hidden' }}>{ slotTitle }</span>
+                    <div style={{ display: BTH || MTL || MSL ? 'flex' : 'none', marginLeft: '5px' }} className={`event-modal-eventreg-slot-marker ${ BTH ? 'bth' : MTL ? 'mtl' : MSL ? 'msl' : '' }`}>{ BTH ? 'BTH' : MTL ? 'MTL' : MSL ? 'MSL' : '' }</div>
                 </div>
             </div>
             <div className={`event-modal-eventreg-slot-tooltip${ team == 1 ? '2' : '' } ${kitTooltip ? 'visible' : ''}`}>
