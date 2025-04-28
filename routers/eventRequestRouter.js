@@ -519,14 +519,41 @@ router.post('/accept/test', AccountCheck, PermissionsCheck, async(req, res) => {
             return
         }
 
-
-
         const event = await EVENTS_TAB.findOne({
             where: {
                 id: foundRequest.eventId
             }
         })
 
+
+        // Убрать пользователя с зарегестрированной позиции, если она есть
+        event.slotsTeam1.forEach((squadItem, squadIndex) => {
+            if(squadIndex === 0) {
+                if(squadItem.player === foundRequest.userId) {
+                    event.slotsTeam1[squadIndex].player = null
+                }
+            } else {
+                squadItem.slots.forEach((slotItem, slotIndex) => {
+                    if(slotItem.player === foundRequest.userId) {
+                        event.slotsTeam1[squadIndex].slots[slotIndex].player = null
+                    }
+                })
+            }
+        });
+
+        event.slotsTeam2.forEach((squadItem, squadIndex) => {
+            if(squadIndex === 0) {
+                if(squadItem.player === foundRequest.userId) {
+                    event.slotsTeam2[squadIndex].player = null
+                }
+            } else {
+                squadItem.slots.forEach((slotItem, slotIndex) => {
+                    if(slotItem.player === foundRequest.userId) {
+                        event.slotsTeam2[squadIndex].slots[slotIndex].player = null
+                    }
+                })
+            }
+        });
 
         let slots = foundRequest.team == 'Red'
             ? event.dataValues.slotsTeam1
