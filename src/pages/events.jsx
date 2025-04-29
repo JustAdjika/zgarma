@@ -143,7 +143,7 @@ const Events = ({isDevBranch}) => {
                     </div>
                     <div className='event-open-output-container'>
                         { events.reverse().map(event => (
-                            event.status == 'OPEN' ?
+                            event.status == 'OPEN' || event.status == 'CONTINUE' ?
                             <OpenEvent 
                                 key={event.id || index} 
                                 isAdmin={isAdmin}

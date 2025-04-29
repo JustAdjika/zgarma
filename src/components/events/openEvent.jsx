@@ -11,6 +11,8 @@ const OpenEvent = ({isAdmin, setModalReglistEvent, setIsModalEventReglist, event
     const [vehicle1, setVehicle1] = useState([])
     const [vehicle2, setVehicle2] = useState([])
 
+    const [isContinue, setIsContinue] = useState(false)
+
     const handleHide = () => {
         setRotated((prev) => !prev)
     }
@@ -27,6 +29,8 @@ const OpenEvent = ({isAdmin, setModalReglistEvent, setIsModalEventReglist, event
         } else if (eventData.vehTeam2 && Array.isArray(eventData.vehTeam2)) {
             setVehicle2(eventData.vehTeam2)
         }
+
+        setIsContinue(eventData.status === 'CONTINUE')
     }, [eventData])
 
     const handleCloseEvent = async () => {
@@ -49,6 +53,12 @@ const OpenEvent = ({isAdmin, setModalReglistEvent, setIsModalEventReglist, event
         }
     }
 
+    const handleCloseRegister = async () => {
+        if(window.confirm('Вы уверены, что хотите закрыть регистрацию на событие?')) {
+            setIsContinue(true)
+        }
+    }
+
     return (
         <div className='openevent-main-container' id={`anchor-${eventData.id}`}>
             <div className='openevent-header-container'>
@@ -61,6 +71,9 @@ const OpenEvent = ({isAdmin, setModalReglistEvent, setIsModalEventReglist, event
                 <span className='openevent-mod-download-container'>Нажмите, чтобы <a href={`${host}/api/developer/event/data/download/modpack/${eventData.id}`} className='openevent-button-mod-download'>скачать сборку</a></span>
             </div>
             <div className='openevent-info-container' style={{ display: rotated ? 'none' : 'flex' }}>
+                <div style={{ display: isContinue ? 'flex' : 'none' }} className='openevent-registerclose-container'>
+                    <span>Регистрация закрыта</span>
+                </div>
                 <div className='openevent-info-decorative-line'/>
                 <div className='openevent-more-info-container'>
                     <p className='openevent-info-date'>Дата проведения { eventData.date } { eventData.time ? `(${eventData.time})` : null }</p>
@@ -92,8 +105,25 @@ const OpenEvent = ({isAdmin, setModalReglistEvent, setIsModalEventReglist, event
                             ))}
                         </div>
                     </div>
-                    <button className='openevent-button-register' onClick={ () => { setIsModalEventRegister(true); setModalRegisterEvent(eventData) } }>Информация и слоты</button>
-                    <button style={{ display: isAdmin ? 'block' : 'none' }} className='openevent-button-close-game' onClick={ handleCloseEvent }>Закончить игру</button>
+                    <button 
+                        className='openevent-button-register' 
+                        onClick={ () => { setIsModalEventRegister(true); setModalRegisterEvent(eventData) } }
+                        disabled={ isContinue }
+                        style={ isContinue ? { cursor: 'not-allowed', opacity: '0.5' } : null }
+                    >
+                        Информация и слоты
+                    </button>
+                    <div style={{ display: isAdmin ? 'flex' : 'none' }}>
+                        <button className='openevent-button-close-game' onClick={ handleCloseEvent }>Закончить игру</button>
+                        <button 
+                            className='openevent-button-closeregister-game'
+                            disabled={ isContinue }
+                            style={ isContinue ? { cursor: 'not-allowed', opacity: '0.5' } : null }
+                            onClick={ handleCloseRegister }
+                        >
+                            Закрыть регистрацию
+                        </button>
+                    </div>
                 </div>
             </div>
             <div className='openevent-hide-info-container' style={{ display: rotated ? 'flex' : 'none' }}>

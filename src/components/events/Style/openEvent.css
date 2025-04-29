@@ -58,6 +58,7 @@
 }
 .openevent-info-container {
     display: flex;
+    position: relative;
 }
 .openevent-info-decorative-line {
     min-height: 100%;
@@ -194,4 +195,45 @@
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
+}
+.openevent-registerclose-container {
+    background-color: rgba(22,22,22, 0.72);
+    color: #fff;
+    font-size: 27pt;
+    width: 710px;
+    height: 250px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 20%;
+    right: -40px;
+    transition: 0.2s;
+    cursor:default ;
+    user-select: none;
+}
+.openevent-registerclose-container>span {
+    text-shadow: 0px 4px 10px rgb(0, 0, 0);
+}
+.openevent-registerclose-container:hover {
+    background-color: rgba(22,22,22, 0.50);
+    color: #ffffffa4;
+}
+.openevent-button-closeregister-game {
+    height: 40px;
+    width: 270px;
+    background-color: #C0912B;
+    color: black;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    font-family: 'My Open Sans';
+    font-size: 13pt;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-bottom: 20px;
+    margin-left: 20px;
+}
+.openevent-button-closeregister-game:hover {
+    background-color: #997320;
 }
