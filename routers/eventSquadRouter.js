@@ -615,4 +615,178 @@ router.patch('/slots/rename', AccountCheck, PermissionsCheck, async(req, res) =>
 
 
 
+// SLOT LEAVE
+router.patch('/slots/freeup/personally', AccountCheck, async(req, res) => {
+    try{
+        const data = req.body
+
+        const user = await ACCOUNTS_TAB.findOne({
+            where: {
+                key: data.key
+            }
+        })
+
+        if(!user) {
+            console.log(`[${GetDateInfo().all}] API снятие со слота пользователем прервано. Пользователь не найден`)
+
+            res.json({
+                status: 404,
+                err: 'User undefined'
+            })
+            return
+        }
+
+        const foundEvent = await EVENTS_TAB.findOne({
+            where: {
+                id: data.eventId
+            }
+        })
+
+        if(!foundEvent) {
+            console.log(`[${GetDateInfo().all}] API снятие со слота пользователем прервано. Событие не найдено`)
+
+            res.json({
+                status: 404,
+                err: 'Event undefined'
+            })
+            return
+        }
+
+        foundEvent.slotsTeam1.forEach((squadItem, squadIndex) => {
+            if(squadIndex === 0) {
+                if(squadItem.player === user.id) {
+                    foundEvent.slotsTeam1[squadIndex].player = null
+                }
+            } else {
+                squadItem.slots.forEach((slotItem, slotIndex) => {
+                    if(slotItem.player === user.id) {
+                        foundEvent.slotsTeam1[squadIndex].slots[slotIndex].player = null
+                    }
+                })
+            }
+        });
+
+        foundEvent.slotsTeam2.forEach((squadItem, squadIndex) => {
+            if(squadIndex === 0) {
+                if(squadItem.player === user.id) {
+                    foundEvent.slotsTeam2[squadIndex].player = null
+                }
+            } else {
+                squadItem.slots.forEach((slotItem, slotIndex) => {
+                    if(slotItem.player === user.id) {
+                        foundEvent.slotsTeam2[squadIndex].slots[slotIndex].player = null
+                    }
+                })
+            }
+        });
+
+        foundEvent.setDataValue('slotsTeam1', foundEvent.slotsTeam1)
+        foundEvent.setDataValue('slotsTeam2', foundEvent.slotsTeam2)
+        foundEvent.changed('slotsTeam1', true);
+        foundEvent.changed('slotsTeam2', true);
+        await foundEvent.save();
+
+        console.log(`[${GetDateInfo().all}] API пользователь ${user.id} успешно снят со всех слотов в событии ${foundEvent.id} добровольно`)
+
+        res.json({
+            status: 200
+        })
+    }catch(e){
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/squad/slots/freeup/personally - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: event/edit/squad/slots/freeup/personally - ${e}`
+        });
+    };
+})
+
+
+
+// FORCE SLOT LEAVE
+router.patch('/slots/freeup/force', AccountCheck, PermissionsCheck, async(req, res) => {
+    try{
+        const data = req.body
+
+        const user = await ACCOUNTS_TAB.findOne({
+            where: {
+                key: data.key
+            }
+        })
+
+        if(!user) {
+            console.log(`[${GetDateInfo().all}] API снятие со слота администратором прервано. Администратор не найден`)
+
+            res.json({
+                status: 404,
+                err: 'User undefined'
+            })
+            return
+        }
+
+        const foundEvent = await EVENTS_TAB.findOne({
+            where: {
+                id: data.eventId
+            }
+        })
+
+        if(!foundEvent) {
+            console.log(`[${GetDateInfo().all}] API снятие со слота администратором прервано. Событие не найдено`)
+
+            res.json({
+                status: 404,
+                err: 'Event undefined'
+            })
+            return
+        }
+
+        foundEvent.slotsTeam1.forEach((squadItem, squadIndex) => {
+            if(squadIndex === 0) {
+                if(squadItem.player === data.userId) {
+                    foundEvent.slotsTeam1[squadIndex].player = null
+                }
+            } else {
+                squadItem.slots.forEach((slotItem, slotIndex) => {
+                    if(slotItem.player === data.userId) {
+                        foundEvent.slotsTeam1[squadIndex].slots[slotIndex].player = null
+                    }
+                })
+            }
+        });
+
+        foundEvent.slotsTeam2.forEach((squadItem, squadIndex) => {
+            if(squadIndex === 0) {
+                if(squadItem.player === data.userId) {
+                    foundEvent.slotsTeam2[squadIndex].player = null
+                }
+            } else {
+                squadItem.slots.forEach((slotItem, slotIndex) => {
+                    if(slotItem.player === data.userId) {
+                        foundEvent.slotsTeam2[squadIndex].slots[slotIndex].player = null
+                    }
+                })
+            }
+        });
+
+        foundEvent.setDataValue('slotsTeam1', foundEvent.slotsTeam1)
+        foundEvent.setDataValue('slotsTeam2', foundEvent.slotsTeam2)
+        foundEvent.changed('slotsTeam1', true);
+        foundEvent.changed('slotsTeam2', true);
+        await foundEvent.save();
+
+        console.log(`[${GetDateInfo().all}] API пользователь ${data.userId} успешно снят со всех слотов в событии ${foundEvent.id} администратором ${user.id}`)
+
+        res.json({
+            status: 200
+        })
+    }catch(e){
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/squad/slots/freeup/force - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: event/edit/squad/slots/freeup/force - ${e}`
+        });
+    };
+})
+
+
+
 export default router;

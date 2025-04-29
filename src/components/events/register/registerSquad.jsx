@@ -2,7 +2,7 @@ import React from 'react';
 
 import RegisterSlot from './registerSlot';
 
-const RegisterSquad = ({ squadItem, squadIndex, slotsOriginal, teamIndex, setSlot, setSquad, setTeam, team, squad, slot, host, handleLoadChange, setErrorMessage, eventid }) => {
+const RegisterSquad = ({ squadItem, squadIndex, slotsOriginal, teamIndex, setSlot, setSquad, setTeam, team, squad, slot, host, handleLoadChange, setErrorMessage, eventid, handleContextMenu }) => {
     return (
         <div className='event-modal-eventreg-squad-container'>
             <h3>{squadItem.title}</h3>
@@ -24,6 +24,7 @@ const RegisterSquad = ({ squadItem, squadIndex, slotsOriginal, teamIndex, setSlo
                         squad={squad}
                         slot={slot}
                         eventid={eventid}
+                        handleContextMenu={handleContextMenu}
                     />
                 ))
             }

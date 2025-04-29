@@ -10,7 +10,7 @@ import ModalRegisterButton from './modalRegisterButton';
 import RegisterSquad from './register/registerSquad';
 import RegisterSlot from './register/registerSlot';
 
-const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegisterEvent, isModalEventRegister, setErrorMessage }) => {
+const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegisterEvent, isModalEventRegister, setErrorMessage, handleContextMenu, handleClick }) => {
     const [checkbox1, setCheckbox1] = useState(false)
     const [checkbox2, setCheckbox2] = useState(false)
     const [slotCount, setSlotCount] = useState({
@@ -92,8 +92,8 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
     const [imgLoading, setImgLoading] = useState(true)
 
     return (
-        <div onClick={ () => { setIsModalEventRegister(false) } } className='event-modal-eventreg-main' style={{ display: isModalEventRegister ? 'flex' : 'none' }}>
-            <div onClick={(e) => e.stopPropagation()} className='event-modal-eventreg-container'>
+        <div onClick={ () => { setIsModalEventRegister(false); handleClick() } } className='event-modal-eventreg-main' style={{ display: isModalEventRegister ? 'flex' : 'none' }}>
+            <div onClick={(e) => { e.stopPropagation(); handleClick()}} className='event-modal-eventreg-container'>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <h2 className='event-modal-eventreg-title' style={{ fontSize: modalRegisterEvent?.title?.length > 23 ? '23px' : '30px' }}>{modalRegisterEvent.title}</h2>
                     <p className='event-modal-eventreg-slots-value'>{ modalRegisterEvent.type == 'PVP' ? `Количество слотов ${slotCount.red}х${slotCount.blue}` : `Количество слотов ${slotCount.red}` }</p>
@@ -174,6 +174,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                                 squad={squad}
                                 slot={slot}
                                 eventid={modalRegisterEvent.id}
+                                handleContextMenu={handleContextMenu}
                             />
                         </div>
                         <div style={{ display: modalRegisterEvent.type == 'PVP' ? 'flex' : 'none', flexDirection: 'column', alignItems: 'center', width: '330px' }}>
@@ -194,6 +195,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                                 squad={squad}
                                 slot={slot}
                                 eventid={modalRegisterEvent.id}
+                                handleContextMenu={handleContextMenu}
                             />
                         </div>
                     </div>
@@ -217,6 +219,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                                         squad={squad}
                                         slot={slot}
                                         eventid={modalRegisterEvent.id}
+                                        handleContextMenu={handleContextMenu}
                                     />
                                 ))}
                             </div>
@@ -236,16 +239,13 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                                         squad={squad}
                                         slot={slot}
                                         eventid={modalRegisterEvent.id}
+                                        handleContextMenu={handleContextMenu}
                                     />
                                 ))}
                             </div>
                         </div>
                     </div>
                 </div>
-
-
-
-
             </div>
         </div>
     );

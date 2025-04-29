@@ -1,13 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
-const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squad, slot, host, handleLoadChange, slotsOriginal, setErrorMessage, isCMDtype, eventid }) => {
+const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squad, slot, host, handleLoadChange, slotsOriginal, setErrorMessage, isCMDtype, eventid, handleContextMenu }) => {
 
     const [title, setTitle] = useState('')
     const [registeredUser, setRegisteredUser] = useState(null)
     const [MTL, setMTL] = useState(false)
     const [MSL, setMSL] = useState(false)
     const [BTH, setBTH] = useState(false)
+
+    const [isCurrentUser, setIsCurrentUser] = useState(false)
 
     const blockedStyle = {
         color: '#000000',
@@ -76,6 +79,8 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
             if(slotsOriginal[mapData.team][0].player) {
                 getRegUser(slotsOriginal[mapData.team][0].player)
                 getMarkers(slotsOriginal[mapData.team][0].player)
+
+                setIsCurrentUser(slotsOriginal[mapData.team][0].player === JSON.parse(Cookies.get('userData')).id)
                     
                 setIsKitOccupied(true)
             } else {
@@ -86,6 +91,8 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
             if(slotsOriginal[mapData.team][mapData.squadIndex].slots[mapData.slotIndex].player) {
                 getRegUser(slotsOriginal[mapData.team][mapData.squadIndex].slots[mapData.slotIndex].player)
                 getMarkers(slotsOriginal[mapData.team][mapData.squadIndex].slots[mapData.slotIndex].player)
+
+                setIsCurrentUser(slotsOriginal[mapData.team][mapData.squadIndex].slots[mapData.slotIndex].player === JSON.parse(Cookies.get('userData')).id)
 
                 setIsKitOccupied(true)
             } else {
@@ -167,7 +174,7 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
     }
 
     return (
-        <div style={{ position: 'relative', marginTop: isCMDtype ? '20px' : '0px' }}>
+        <div style={{ position: 'relative', marginTop: isCMDtype ? '20px' : '0px' }} onContextMenu={isCurrentUser ? handleContextMenu : null}>
             <div
                 onMouseEnter={ isKitOccupied ? handleMouseEnter : null } 
                 onMouseLeave={ handleMouseLeave } 
@@ -175,7 +182,7 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
                 <button 
                     onClick={ handleSelectSlot } 
                     className='event-modal-eventreg-slot-container'
-                    style={ currentStyle }
+                    style={ {...currentStyle, cursor: isCurrentUser ? 'pointer' : currentStyle.cursor } }
                 >
                     { title }
                     <div style={{ display: BTH || MTL || MSL ? 'flex' : 'none' }} className={`event-modal-eventreg-slot-marker ${ BTH ? 'bth' : MTL ? 'mtl' : MSL ? 'msl' : '' }`}>{ BTH ? 'BTH' : MTL ? 'MTL' : MSL ? 'MSL' : '' }</div>
