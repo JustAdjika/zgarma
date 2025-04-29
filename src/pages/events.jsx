@@ -121,6 +121,7 @@ const Events = ({isDevBranch}) => {
                         <div className='event-title-decorative-line'></div>
                     </div>
                     <div className='event-ready-output-container'>
+                        <h2 style={{ display: events.filter(event => event.status == 'READY').length > 0 ? 'none' : 'flex' }} className='event-emptylist'>Нет запланированных событий</h2>
                         { events.reverse().map(event => (
                             event.status == 'READY' ?
                             <ReadyEvent 
@@ -142,6 +143,7 @@ const Events = ({isDevBranch}) => {
                         <div className='event-title-decorative-line'></div>
                     </div>
                     <div className='event-open-output-container'>
+                        <h2 style={{ display: events.filter(event => event.status == 'OPEN' || event.status == 'CONTINUE').length > 0 ? 'none' : 'flex' }} className='event-emptylist'>Нет открытых событий</h2>
                         { events.reverse().map(event => (
                             event.status == 'OPEN' || event.status == 'CONTINUE' ?
                             <OpenEvent 

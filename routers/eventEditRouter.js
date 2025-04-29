@@ -149,6 +149,10 @@ router.post('/status/:status', AccountCheck, PermissionsCheck, async(req, res) =
                 botKey: botKey,
                 devBranch: data.devBranch
             })
+        } else if(req.params.status == 'continue') {
+            await currentEvent.update({
+                status: 'CONTINUE'
+            })
         } else {
             console.log(`[${GetDateInfo().all}] API изменение статуса события прервано. Статус указан неверно`)
 

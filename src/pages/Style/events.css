@@ -93,5 +93,12 @@
     -webkit-mask-composite: source-out;
             mask-composite: subtract;
     animation: l3 1s infinite linear;
-  }
-  @keyframes l3 {to{transform: rotate(1turn)}}
+}
+@keyframes l3 {to{transform: rotate(1turn)}}
+.event-emptylist {
+    color: #282828b4;
+    font-family: 'Outist';
+    font-size: 30pt;
+    padding-left: 30px;
+    letter-spacing: 1px;
+}

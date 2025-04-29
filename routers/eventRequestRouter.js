@@ -179,6 +179,16 @@ router.post('/add', SteamCheck, async(req, res) => {
             return
         }
 
+        if(foundEvent.status === 'CONTINUE') {
+            console.log(`[${GetDateInfo().all}] API добавление заявки на событие прервано. Событие закрыло регистрацию`)
+
+            res.json({
+                status: 403,
+                err: 'Event registration was closed by administrator'
+            })
+            return
+        }
+
         if( !data.team || data.squad === null || data.slot === null || data.maybeSL === null || data.maybeTL === null ) {
             console.log(`[${GetDateInfo().all}] API добавление заявки на событие прервано. Не все данные указаны`)
 

@@ -48,14 +48,24 @@ const OpenEvent = ({isAdmin, setModalReglistEvent, setIsModalEventReglist, event
             } else {
                 setErrorMessage(res.data.err)
                 setTimeout(() => {setErrorMessage("")}, 3000)
-                console.log(res.data.err)
             }
         }
     }
 
     const handleCloseRegister = async () => {
         if(window.confirm('Вы уверены, что хотите закрыть регистрацию на событие?')) {
-            setIsContinue(true)
+            const res = await axios.post(`${host}/api/developer/event/edit/status/continue`, {
+                eventId: eventData.id,
+                key: JSON.parse(Cookies.get("userData")).key,
+                devBranch: isDevBranch
+            })
+
+            if(res.data.status == 200) {
+                setIsContinue(true)
+            } else {
+                setErrorMessage(res.data.err)
+                setTimeout(() => {setErrorMessage("")}, 3000)
+            }
         }
     }
 
