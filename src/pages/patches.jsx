@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Layouts from "../layouts/layout";
 import './Style/patches.css';
+import './Style/annoucement.css'
 
 import PTCHadmin from "../components/PTCHadminMSG";
 import PTCHbug from "../components/PTCHbugList";
