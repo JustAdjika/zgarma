@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { DateTime } from 'luxon'
 import Cookies from 'js-cookie';
 
 
@@ -27,36 +28,31 @@ const ReglistReport = ({ host, currentRequest, setErrorMessage }) => {
                 setDiscordName(res.data.container.discord.username)
                 setDiscordid(res.data.container.discord.id)
 
-
-                let notices = res.data.container.date
-
                 try {
-                    notices.forEach((notice, index) => {
-                        const moscowDate = notice.date 
-                        const parts = moscowDate.match(/(\d{2})\.(\d{2})\.(\d{2}) \((\d{2}):(\d{2})\)/)
+                    const moscowDate = res.data.container.date
+                    const parts = moscowDate.match(/(\d{2})\.(\d{2})\.(\d{2}) \((\d{2}):(\d{2})\)/)
 
-                        if(parts) {
-                            const [_, day, month, year, hour, minute] = parts;
+                    if(parts) {
+                        const [_, day, month, year, hour, minute] = parts;
 
-                            const fullYear = 2000 + parseInt(year);
+                        const fullYear = 2000 + parseInt(year);
 
-                            const ISOmoscowDate = DateTime.fromObject(
-                                {
-                                day: parseInt(day),
-                                month: parseInt(month),
-                                year: fullYear,
-                                hour: parseInt(hour),
-                                minute: parseInt(minute),
-                                },
-                                { zone: 'Europe/Moscow' }
-                            );
+                        const ISOmoscowDate = DateTime.fromObject(
+                            {
+                            day: parseInt(day),
+                            month: parseInt(month),
+                            year: fullYear,
+                            hour: parseInt(hour),
+                            minute: parseInt(minute),
+                            },
+                            { zone: 'Europe/Moscow' }
+                        );
 
-                            const localDate = ISOmoscowDate.setZone(DateTime.local().zoneName);
-                            const displayTime = localDate.toFormat('dd.MM.yy (HH:mm)');
-                            
-                            notices[index].date = displayTime
-                        }
-                    })
+                        const localDate = ISOmoscowDate.setZone(DateTime.local().zoneName);
+                        const displayTime = localDate.toFormat('dd.MM.yy (HH:mm)');
+
+                        setRegDate(displayTime)
+                    }
                 } catch (e) {
                     console.error(e)
                 }
@@ -64,7 +60,7 @@ const ReglistReport = ({ host, currentRequest, setErrorMessage }) => {
                 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 
-                setRegDate(notices)
+
             } else {
                 setErrorMessage(res.data.err)
                 setTimeout(() => { setErrorMessage("") }, 3000)
