@@ -160,7 +160,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                             <h2 className='event-modal-eventreg-slots-h2' style={{ color: '#C0392B' }}>Красная команда</h2>
                             <div className='event-modal-eventreg-slots-decorative-line' style={{ backgroundColor: '#C0392B' }}/>
                             <RegisterSlot 
-                                slotItem={{title: 'Командир стороны'}}
+                                slotItem={modalRegisterEvent.slotsTeam1?.[0]}
                                 mapData={{team: 0}}
                                 setTeam={setTeam}
                                 setSquad={setSquad}
@@ -181,7 +181,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                             <h2 className='event-modal-eventreg-slots-h2' style={{ color: '#0B94E0' }}>Синяя команда</h2>
                             <div className='event-modal-eventreg-slots-decorative-line' style={{ backgroundColor: '#0B94E0' }}/>
                             <RegisterSlot 
-                                slotItem={{title: 'Командир стороны'}}
+                                slotItem={modalRegisterEvent.slotsTeam2?.[0]}
                                 mapData={{team: 1}}
                                 setTeam={setTeam}
                                 setSquad={setSquad}

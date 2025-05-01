@@ -329,3 +329,32 @@
     opacity: 1;
     visibility: visible;
 }
+.reglistSquad-title {
+    font-family: 'My Open Sans';
+    font-weight: lighter;
+    margin: 0px;
+    margin-top: 10px;
+    font-size: 15pt;
+    margin-left: 20px;
+    word-wrap: break-word;
+    overflow: hidden;
+    width: 200px;
+    color: white;
+    margin-bottom: 5px;
+}
+.reglist-header-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+.reglist-cmdbox {
+    font-family: 'Outist';
+    color: #FF9F1A;
+    font-size: 18pt;
+    margin-left: 10px;
+    margin-right: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70px;
+}

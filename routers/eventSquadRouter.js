@@ -789,4 +789,100 @@ router.patch('/slots/freeup/force', AccountCheck, PermissionsCheck, async(req, r
 
 
 
+// SET HQ STATUS
+router.patch('/setHQ', AccountCheck, PermissionsCheck, async(req, res) => {
+    try{
+        const data = req.body
+
+        const user = await ACCOUNTS_TAB.findOne({
+            where: {
+                key: data.key
+            }
+        })
+
+        if(!user){
+            console.log(`[${GetDateInfo().all}] API Изменение HQ статуса прервано. Пользователь не найден`)
+
+            res.json({
+                status: 404,
+                err: 'User undefined'
+            })
+            return
+        }
+
+        const currentEvent = await EVENTS_TAB.findOne({
+            where: {
+                id: data.eventId
+            }
+        })
+
+        if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API Изменение HQ статуса прервано. Событие не найдено`)
+
+            res.json({
+                status: 404,
+                err: 'Current event undefined'
+            })
+            return
+        }
+
+        let squadList
+        const squadId = data.squadId
+
+        if(data.team == 'Red') { squadList = currentEvent.slotsTeam1 }
+        else if(data.team == 'Blue') { squadList = currentEvent.slotsTeam2 }
+        else {
+            console.log(`[${GetDateInfo().all}] API Изменение HQ статуса прервано. Команда указана неверно`)
+
+            res.json({
+                status: 404,
+                err: 'You can only indicate the Blue and Red command'
+            })
+            return
+        }
+
+        if(!squadList[squadId]){
+            console.log(`[${GetDateInfo().all}] API Изменение HQ статуса прервано. Отряд не найден`)
+
+            res.json({
+                status: 404,
+                err: 'Squad by id undefined'
+            })
+            return
+        }
+
+        if(squadId == 0) {
+            console.log(`[${GetDateInfo().all}] API Изменение HQ статуса прервано. Попытка изменения отряда 0`)
+            return res.json({ status: 400, err: 'You can\'t rename squad with id 0' })
+        }
+
+        squadList[squadId].hq = data.isHQ
+
+        squadList.forEach((item, itemIndex) => {
+            if(itemIndex !== data.squadId) squadList[itemIndex].hq = false
+        });
+
+        if(data.team == 'Red') { currentEvent.setDataValue('slotsTeam1', squadList) }
+        else { currentEvent.setDataValue('slotsTeam2', squadList) }
+
+        currentEvent.changed('slotsTeam1', true);
+        currentEvent.changed('slotsTeam2', true);
+        await currentEvent.save();
+
+        console.log(`[${GetDateInfo().all}] API HQ статус отряда ${squadId} в событии ${data.eventId} успешно изменен на ${data.isHQ} администратором ${user.id}`)
+
+        res.json({
+            status: 200
+        })
+    }catch(e){
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/squad/setHQ - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: event/edit/squad/setHQ - ${e}`
+        });
+    };
+})
+
+
+
 export default router;

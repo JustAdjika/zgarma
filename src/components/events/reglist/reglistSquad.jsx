@@ -8,8 +8,11 @@ const ReglistSquad = ({ host, setErrorMessage, event, currentRequest, reqests, t
 
     return (
         <div className='reglistSquad-main-container'>
-            <h2>{squad.title}</h2>
-            
+            <div style={{ display: 'flex' }} className='reglist-header-container'>
+                <h2 className='reglistSquad-title'>{squad.title}</h2>
+                <span style={{ display: squad.hq ? 'flex' : 'none' }} className='reglist-cmdbox'>CMD</span>
+            </div>
+
             { slots[squadIndex].slots.map((slotItem, slotIndex) => {
                 return (
                 <ReglistSlot 

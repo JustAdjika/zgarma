@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import axios from 'axios';
+import { Op } from 'sequelize'
 
 import EVENTS_TAB from '../database/events.js';
 import ACCOUNTS_TAB from '../database/accounts.js';
@@ -346,6 +347,19 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
             }
         })
 
+        const oldRequests = await EVENT_REQUESTS_TAB.findAll({
+            where: {
+                eventId: foundRequest.eventId,
+                userId: foundRequest.userId,
+                id: {
+                    [Op.ne]: foundRequest.id
+                }
+            }
+        })
+
+        for (const oldRequest of oldRequests) {
+            await oldRequest.destroy();
+        }
 
         // Убрать пользователя с зарегестрированной позиции, если она есть
         event.slotsTeam1.forEach((squadItem, squadIndex) => {
@@ -383,8 +397,47 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
 
         if(foundRequest.squad === 0) {
             slots[foundRequest.squad].player = foundRequest.userId
+
+            let HQsquadIndex = null
+
+            slots.forEach((item, index) => {
+                if(slots[index].hq) {
+                    slots[index].slots[0].player = foundRequest.userId
+                    HQsquadIndex = index
+                }
+            })
+
+            if(HQsquadIndex) {
+                await EVENT_REQUESTS_TAB.create({
+                    userId: foundRequest.userId,
+                    eventId: foundRequest.eventId,
+                    team: foundRequest.team,
+                    squad: HQsquadIndex,
+                    slot: 0,
+                    maybeSL: false,
+                    maybeTL: false,
+                    date: GetDateInfo().all,
+                    status: false
+                })
+            }
         } else {
             slots[foundRequest.squad].slots[foundRequest.slot].player = foundRequest.userId
+
+            if(foundRequest.slot === 0 && foundRequest.squad !== 0 && slots[foundRequest.squad].hq) {
+                slots[0].player = foundRequest.userId
+
+                await EVENT_REQUESTS_TAB.create({
+                    userId: foundRequest.userId,
+                    eventId: foundRequest.eventId,
+                    team: foundRequest.team,
+                    squad: 0,
+                    slot: 0,
+                    maybeSL: false,
+                    maybeTL: false,
+                    date: GetDateInfo().all,
+                    status: false
+                })
+            }
         }
 
 

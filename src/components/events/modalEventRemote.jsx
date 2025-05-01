@@ -214,11 +214,11 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
         ])
     }
 
-    const selectHQ = (teamIndex, squadIndex) => {
+    const selectHQ = async (teamIndex, squadIndex) => {
         setSettingConfig(prev => {
             const updatedTeamSlots = prev.slots[teamIndex].map((squad, i) => ({
                 ...squad,
-                hq: i === squadIndex
+                hq: i === squadIndex ? !squad.hq : false
             }));
     
             const updatedSlots = [...prev.slots];
@@ -229,6 +229,19 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                 slots: updatedSlots
             };
         });
+
+        const res = await axios.patch(`${host}/api/developer/event/edit/squad/setHQ`, {
+            key: JSON.parse(Cookies.get("userData")).key, 
+            eventId: modalRemoteEvent.id,
+            squadId: squadIndex + 1,
+            team: teamIndex === 0 ? 'Red' : 'Blue',
+            isHQ: !settingConfig.slots[teamIndex][squadIndex].hq
+        })
+
+        if(res.data.status != 200) {
+            setErrorMessage(res.data.err)
+            setTimeout(() => setErrorMessage(""), 3000)
+        }
     };
 
     return (
