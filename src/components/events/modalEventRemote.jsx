@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
+import Vehicle from './eventRemote/vehicle';
+
 import './Style/modalEventRemote.css'
 
 const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, modalRemoteEvent, setErrorMessage, isDevBranch }) => {
@@ -67,13 +69,13 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
 
     useEffect(() => {
         // M2 - Old
-        setEventRemoteTitle(modalRemoteEvent.title)
-        setEventRemoteMetar(modalRemoteEvent.metar)
-        setEventRemoteDescription(modalRemoteEvent.description)
-        setEventRemoteDate(modalRemoteEvent.date)
-        setEventRemoteTeam1(modalRemoteEvent.team1)
-        setEventRemoteTeam2(modalRemoteEvent.team2)
-        setEventRemoteType(modalRemoteEvent.type)
+        // setEventRemoteTitle(modalRemoteEvent.title)
+        // setEventRemoteMetar(modalRemoteEvent.metar)
+        // setEventRemoteDescription(modalRemoteEvent.description)
+        // setEventRemoteDate(modalRemoteEvent.date)
+        // setEventRemoteTeam1(modalRemoteEvent.team1)
+        // setEventRemoteTeam2(modalRemoteEvent.team2)
+        // setEventRemoteType(modalRemoteEvent.type)
 
         // M2 - New
         setSettingConfig(prev => ({
@@ -100,20 +102,20 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
         if (modalRemoteEvent.vehTeam1 && typeof modalRemoteEvent.vehTeam1 === "string") {
             const parsedData = JSON.parse(modalRemoteEvent.vehTeam1);
             if (Array.isArray(parsedData) && parsedData.length > 0) {
-                setEventRemoteVeh1(parsedData);
+                settingsKitsChange('vehicle', 0, parsedData)
             }
         } else if(modalRemoteEvent.vehTeam1 && Array.isArray(modalRemoteEvent.vehTeam1)) {
-            setEventRemoteVeh1(modalRemoteEvent.vehTeam1)
+            settingsKitsChange('vehicle', 0, modalRemoteEvent.vehTeam1)
         }
         
         // Veh team 1 array check
         if (modalRemoteEvent.vehTeam2 && typeof modalRemoteEvent.vehTeam2 === "string") {
             const parsedData = JSON.parse(modalRemoteEvent.vehTeam2);
             if (Array.isArray(parsedData) && parsedData.length > 0) {
-                setEventRemoteVeh2(parsedData);
+                settingsKitsChange('vehicle', 1, parsedData)
             }
         } else if(modalRemoteEvent.vehTeam2 && Array.isArray(modalRemoteEvent.vehTeam2)) {
-            setEventRemoteVeh2(modalRemoteEvent.vehTeam2)
+            settingsKitsChange('vehicle', 1, modalRemoteEvent.vehTeam2)
         }
         
 
@@ -415,13 +417,13 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                             <textarea 
                                 maxLength={60} 
                                 className='event-modal-eventremote-slots-header-name' 
-                                value={eventRemoteTeam1}
-                                onChange={(e) => { setEventRemoteTeam1(e.target.value) }}
+                                value={settingConfig.redTeam}
+                                onChange={(e) => { settingsChange('redTeam', e.target.value) }}
                                 onBlur={() => { 
                                     axios.patch(`${host}/api/developer/event/edit/info`, { 
                                         key: JSON.parse(Cookies.get("userData")).key, 
                                         eventId: modalRemoteEvent.id,  
-                                        team1: eventRemoteTeam1
+                                        team1: settingConfig.redTeam
                                     }) 
                                 }} 
                             />
@@ -432,13 +434,13 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                             <textarea 
                                 maxLength={60} 
                                 className='event-modal-eventremote-slots-header-name'
-                                value={eventRemoteTeam2}
-                                onChange={(e) => { setEventRemoteTeam2(e.target.value) }}
+                                value={settingConfig.blueTeam}
+                                onChange={(e) => { settingsChange('blueTeam', e.target.value) }}
                                 onBlur={() => { 
                                     axios.patch(`${host}/api/developer/event/edit/info`, { 
                                         key: JSON.parse(Cookies.get("userData")).key, 
                                         eventId: modalRemoteEvent.id,  
-                                        team2: eventRemoteTeam2
+                                        team2: settingConfig.blueTeam
                                     }) 
                                 }}     
                             />
@@ -456,63 +458,16 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                             {/* КОНТЕЙНЕР СЛОТОВ ТЕХНИКИ */}
                             <div className='event-modal-eventremote-main-vehicle-container'>
                                 <div className='event-modal-eventremote-team-container'>
-                                    { eventRemoteVeh1.map((element, index) => (
-                                        <div className='event-modal-eventremote-main-vehicle-slot-container'>
-                                            <div className='event-modal-eventremote-main-vehicle-slot-input-container'>
-                                                <input type="text" 
-                                                    value={element.title}
-                                                    onChange={(e) => { 
-                                                        setEventRemoteVeh1(prevState => 
-                                                            prevState.map((item, i) => 
-                                                                i === index ? { ...item, title: e.target.value } : item
-                                                            )
-                                                        );
-                                                    }}
-                                                    onBlur={() => { 
-                                                        axios.patch(`${host}/api/developer/event/edit/vehicle/`, { 
-                                                            key: JSON.parse(Cookies.get("userData")).key, 
-                                                            eventId: modalRemoteEvent.id,  
-                                                            vehId: index,
-                                                            team: "Red",
-                                                            title: eventRemoteVeh1[index].title
-                                                        }) 
-                                                    }}
-                                                />
-                                                <button onClick={() => {
-                                                    axios.delete(`${host}/api/developer/event/edit/vehicle/delete`, { 
-                                                        data: {
-                                                            key: JSON.parse(Cookies.get("userData")).key,
-                                                            eventId: modalRemoteEvent.id,
-                                                            vehId: index,
-                                                            team: "Red"
-                                                        }
-                                                    }) 
-
-                                                    setEventRemoteVeh1(prevState => prevState.filter((_, i) => i !== index))
-                                                }}/>
-                                            </div>
-                                            <input 
-                                                type="text" 
-                                                maxLength={2} 
-                                                value={element.count}
-                                                onChange={(e) => { 
-                                                    setEventRemoteVeh1(prevState => 
-                                                        prevState.map((item, i) => 
-                                                            i === index ? { ...item, count: e.target.value } : item
-                                                        )
-                                                    );
-                                                }}
-                                                onBlur={() => { 
-                                                    axios.patch(`${host}/api/developer/event/edit/vehicle/`, { 
-                                                        key: JSON.parse(Cookies.get("userData")).key, 
-                                                        eventId: modalRemoteEvent.id,  
-                                                        vehId: index,
-                                                        team: "Red",
-                                                        count: eventRemoteVeh1[index].count
-                                                    }) 
-                                                }}
-                                                />
-                                        </div>
+                                    { settingConfig.vehicle[0].map((element, index) => (
+                                        <Vehicle 
+                                            vehItem={element} 
+                                            vehIndex={index} 
+                                            settingsKitsChange={settingsKitsChange} 
+                                            settingConfig={settingConfig} 
+                                            teamIndex={0} 
+                                            modalRemoteEvent={modalRemoteEvent} 
+                                            host={host}
+                                        />
                                     ))}
                                     <button className='event-modal-eventremote-main-vehicle-button-newSlot' onClick={() => {
                                         axios.post(`${host}/api/developer/event/edit/vehicle/add`, { 
@@ -520,7 +475,8 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                                             eventId: modalRemoteEvent.id,  
                                             team: "Red",
                                         }) 
-                                        setEventRemoteVeh1(prevState => [...prevState, {title: 'New Vehicle', count: 1}] );
+
+                                        settingsKitsChange('vehicle', 0, [ ...settingConfig.vehicle[0], { title: 'New Vehicle', count: 1 } ])
                                     }}/>
                                 </div>
                             </div>
@@ -663,63 +619,16 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
 
                             <div className='event-modal-eventremote-main-vehicle-container'>
                                 <div className='event-modal-eventremote-team-container'>
-                                    { eventRemoteVeh2.map((element, index) => (
-                                        <div className='event-modal-eventremote-main-vehicle-slot-container'>
-                                            <div className='event-modal-eventremote-main-vehicle-slot-input-container'>
-                                                <input type="text" 
-                                                    value={element.title}
-                                                    onChange={(e) => { 
-                                                        setEventRemoteVeh2(prevState => 
-                                                            prevState.map((item, i) => 
-                                                                i === index ? { ...item, title: e.target.value } : item
-                                                            )
-                                                        );
-                                                    }}
-                                                    onBlur={() => { 
-                                                        axios.patch(`${host}/api/developer/event/edit/vehicle/`, { 
-                                                            key: JSON.parse(Cookies.get("userData")).key, 
-                                                            eventId: modalRemoteEvent.id,  
-                                                            vehId: index,
-                                                            team: "Blue",
-                                                            title: eventRemoteVeh2[index].title
-                                                        }) 
-                                                    }}      
-                                                />
-                                                <button onClick={() => {
-                                                    axios.delete(`${host}/api/developer/event/edit/vehicle/delete`, { 
-                                                        data: {
-                                                            key: JSON.parse(Cookies.get("userData")).key,
-                                                            eventId: modalRemoteEvent.id,
-                                                            vehId: index,
-                                                            team: "Blue"
-                                                        }
-                                                    }) 
-
-                                                    setEventRemoteVeh2(prevState => prevState.filter((_, i) => i !== index))
-                                                }}/>
-                                            </div>
-                                            <input 
-                                                type="text" 
-                                                maxLength={2} 
-                                                value={element.count}
-                                                onChange={(e) => { 
-                                                    setEventRemoteVeh2(prevState => 
-                                                        prevState.map((item, i) => 
-                                                            i === index ? { ...item, count: e.target.value } : item
-                                                        )
-                                                    );
-                                                }}
-                                                onBlur={() => { 
-                                                    axios.patch(`${host}/api/developer/event/edit/vehicle/`, { 
-                                                        key: JSON.parse(Cookies.get("userData")).key, 
-                                                        eventId: modalRemoteEvent.id,  
-                                                        vehId: index,
-                                                        team: "Blue",
-                                                        count: eventRemoteVeh2[index].count
-                                                    }) 
-                                                }}
-                                            />
-                                        </div>
+                                    { settingConfig.vehicle[1].map((element, index) => (
+                                        <Vehicle 
+                                            vehItem={element} 
+                                            vehIndex={index} 
+                                            settingsKitsChange={settingsKitsChange} 
+                                            settingConfig={settingConfig} 
+                                            teamIndex={1} 
+                                            modalRemoteEvent={modalRemoteEvent} 
+                                            host={host}
+                                        />
                                     ))}
                                     <button className='event-modal-eventremote-main-vehicle-button-newSlot' onClick={() => {
                                         axios.post(`${host}/api/developer/event/edit/vehicle/add`, { 
@@ -727,7 +636,8 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                                             eventId: modalRemoteEvent.id,  
                                             team: "Blue",
                                         }) 
-                                        setEventRemoteVeh2(prevState => [...prevState, {title: 'New Vehicle', count: 1}] );
+
+                                        settingsKitsChange('vehicle', 1, [ ...settingConfig.vehicle[1], { title: 'New Vehicle', count: 1 } ])
                                     }}/>
                                 </div>
                                 
