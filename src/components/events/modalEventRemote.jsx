@@ -3,26 +3,13 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 import Vehicle from './eventRemote/vehicle';
+import Squad from './eventRemote/squad';
 
 import './Style/modalEventRemote.css'
 
 const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, modalRemoteEvent, setErrorMessage, isDevBranch }) => {
-    // M1 - Old
-    const [eventRemoteTitle, setEventRemoteTitle] = useState("")
-    const [eventRemoteMetar, setEventRemoteMetar] = useState("")
-    const [eventRemoteDescription, setEventRemoteDescription] = useState("")
     const [eventRemoteIsImg, setEventRemoteIsImg] = useState(false)
     const [eventRemoteIsMod, setEventRemoteIsMod] = useState(false)
-    const [eventRemoteDate, setEventRemoteDate] = useState("")
-    const [eventRemoteTimeM, setEventRemoteTimeM] = useState("")
-    const [eventRemoteTimeH, setEventRemoteTimeH] = useState("")
-    const [eventRemoteTeam1, setEventRemoteTeam1] = useState("")
-    const [eventRemoteTeam2, setEventRemoteTeam2] = useState("")
-    const [eventRemoteVeh1, setEventRemoteVeh1] = useState([])
-    const [eventRemoteVeh2, setEventRemoteVeh2] = useState([])
-    const [eventRemoteType, setEventRemoteType] = useState("PVE")
-    const [eventRemoteSlots1, setEventRemoteSlots1] = useState([])
-    const [eventRemoteSlots2, setEventRemoteSlots2] = useState([])
 
     // M1 - New
     const [settingConfig, setSettingConfig] = useState({
@@ -68,16 +55,6 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
     }
 
     useEffect(() => {
-        // M2 - Old
-        // setEventRemoteTitle(modalRemoteEvent.title)
-        // setEventRemoteMetar(modalRemoteEvent.metar)
-        // setEventRemoteDescription(modalRemoteEvent.description)
-        // setEventRemoteDate(modalRemoteEvent.date)
-        // setEventRemoteTeam1(modalRemoteEvent.team1)
-        // setEventRemoteTeam2(modalRemoteEvent.team2)
-        // setEventRemoteType(modalRemoteEvent.type)
-
-        // M2 - New
         setSettingConfig(prev => ({
             ...prev,
             title: modalRemoteEvent.title,
@@ -108,7 +85,7 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
             settingsKitsChange('vehicle', 0, modalRemoteEvent.vehTeam1)
         }
         
-        // Veh team 1 array check
+        // Veh team 2 array check
         if (modalRemoteEvent.vehTeam2 && typeof modalRemoteEvent.vehTeam2 === "string") {
             const parsedData = JSON.parse(modalRemoteEvent.vehTeam2);
             if (Array.isArray(parsedData) && parsedData.length > 0) {
@@ -123,11 +100,11 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
 
         if(modalRemoteEvent.slotsTeam1) {
             const tempSlots = modalRemoteEvent.slotsTeam1.filter((_, i) => i != 0)
-            setEventRemoteSlots1(tempSlots)
+            settingsKitsChange('slots', 0, tempSlots)
         }
         if(modalRemoteEvent.slotsTeam2) {
             const tempSlots = modalRemoteEvent.slotsTeam2.filter((_, i) => i != 0)
-            setEventRemoteSlots2(tempSlots)
+            settingsKitsChange('slots', 1, tempSlots)
         }
     }, [modalRemoteEvent])
 
@@ -216,11 +193,33 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
         }
     }
 
+    const handleNewSquad = (teamIndex) => {
+        axios.post(`${host}/api/developer/event/edit/squad/add`, { 
+            key: JSON.parse(Cookies.get("userData")).key, 
+            eventId: modalRemoteEvent.id,  
+            team: teamIndex === 0 ? "Red" : "Blue",
+        })
+
+        settingsKitsChange('slots', teamIndex, [
+            ...settingConfig.slots[teamIndex], { 
+                title: 'Squad', 
+                slots: [
+                    { 
+                        title: 'Squad Leader', 
+                        player: null, 
+                        SL: true 
+                    }
+                ] 
+            }
+        ])
+    }
+
+    useEffect(() => console.log(settingConfig), [settingConfig])
+
     return (
         <div onClick={ () => { setIsModalEventRemote(false) } } className='event-modal-eventremote-main' style={{ display: isModalEventRemote ? 'flex' : 'none' }}>
             <div onClick={(e) => e.stopPropagation()} className='event-modal-eventremote-container'>
                 <div className='event-modal-eventremote-info-container'>
-
 
 
                     <input 
@@ -233,6 +232,7 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                         }} 
                         type="text" 
                         className='event-modal-eventremote-info-title' 
+                        placeholder='Название миссии'
                         onChange={(e) => { settingsChange('title', e.target.value) }} 
                         value={settingConfig.title}
                         maxLength={25}
@@ -279,6 +279,7 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                         }} 
                         type="text" 
                         className='event-modal-eventremote-info-metar' 
+                        placeholder='Погодные условия и рельеф'
                         onChange={(e) => { settingsChange('metar', e.target.value) }} 
                         value={settingConfig.metar}
                         maxLength={40}
@@ -295,6 +296,7 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                         }} 
                         type="text" 
                         className='event-modal-eventremote-info-description' 
+                        placeholder='Описание'
                         onChange={(e) => { settingsChange('desc', e.target.value) }} 
                         value={settingConfig.desc}
                     />
@@ -417,6 +419,7 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                             <textarea 
                                 maxLength={60} 
                                 className='event-modal-eventremote-slots-header-name' 
+                                placeholder='Красная команда'
                                 value={settingConfig.redTeam}
                                 onChange={(e) => { settingsChange('redTeam', e.target.value) }}
                                 onBlur={() => { 
@@ -434,6 +437,7 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                             <textarea 
                                 maxLength={60} 
                                 className='event-modal-eventremote-slots-header-name'
+                                placeholder='Синяя команда'
                                 value={settingConfig.blueTeam}
                                 onChange={(e) => { settingsChange('blueTeam', e.target.value) }}
                                 onBlur={() => { 
@@ -486,129 +490,19 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                                 <div className='event-modal-eventremote-kit-container' style={{ marginBottom: '0px' }}>
                                     <input type="text" className='event-modal-eventremote-kit-input' value={'Командир стороны'} />
                                 </div>
-                                { eventRemoteSlots1.map((element, index) => (
-                                    <div className='event-modal-eventremote-squad-container'>
-                                        <div className='event-modal-eventremote-squad-header-container'>
-                                            <input 
-                                                type="text" 
-                                                value={element.title}
-                                                onChange={(e) => { 
-                                                    setEventRemoteSlots1(prevState => 
-                                                        prevState.map((item, i) => 
-                                                            i === index ? { ...item, title: e.target.value } : item
-                                                        )
-                                                    )
-                                                }}
-                                                onBlur={() => { 
-                                                    axios.patch(`${host}/api/developer/event/edit/squad/rename`, { 
-                                                        key: JSON.parse(Cookies.get("userData")).key, 
-                                                        eventId: modalRemoteEvent.id,  
-                                                        squadId: index+1,
-                                                        team: "Red",
-                                                        title: element.title
-                                                    }) 
-                                                }} 
-                                            />
-                                            <div className='event-modal-eventremote-button-hqTurn'>CMD</div>
-                                            <button className='event-modal-eventremote-button-squad-delete' onClick={() => {
-                                                axios.delete(`${host}/api/developer/event/edit/squad/delete`, { 
-                                                    data: {
-                                                        key: JSON.parse(Cookies.get("userData")).key, 
-                                                        eventId: modalRemoteEvent.id,  
-                                                        squadId: index+1,
-                                                        team: "Red"
-                                                    }
-                                                }) 
-
-                                                setEventRemoteSlots1(prevState => prevState.filter((_, i) => i != index))
-                                            }} />
-                                        </div>
-                                        { element.slots.map((element2, index2) => (
-                                            <div className='event-modal-eventremote-kit-container'>
-                                                <input 
-                                                    type="text" 
-                                                    className='event-modal-eventremote-kit-input' 
-                                                    placeholder='Кит' 
-                                                    value={element2.title}
-                                                    onChange={(e) => { 
-                                                        setEventRemoteSlots1(prevState => { 
-                                                            const newState = [...prevState]; 
-                                                            newState[index].slots[index2] = { 
-                                                                ...newState[index].slots[index2], 
-                                                                title: e.target.value 
-                                                            }; 
-                                                            return newState;
-                                                        });
-                                                    }}
-                                                    onBlur={() => { 
-                                                        axios.patch(`${host}/api/developer/event/edit/squad/slots/rename`, { 
-                                                            key: JSON.parse(Cookies.get("userData")).key, 
-                                                            eventId: modalRemoteEvent.id,  
-                                                            squadId: index+1,
-                                                            slotId: index2,
-                                                            team: "Red",
-                                                            title: element2.title
-                                                        }) 
-                                                    }}
-                                                />
-                                                { index2 != 0 ? <button onClick={() => {
-                                                    axios.delete(`${host}/api/developer/event/edit/squad/slots/delete`, { 
-                                                        data: {
-                                                            key: JSON.parse(Cookies.get("userData")).key, 
-                                                            eventId: modalRemoteEvent.id,  
-                                                            squadId: index+1,
-                                                            slotId: index2,
-                                                            team: "Red"
-                                                        }
-                                                    })
-
-                                                    setEventRemoteSlots1(prevState => {
-                                                        let newState = [...prevState]
-                                                        let newSquad = newState[index]
-        
-                                                        newSquad.slots = newSquad.slots.filter((_, i) => i != index2)
-        
-                                                        newState[index] = newSquad
-                                                        return newState
-                                                    })
-                                                }} /> : null }
-                                            </div>
-                                        ))}
-                                        <button className='event-modal-eventremote-newKit' onClick={() => {
-                                            axios.post(`${host}/api/developer/event/edit/squad/slots/add`, { 
-                                                key: JSON.parse(Cookies.get("userData")).key, 
-                                                eventId: modalRemoteEvent.id,  
-                                                squadId: index+1,
-                                                team: "Red"
-                                            })
-                                            setEventRemoteSlots1(prevState => {
-                                                let newState = [...prevState]
-                                                let newSquad = newState[index]
-
-                                                newSquad.slots = [
-                                                    ...newSquad.slots,
-                                                    {
-                                                        SL: false,
-                                                        player: null,
-                                                        title: 'Riffleman'
-                                                    }
-                                                ]
-
-                                                newState[index] = newSquad
-                                                return newState
-                                            })
-                                        }}>Добавить слот</button>
-                                    </div>
+                                {Array.isArray(settingConfig.slots[0]) &&
+                                    settingConfig.slots[0].map((element, index) => (
+                                        <Squad
+                                            squadItem={element}
+                                            squadIndex={index}
+                                            settingsKitsChange={settingsKitsChange}
+                                            settingConfig={settingConfig}
+                                            teamIndex={0}
+                                            modalRemoteEvent={modalRemoteEvent}
+                                            host={host}
+                                        />
                                 ))}
-                                <button className='event-modal-eventremote-button-squad-add' onClick={() => {
-                                    axios.post(`${host}/api/developer/event/edit/squad/add`, { 
-                                        key: JSON.parse(Cookies.get("userData")).key, 
-                                        eventId: modalRemoteEvent.id,  
-                                        team: "Red"
-                                    })
-
-                                    setEventRemoteSlots1(prevState => [...prevState, { title: 'Squad', slots: [{ title: 'Squad Leader', player: null, SL: true }] }])
-                                }}>Добавить отделение</button>
+                                <button className='event-modal-eventremote-button-squad-add' onClick={() => { handleNewSquad(0) }}>Добавить отделение</button>
                             </div>
                         </div>
 
@@ -647,128 +541,19 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                                 <div className='event-modal-eventremote-kit-container' style={{ marginBottom: '0px' }}>
                                     <input type="text" className='event-modal-eventremote-kit-input' value={'Командир стороны'} />
                                 </div>
-                                { eventRemoteSlots2.map((element, index) => (
-                                    <div className='event-modal-eventremote-squad-container'>
-                                        <div className='event-modal-eventremote-squad-header-container'>
-                                            <input 
-                                                type="text" 
-                                                value={element.title}
-                                                onChange={(e) => { 
-                                                    setEventRemoteSlots2(prevState => 
-                                                        prevState.map((item, i) => 
-                                                            i === index ? { ...item, title: e.target.value } : item
-                                                        )
-                                                    )
-                                                }}
-                                                onBlur={() => { 
-                                                    axios.patch(`${host}/api/developer/event/edit/squad/rename`, { 
-                                                        key: JSON.parse(Cookies.get("userData")).key, 
-                                                        eventId: modalRemoteEvent.id,  
-                                                        squadId: index+1,
-                                                        team: "Blue",
-                                                        title: element.title
-                                                    }) 
-                                                }} 
-                                            />
-                                            <button className='event-modal-eventremote-button-squad-delete' onClick={() => {
-                                                axios.delete(`${host}/api/developer/event/edit/squad/delete`, { 
-                                                    data: {
-                                                        key: JSON.parse(Cookies.get("userData")).key, 
-                                                        eventId: modalRemoteEvent.id,  
-                                                        squadId: index+1,
-                                                        team: "Blue"
-                                                    }
-                                                }) 
-
-                                                setEventRemoteSlots2(prevState => prevState.filter((_, i) => i != index))
-                                            }} />
-                                        </div>
-                                        { element.slots.map((element2, index2) => (
-                                            <div className='event-modal-eventremote-kit-container'>
-                                                <input 
-                                                    type="text" 
-                                                    className='event-modal-eventremote-kit-input' 
-                                                    placeholder='Кит' 
-                                                    value={element2.title}
-                                                    onChange={(e) => { 
-                                                        setEventRemoteSlots2(prevState => { 
-                                                            const newState = [...prevState]; 
-                                                            newState[index].slots[index2] = { 
-                                                                ...newState[index].slots[index2], 
-                                                                title: e.target.value 
-                                                            }; 
-                                                            return newState;
-                                                        });
-                                                    }}
-                                                    onBlur={() => { 
-                                                        axios.patch(`${host}/api/developer/event/edit/squad/slots/rename`, { 
-                                                            key: JSON.parse(Cookies.get("userData")).key, 
-                                                            eventId: modalRemoteEvent.id,  
-                                                            squadId: index+1,
-                                                            slotId: index2,
-                                                            team: "Blue",
-                                                            title: element2.title
-                                                        }) 
-                                                    }}
-                                                />
-                                                { index2 != 0 ? <button onClick={() => {
-                                                    axios.delete(`${host}/api/developer/event/edit/squad/slots/delete`, { 
-                                                        data: {
-                                                            key: JSON.parse(Cookies.get("userData")).key, 
-                                                            eventId: modalRemoteEvent.id,  
-                                                            squadId: index+1,
-                                                            slotId: index2,
-                                                            team: "Blue"
-                                                        }
-                                                    })
-
-                                                    setEventRemoteSlots2(prevState => {
-                                                        let newState = [...prevState]
-                                                        let newSquad = newState[index]
-        
-                                                        newSquad.slots = newSquad.slots.filter((_, i) => i != index2)
-        
-                                                        newState[index] = newSquad
-                                                        return newState
-                                                    })
-                                                }} /> : null }
-                                            </div>
-                                        ))}
-                                        <button className='event-modal-eventremote-newKit' onClick={() => {
-                                            axios.post(`${host}/api/developer/event/edit/squad/slots/add`, { 
-                                                key: JSON.parse(Cookies.get("userData")).key, 
-                                                eventId: modalRemoteEvent.id,  
-                                                squadId: index+1,
-                                                team: "Blue"
-                                            })
-                                            setEventRemoteSlots2(prevState => {
-                                                let newState = [...prevState]
-                                                let newSquad = newState[index]
-
-                                                newSquad.slots = [
-                                                    ...newSquad.slots,
-                                                    {
-                                                        SL: false,
-                                                        player: null,
-                                                        title: 'Riffleman'
-                                                    }
-                                                ]
-
-                                                newState[index] = newSquad
-                                                return newState
-                                            })
-                                        }}>Добавить слот</button>
-                                    </div>
+                                {Array.isArray(settingConfig.slots[1]) &&
+                                    settingConfig.slots[1].map((element, index) => (
+                                        <Squad
+                                            squadItem={element}
+                                            squadIndex={index}
+                                            settingsKitsChange={settingsKitsChange}
+                                            settingConfig={settingConfig}
+                                            teamIndex={1}
+                                            modalRemoteEvent={modalRemoteEvent}
+                                            host={host}
+                                        />
                                 ))}
-                                <button className='event-modal-eventremote-button-squad-add' onClick={() => {
-                                    axios.post(`${host}/api/developer/event/edit/squad/add`, { 
-                                        key: JSON.parse(Cookies.get("userData")).key, 
-                                        eventId: modalRemoteEvent.id,  
-                                        team: "Blue"
-                                    })
-
-                                    setEventRemoteSlots2(prevState => [...prevState, { title: 'Squad', slots: [{ title: 'Squad Leader', player: null, SL: true }] }])
-                                }}>Добавить отделение</button>
+                                <button className='event-modal-eventremote-button-squad-add' onClick={ () => handleNewSquad(1) }>Добавить отделение</button>
                                 <button 
                                     onClick={() => { 
                                         axios.patch(`${host}/api/developer/event/edit/type`, { 
