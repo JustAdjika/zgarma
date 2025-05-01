@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import './Style/modalEventRemote.css'
 
 const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, modalRemoteEvent, setErrorMessage, isDevBranch }) => {
+    // M1 - Old
     const [eventRemoteTitle, setEventRemoteTitle] = useState("")
     const [eventRemoteMetar, setEventRemoteMetar] = useState("")
     const [eventRemoteDescription, setEventRemoteDescription] = useState("")
@@ -21,7 +22,51 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
     const [eventRemoteSlots1, setEventRemoteSlots1] = useState([])
     const [eventRemoteSlots2, setEventRemoteSlots2] = useState([])
 
+    // M1 - New
+    const [settingConfig, setSettingConfig] = useState({
+        title: '',
+        metar: '',
+        desc: '',
+        date: '',
+        timeM: '',
+        timeH: '',
+        redTeam: '',
+        blueTeam: '',
+        type: 'PVE',
+        vehicle: [[], []],
+        slots: [[], []]
+    })
+
+    const settingsChange = (key, value) => {
+        try {
+            const keyWhiteList = ['title', 'metar', 'desc', 'date', 'timeM', 'timeH', 'redTeam', 'blueTeam', 'type']
+            if(!keyWhiteList.some(obj => obj === key)) return console.error('settingsChange error: unknown key value')
+
+            setSettingConfig(prev => ({...prev, [key]: value}))
+        } catch (e) {
+            console.error(`settingsChange error: ${e}`)
+        }
+    }
+
+    const settingsKitsChange = (key, index, value) => {
+        try {
+            const keyWhiteList = ['vehicle', 'slots']
+            if(!keyWhiteList.some(obj => obj === key)) return console.error('settingsChange error: unknown key value')
+        
+            setSettingConfig(prev => ({
+                ...prev, 
+                [key]: [
+                    index === 0 ? value : prev[key][0], 
+                    index === 1 ? value : prev[key][1]
+                ]
+            }))
+        } catch (e) {
+            console.error(`settingsKitsChange error: ${e}`)
+        }
+    }
+
     useEffect(() => {
+        // M2 - Old
         setEventRemoteTitle(modalRemoteEvent.title)
         setEventRemoteMetar(modalRemoteEvent.metar)
         setEventRemoteDescription(modalRemoteEvent.description)
@@ -30,7 +75,24 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
         setEventRemoteTeam2(modalRemoteEvent.team2)
         setEventRemoteType(modalRemoteEvent.type)
 
+        // M2 - New
+        setSettingConfig(prev => ({
+            ...prev,
+            title: modalRemoteEvent.title,
+            metar: modalRemoteEvent.metar,
+            desc: modalRemoteEvent.description,
+            date: modalRemoteEvent.date,
+            redTeam: modalRemoteEvent.team1,
+            blueTeam: modalRemoteEvent.team2,
+            type: modalRemoteEvent.type
+        }))
 
+
+        if(modalRemoteEvent.time) {
+            const [hours, minutes] = modalRemoteEvent.time.split(":")
+            settingsChange('timeM', minutes)
+            settingsChange('timeH', hours)
+        }
 
 
 
@@ -56,12 +118,6 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
         
 
 
-
-        if(modalRemoteEvent.time) {
-            const [hours, minutes] = modalRemoteEvent.time.split(":")
-            setEventRemoteTimeM(minutes)
-            setEventRemoteTimeH(hours)
-        }
 
         if(modalRemoteEvent.slotsTeam1) {
             const tempSlots = modalRemoteEvent.slotsTeam1.filter((_, i) => i != 0)
@@ -170,13 +226,13 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                             axios.patch(`${host}/api/developer/event/edit/info`, { 
                                 key: JSON.parse(Cookies.get("userData")).key, 
                                 eventId: modalRemoteEvent.id,  
-                                title: eventRemoteTitle 
+                                title: settingConfig.title
                             }) 
                         }} 
                         type="text" 
                         className='event-modal-eventremote-info-title' 
-                        onChange={(e) => { setEventRemoteTitle(e.target.value) }} 
-                        value={eventRemoteTitle}
+                        onChange={(e) => { settingsChange('title', e.target.value) }} 
+                        value={settingConfig.title}
                         maxLength={25}
                     />
 
@@ -216,13 +272,13 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                             axios.patch(`${host}/api/developer/event/edit/info`, { 
                                 key: JSON.parse(Cookies.get("userData")).key, 
                                 eventId: modalRemoteEvent.id,  
-                                metar: eventRemoteMetar
+                                metar: settingConfig.metar
                             }) 
                         }} 
                         type="text" 
                         className='event-modal-eventremote-info-metar' 
-                        onChange={(e) => { setEventRemoteMetar(e.target.value) }} 
-                        value={eventRemoteMetar}
+                        onChange={(e) => { settingsChange('metar', e.target.value) }} 
+                        value={settingConfig.metar}
                         maxLength={40}
                     />
 
@@ -232,13 +288,13 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                             axios.patch(`${host}/api/developer/event/edit/info`, { 
                                 key: JSON.parse(Cookies.get("userData")).key, 
                                 eventId: modalRemoteEvent.id,  
-                                description: eventRemoteDescription
+                                description: settingConfig.desc
                             }) 
                         }} 
                         type="text" 
                         className='event-modal-eventremote-info-description' 
-                        onChange={(e) => { setEventRemoteDescription(e.target.value) }} 
-                        value={eventRemoteDescription}
+                        onChange={(e) => { settingsChange('desc', e.target.value) }} 
+                        value={settingConfig.desc}
                     />
 
 
@@ -282,14 +338,14 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                                     marginLeft: '45px',
                                     textAlign: 'left',
                                 }} 
-                                onChange={(e) => { setEventRemoteDate(e.target.value) }}
-                                value={ eventRemoteDate }
+                                onChange={(e) => { settingsChange('date', e.target.value) }}
+                                value={ settingConfig.date }
                                 placeholder='дд.мм.гг'
                                 onBlur={() => { 
                                     axios.patch(`${host}/api/developer/event/edit/info`, { 
                                         key: JSON.parse(Cookies.get("userData")).key, 
                                         eventId: modalRemoteEvent.id,  
-                                        date: eventRemoteDate
+                                        date: settingConfig.title
                                     }) 
                                 }} 
                             />
@@ -303,13 +359,13 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                                     minLength={2} 
                                     type="text" 
                                     placeholder='--' 
-                                    value={eventRemoteTimeH}
-                                    onChange={(e) => { setEventRemoteTimeH(e.target.value) }}
+                                    value={settingConfig.timeH}
+                                    onChange={(e) => { settingsChange('timeH', e.target.value) }}
                                     onBlur={() => { 
                                         axios.patch(`${host}/api/developer/event/edit/info`, { 
                                             key: JSON.parse(Cookies.get("userData")).key, 
                                             eventId: modalRemoteEvent.id,  
-                                            time: `${eventRemoteTimeH}:${eventRemoteTimeM}`
+                                            time: `${settingConfig.timeH}:${settingConfig.timeM}`
                                         }) 
                                     }} 
                                 />
@@ -320,13 +376,13 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                                     minLength={2} 
                                     type="text" 
                                     placeholder='--' 
-                                    value={eventRemoteTimeM}
-                                    onChange={(e) => { setEventRemoteTimeM(e.target.value) }}
+                                    value={settingConfig.timeM}
+                                    onChange={(e) => { settingsChange('timeM', e.target.value) }}
                                     onBlur={() => { 
                                         axios.patch(`${host}/api/developer/event/edit/info`, { 
                                             key: JSON.parse(Cookies.get("userData")).key, 
                                             eventId: modalRemoteEvent.id,  
-                                            time: `${eventRemoteTimeH}:${eventRemoteTimeM}`
+                                            time: `${settingConfig.timeH}:${settingConfig.timeM}`
                                         }) 
                                     }} 
                                 />
@@ -497,6 +553,7 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                                                     }) 
                                                 }} 
                                             />
+                                            <div className='event-modal-eventremote-button-hqTurn'>CMD</div>
                                             <button className='event-modal-eventremote-button-squad-delete' onClick={() => {
                                                 axios.delete(`${host}/api/developer/event/edit/squad/delete`, { 
                                                     data: {
@@ -601,7 +658,7 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
 
 
                         {/* КОНТЕЙНЕР ПРАВОЙ КОМАНДЫ */}
-                        { eventRemoteType == "PVP" ?
+                        { settingConfig.type == "PVP" ?
                         <div className='event-modal-eventremote-main-team-container'>
 
                             <div className='event-modal-eventremote-main-vehicle-container'>
@@ -810,7 +867,7 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                                             isPvpOn: false
                                         }) 
 
-                                        setEventRemoteType("PVE") 
+                                        settingsChange('type', 'PVE') 
                                     }} 
                                     className='event-modal-eventremote-button-pvpon' 
                                     style={{ marginTop: '0px', position: 'relative', left: '15px' }}
@@ -829,7 +886,7 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                                         isPvpOn: true
                                     }) 
 
-                                    setEventRemoteType("PVP") 
+                                    settingsChange('type', 'PVP') 
                                 }} 
                                 className='event-modal-eventremote-button-pvpon'
                             >
