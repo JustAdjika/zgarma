@@ -415,7 +415,7 @@
     cursor: pointer;
     transition: 0.2s;
     color: #696969;
-    /* color: #FF9F1A; */
+    user-select: none;
 }
 .event-modal-eventremote-button-hqTurn:hover {
     background-color: #91919125;

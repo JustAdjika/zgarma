@@ -214,7 +214,22 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
         ])
     }
 
-    useEffect(() => console.log(settingConfig), [settingConfig])
+    const selectHQ = (teamIndex, squadIndex) => {
+        setSettingConfig(prev => {
+            const updatedTeamSlots = prev.slots[teamIndex].map((squad, i) => ({
+                ...squad,
+                hq: i === squadIndex
+            }));
+    
+            const updatedSlots = [...prev.slots];
+            updatedSlots[teamIndex] = updatedTeamSlots;
+
+            return {
+                ...prev,
+                slots: updatedSlots
+            };
+        });
+    };
 
     return (
         <div onClick={ () => { setIsModalEventRemote(false) } } className='event-modal-eventremote-main' style={{ display: isModalEventRemote ? 'flex' : 'none' }}>
@@ -500,6 +515,7 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                                             teamIndex={0}
                                             modalRemoteEvent={modalRemoteEvent}
                                             host={host}
+                                            selectHQ={selectHQ}
                                         />
                                 ))}
                                 <button className='event-modal-eventremote-button-squad-add' onClick={() => { handleNewSquad(0) }}>Добавить отделение</button>
@@ -551,6 +567,7 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                                             teamIndex={1}
                                             modalRemoteEvent={modalRemoteEvent}
                                             host={host}
+                                            selectHQ={selectHQ}
                                         />
                                 ))}
                                 <button className='event-modal-eventremote-button-squad-add' onClick={ () => handleNewSquad(1) }>Добавить отделение</button>

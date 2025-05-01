@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
 import Slot from './slot';
 
-const Squad = ({ squadItem, squadIndex, settingsKitsChange, settingConfig, teamIndex, modalRemoteEvent, host }) => {
+const Squad = ({ squadItem, squadIndex, settingsKitsChange, settingConfig, teamIndex, modalRemoteEvent, host, selectHQ }) => {
+    const [HQ, setHQ] = useState(false)
+
+    useEffect(() => {
+        setHQ(squadItem.hq)
+    }, [])
+    useEffect(() => {
+        setHQ(squadItem.hq)
+    }, [squadItem.hq])
+
     const onChange = (e) => {
         const slotsArray = settingConfig.slots[teamIndex]
 
@@ -70,7 +79,7 @@ const Squad = ({ squadItem, squadIndex, settingsKitsChange, settingConfig, teamI
                     onChange={(e) => onChange(e)}
                     onBlur={ onBlur } 
                 />
-                <div className='event-modal-eventremote-button-hqTurn'>CMD</div>
+                <div className='event-modal-eventremote-button-hqTurn' style={{ color: HQ ? '#FF9F1A' : '#696969' }} onClick={() => { selectHQ(teamIndex, squadIndex) }}>CMD</div>
                 <button className='event-modal-eventremote-button-squad-delete' onClick={ handleDelete } />
             </div>
             { squadItem.slots.map((element, index) => (
