@@ -459,7 +459,7 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         axios.post(`${host}/api/developer/bot/notice/send`, {
-            discordid: user.discord.id,
+            discordid: foundDestination.discord.id,
             noticeid: newNotice.id,
             content: newNotice.content,
             botKey: botKey
