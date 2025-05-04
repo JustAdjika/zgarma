@@ -22,6 +22,19 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
     const [isSlotOccupied, setIsSlotOccupied] = useState(false)
 
     const [loadCount, setLoadCount] = useState(0)
+    const [menuVisible, setMenuVisible] = useState(false);
+    const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+
+    const handleContextMenu = (e) => {
+        console.log(123)
+        e.preventDefault();
+        setMenuPosition({ x: e.pageX, y: e.pageY });
+        setMenuVisible(true);
+    };
+
+    const handleClick = () => {
+        if (menuVisible) setMenuVisible(false);
+    };
 
     const getRequests = async () => {
         handleLoadChange(true)
@@ -175,7 +188,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
     }
 
     return (
-        <div onClick={ () => { setIsModalReglist(false) } } className='event-modal-reglist-main' style={{ display: isModalReglist ? 'flex' : 'none' }}>
+        <div onClick={ () => { setIsModalReglist(false); handleClick } } className='event-modal-reglist-main' style={{ display: isModalReglist ? 'flex' : 'none' }}>
             <div onClick={(e) => { e.stopPropagation()}} className='event-modal-reglist-container'>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <h2 className='event-modal-reglist-title' style={{ fontSize: event?.title?.length > 23 ? '23px' : '30px'}}>{event.title}</h2>
@@ -301,6 +314,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                 type={'CMD'}
                                 team={0}
                                 handleLoadChange={handleLoadChange}
+                                handleContextMenu={handleContextMenu}
                             />
                             { slotsRed.map((squadItem, squadIndex ) => (
                                 <ReglistSquad 
@@ -314,6 +328,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                     squadIndex={squadIndex}
                                     slots={slotsRed}
                                     handleLoadChange={handleLoadChange}
+                                    handleContextMenu={handleContextMenu}
                                 />
                             )) }
                         </div>
@@ -328,6 +343,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                     type={'CMD'}
                                     team={1}
                                     handleLoadChange={handleLoadChange}
+                                    handleContextMenu={handleContextMenu}
                                 />
                             ) : null}
                             { slotsBlue.map((squadItem, squadIndex ) => (
@@ -342,6 +358,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                     squadIndex={squadIndex}
                                     slots={slotsBlue}
                                     handleLoadChange={handleLoadChange}
+                                    handleContextMenu={handleContextMenu}
                                 />
                             )) }
                         </div>

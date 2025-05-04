@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, type, team, squad, slot, handleLoadChange }) => {
+const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, type, team, squad, slot, handleLoadChange, handleContextMenu }) => {
     const [slotTitle, setSlotTitle] = useState("")
     const [slots, setSlots] = useState([])
     const [style, setStyle] = useState("open")
@@ -167,7 +167,7 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
     }
 
     return (
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative' }} onContextMenu={ handleContextMenu }>
             <div
                 onMouseEnter={ isKitOccupied ? handleButtonAcceptMouseEnter : null } 
                 onMouseLeave={ handleButtonAcceptMouseLeave } 
