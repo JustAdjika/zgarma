@@ -191,6 +191,25 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         <div onClick={ () => { setIsModalReglist(false); handleClick } } className='event-modal-reglist-main' style={{ display: isModalReglist ? 'flex' : 'none' }}>
             <div onClick={(e) => { e.stopPropagation()}} className='event-modal-reglist-container'>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {menuVisible && (
+                        <ul
+                            className='event-contextmenu'
+                            style={{
+                                position: "absolute",
+                                top: menuPosition.y,
+                                left: menuPosition.x,
+                                listStyle: "none",
+                                margin: 0,
+                                zIndex: 40,
+                            }}
+                        >
+                            <li onClick={ handleSlotLeave }>Показать информацию</li>
+                            <li onClick={ handleSlotLeave }>Убрать со слота</li>
+                            <li onClick={ handleSlotLeave }>Переназначить</li>
+                            <li onClick={ handleSlotLeave }>Отправить уведомление</li>
+                        </ul>
+                    )}
+
                     <h2 className='event-modal-reglist-title' style={{ fontSize: event?.title?.length > 23 ? '23px' : '30px'}}>{event.title}</h2>
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '650px', height: '100%' }}>
                         <div className='event-modal-reglist-req-main-container'>
