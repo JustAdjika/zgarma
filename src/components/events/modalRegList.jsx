@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -9,6 +10,8 @@ import ReglistItem from './reglist/reglistItem.jsx';
 import ReglistReport from './reglist/reglistReport.jsx';
 import ReglistSquad from './reglist/reglistSquad.jsx';
 import ReglistSlot from './reglist/reglistSlot.jsx';
+
+import { faCircleInfo, faUserMinus, faFileInvoice, faShare } from '@fortawesome/free-solid-svg-icons';
 
 const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event, setErrorMessage }) => {
     const [reqests, setRequests] = useState([])
@@ -26,15 +29,16 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
     const handleContextMenu = (e) => {
-        console.log(123)
         e.preventDefault();
-        setMenuPosition({ x: e.pageX, y: e.pageY });
+        setMenuPosition({ x: e.clientX, y: e.clientY });
         setMenuVisible(true);
     };
 
     const handleClick = () => {
         if (menuVisible) setMenuVisible(false);
     };
+
+    useEffect(() => console.log(menuPosition), [menuPosition])
 
     const getRequests = async () => {
         handleLoadChange(true)
@@ -188,8 +192,8 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
     }
 
     return (
-        <div onClick={ () => { setIsModalReglist(false); handleClick } } className='event-modal-reglist-main' style={{ display: isModalReglist ? 'flex' : 'none' }}>
-            <div onClick={(e) => { e.stopPropagation()}} className='event-modal-reglist-container'>
+        <div onClick={ () => { setIsModalReglist(false); handleClick() } } className='event-modal-reglist-main' style={{ display: isModalReglist ? 'flex' : 'none' }}>
+            <div onClick={(e) => { e.stopPropagation(); handleClick()}} className='event-modal-reglist-container'>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     {menuVisible && (
                         <ul
@@ -201,12 +205,35 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                 listStyle: "none",
                                 margin: 0,
                                 zIndex: 40,
+                                width: '250px',
+                                paddingTop: '10px',
+                                paddingBottom: '10px'
                             }}
                         >
-                            <li onClick={ handleSlotLeave }>Показать информацию</li>
-                            <li onClick={ handleSlotLeave }>Убрать со слота</li>
-                            <li onClick={ handleSlotLeave }>Переназначить</li>
-                            <li onClick={ handleSlotLeave }>Отправить уведомление</li>
+                            <li className='event-reglist-contextmenu-li-container' onClick={ null }>
+                                <div className='event-reglist-contextmenu-icon-container'>
+                                    <FontAwesomeIcon icon={faCircleInfo} />
+                                </div>
+                                Показать информацию
+                            </li>
+                            <li className='event-reglist-contextmenu-li-container' onClick={ null }>
+                                <div className='event-reglist-contextmenu-icon-container'>
+                                    <FontAwesomeIcon icon={faFileInvoice} />
+                                </div>
+                                Переназначить
+                            </li>
+                            <li className='event-reglist-contextmenu-li-container' onClick={ null }>
+                                <div className='event-reglist-contextmenu-icon-container'>
+                                    <FontAwesomeIcon icon={faShare} />
+                                </div>
+                                Отправить уведомление
+                            </li>
+                            <li className='event-reglist-contextmenu-li-container' onClick={ null } style={{ color: '#c0392b' }} >
+                                <div className='event-reglist-contextmenu-icon-container'>
+                                    <FontAwesomeIcon icon={faUserMinus} />
+                                </div>
+                                Убрать со слота
+                            </li>
                         </ul>
                     )}
 

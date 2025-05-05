@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -10,7 +10,10 @@ import ModalRegisterButton from './modalRegisterButton';
 import RegisterSquad from './register/registerSquad';
 import RegisterSlot from './register/registerSlot';
 
-const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegisterEvent, isModalEventRegister, setErrorMessage, handleContextMenu, handleClick }) => {
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserMinus } from '@fortawesome/free-solid-svg-icons';
+
+const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegisterEvent, isModalEventRegister, setErrorMessage }) => {
     const [checkbox1, setCheckbox1] = useState(false)
     const [checkbox2, setCheckbox2] = useState(false)
     const [slotCount, setSlotCount] = useState({
@@ -89,10 +92,59 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
         setLoadCount(prev => isLoading ? prev + 1 : prev - 1)
     }
 
+    const [menuVisible, setMenuVisible] = useState(false);
+    const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+
+    const handleContextMenu = (e) => {
+        e.preventDefault();
+        setMenuPosition({ x: e.clientX, y: e.clientY });
+        setMenuVisible(true);
+    };
+
+    const handleClick = () => {
+        if (menuVisible) setMenuVisible(false);
+    };
+
+    const handleSlotLeave = async () => {
+        const res = await axios.patch(`${host}/api/developer/event/edit/squad/slots/freeup/personally`, {
+            key: JSON.parse(Cookies.get("userData")).key,
+            eventId: modalRegisterEvent.id
+        })
+
+        if(res.data.status == 200) {
+            window.location.reload()
+        } else {
+            setErrorMessage(res.data.err)
+            setTimeout(() => setErrorMessage(""), 3000)
+        }
+    } 
+
     const [imgLoading, setImgLoading] = useState(true)
 
     return (
         <div onClick={ () => { setIsModalEventRegister(false); handleClick() } } className='event-modal-eventreg-main' style={{ display: isModalEventRegister ? 'flex' : 'none' }}>
+            {menuVisible && (
+                <ul
+                    className='event-contextmenu'
+                    style={{
+                        position: "absolute",
+                        top: menuPosition.y,
+                        left: menuPosition.x,
+                        listStyle: "none",
+                        margin: 0,
+                        zIndex: 40,
+                        paddingTop: '10px',
+                        paddingBottom: '10px'
+                    }}
+                >
+                    <li className='event-reglist-contextmenu-li-container' onClick={ handleSlotLeave } style={{ color: '#c0392b' }}>
+                        <div className='event-reglist-contextmenu-icon-container'>
+                            <FontAwesomeIcon icon={faUserMinus} />
+                        </div>
+                        Освободить слот
+                    </li>
+                </ul>
+            )}
             <div onClick={(e) => { e.stopPropagation(); handleClick()}} className='event-modal-eventreg-container'>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <h2 className='event-modal-eventreg-title' style={{ fontSize: modalRegisterEvent?.title?.length > 23 ? '23px' : '30px' }}>{modalRegisterEvent.title}</h2>

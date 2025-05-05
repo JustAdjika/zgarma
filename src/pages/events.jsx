@@ -33,19 +33,6 @@ const Events = ({isDevBranch}) => {
     
     const [errorMessage, setErrorMessage] = useState("");
 
-    const [menuVisible, setMenuVisible] = useState(false);
-    const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
-
-    const handleContextMenu = (e) => {
-        e.preventDefault();
-        setMenuPosition({ x: e.pageX, y: e.pageY });
-        setMenuVisible(true);
-    };
-
-    const handleClick = () => {
-        if (menuVisible) setMenuVisible(false);
-    };
-
     useEffect(() => {
         const accountCheck = async () => {
             if(!JSON.parse(Cookies.get("userData"))) {
@@ -85,37 +72,8 @@ const Events = ({isDevBranch}) => {
         getEvents()
     }, [eventList])
 
-    const handleSlotLeave = async () => {
-        const res = await axios.patch(`${host}/api/developer/event/edit/squad/slots/freeup/personally`, {
-            key: JSON.parse(Cookies.get("userData")).key,
-            eventId: modalRegisterEvent.id
-        })
-
-        if(res.data.status == 200) {
-            window.location.reload()
-        } else {
-            setErrorMessage(res.data.err)
-            setTimeout(() => setErrorMessage(""), 3000)
-        }
-    } 
-
     return (
         <>
-            {menuVisible && (
-                <ul
-                    className='event-contextmenu'
-                    style={{
-                        position: "absolute",
-                        top: menuPosition.y,
-                        left: menuPosition.x,
-                        listStyle: "none",
-                        margin: 0,
-                        zIndex: 40,
-                    }}
-                >
-                    <li onClick={ handleSlotLeave }>Освободить слот</li>
-                </ul>
-            )}
             <ModalRegList 
                 host={host} 
                 setIsModalReglist={setIsModalEventReglist}
@@ -133,8 +91,6 @@ const Events = ({isDevBranch}) => {
                 isModalEventRegister={isModalEventRegister}
                 setErrorMessage={setErrorMessage}
                 isAccount={isAccount}
-                handleClick={handleClick}
-                handleContextMenu={handleContextMenu}
             />
 
             <ModalEventRemote 
@@ -154,7 +110,7 @@ const Events = ({isDevBranch}) => {
                 setErrorMessage={setErrorMessage}
                 isDevBranch={isDevBranch}
             />
-            <div className='event-main-container' onClick={ handleClick }>
+            <div className='event-main-container'>
                 <div className='event-ready-container'>
                     <div className='event-ready-title-container'>
                         <div className='event-ready-title-up-container'>
