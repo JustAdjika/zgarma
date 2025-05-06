@@ -6,7 +6,6 @@ import { Op } from 'sequelize'
 import EVENTS_TAB from '../database/events.js';
 import ACCOUNTS_TAB from '../database/accounts.js';
 import EVENT_REQUESTS_TAB from '../database/eventRequests.js';
-import NOTICES_TAB from '../database/notices.js'
 
 import GetDateInfo from '../modules/dateInfo.js'
 import PermissionsCheck from '../modules/permissions.js'
@@ -451,18 +450,10 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
         event.changed('slotsTeam2', true);
         await event.save();
 
-
-        const newNotice = await NOTICES_TAB.create({
-            destination: foundDestination.id,
-            content: `Ваша заявка в регистрации на роль "${data.eventSlot}" в игре "${data.eventTitle}" была одобрена`,
-            date: GetDateInfo().all
-        })
-
-        axios.post(`${host}/api/developer/bot/notice/send`, {
-            discordid: foundDestination.discord.id,
-            noticeid: newNotice.id,
-            content: newNotice.content,
-            botKey: botKey
+        axios.post(`${host}/api/developer/account/notices/add`, {
+            key: data.key,
+            dest: foundDestination.id,
+            content: `Ваша заявка в регистрации на роль "${data.eventSlot}" в игре "${data.eventTitle}" была одобрена`
         })
 
         await foundRequest.update({status: false})
@@ -538,19 +529,12 @@ router.post('/cancel', AccountCheck, PermissionsCheck, async(req, res) => {
         }
 
 
-
-        const newNotice = await NOTICES_TAB.create({
-            destination: foundDestination.id,
-            content: `Ваша заявка в регистрации на игру была отклонена управляющим составом, по причине: ${data.reason}`,
-            date: GetDateInfo().all
+        axios.post(`${host}/api/developer/account/notices/add`, {
+            key: data.key,
+            dest: foundDestination.id,
+            content: `Ваша заявка в регистрации на роль "${data.eventSlot}" в игре "${data.eventTitle}" была одобрена`
         })
 
-        axios.post(`${host}/api/developer/bot/notice/send`, {
-            discordid: user.discord.id,
-            noticeid: newNotice.id,
-            content: newNotice.content,
-            botKey: botKey
-        })
 
         await foundRequest.update({status: false})
 

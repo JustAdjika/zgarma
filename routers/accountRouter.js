@@ -16,6 +16,7 @@ import NOTICES_TAB from '../database/notices.js'
 
 import GetDateInfo from '../modules/dateInfo.js';
 import AccountCheck from '../modules/accountCheck.js'
+import PermissionsCheck from '../modules/permissions.js'
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -393,6 +394,68 @@ router.get('/logout', async (req, res) => {
         res.json({
             status: 500,
             err: `Api developer error: account/logout - ${e}`
+        });
+    }
+})
+
+
+router.post('/notices/add', AccountCheck, PermissionsCheck, async (req, res) => {
+    try {
+        const data = req.body
+
+        const user = await ACCOUNTS_TAB.findOne({
+            where: {
+                key: data.key
+            }
+        })
+
+        if(!user) {
+            console.log(`[${GetDateInfo().all}] API отправка уведомления пользователю прервана. Пользователь не найден`)
+
+            res.json({
+                status: 404,
+                err: 'User undefined'
+            })
+            return
+        }
+
+        const foundDestination = await ACCOUNTS_TAB.findOne({
+            where: {
+                id: data.dest
+            }
+        })
+
+        if(!foundDestination) {
+            console.log(`[${GetDateInfo().all}] API отправка уведомления пользователю прервана. Получатель не найден`)
+
+            res.json({
+                status: 404,
+                err: 'Destionation undefined'
+            })
+            return
+        }
+
+        const newNotice = await NOTICES_TAB.create({
+            destination: foundDestination.id,
+            content: data.content,
+            date: GetDateInfo().all
+        })
+
+        axios.post(`${host}/api/developer/bot/notice/send`, {
+            discordid: foundDestination.discord.id,
+            noticeid: newNotice.id,
+            content: newNotice.content,
+            botKey: botKey
+        })
+
+        res.json({
+            status: 200
+        })
+    } catch (e) {
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: account/notices/add - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: account/notices/add - ${e}`
         });
     }
 })
