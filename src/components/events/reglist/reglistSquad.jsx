@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 
 import ReglistSlot from './reglistSlot';
 
-const ReglistSquad = ({ host, setErrorMessage, event, currentRequest, reqests, team, squad, squadIndex, slots, handleLoadChange, handleContextMenu }) => {
+const ReglistSquad = ({ host, setErrorMessage, event, currentRequest, reqests, team, squad, squadIndex, slots, handleLoadChange, handleContextMenu, setContextUserid }) => {
 
     return (
         <div className='reglistSquad-main-container'>
@@ -27,6 +27,7 @@ const ReglistSquad = ({ host, setErrorMessage, event, currentRequest, reqests, t
                     slot={slotIndex}
                     handleLoadChange={handleLoadChange}
                     handleContextMenu={handleContextMenu}
+                    setContextUserid={setContextUserid}
                 />)
             }) }
         </div>

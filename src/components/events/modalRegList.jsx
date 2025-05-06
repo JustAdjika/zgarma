@@ -38,8 +38,6 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         if (menuVisible) setMenuVisible(false);
     };
 
-    useEffect(() => console.log(menuPosition), [menuPosition])
-
     const getRequests = async () => {
         handleLoadChange(true)
         const res = await axios.post(`${host}/api/developer/event/request/data/id`, {
@@ -191,6 +189,41 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         setLoadCount(prev => isLoading ? prev + 1 : prev - 1)
     }
 
+    const [contextUserid, setContextUserid] = useState(null)
+
+    const handleSlotFreeup = async () => {
+        handleClick()
+
+        handleLoadChange(true)
+        console.log(contextUserid)
+        const res = await axios.patch(`${host}/api/developer/event/edit/squad/slots/freeup/force`, {
+            key: JSON.parse(Cookies.get("userData")).key,
+            eventId: event.id,
+            userId: contextUserid
+        })
+
+        if(res.data.status == 200) {
+            const eventsRes = await axios.get(`${host}/api/developer/event/data/all`)
+
+            if(eventsRes.data.status == 200) {
+                try {
+                    updateEvent()
+                } catch (e) {
+                    setErrorMessage(e)
+                    setTimeout(() => setErrorMessage(""), 3000)
+                }
+            } else {
+                setErrorMessage(eventsRes.data.err)
+                setTimeout(() => setErrorMessage(""), 3000)
+            }
+        } else {
+            setErrorMessage(res.data.err)
+            setTimeout(() => setErrorMessage(""), 3000)
+        }
+
+        handleLoadChange(false)
+    } 
+
     return (
         <div onClick={ () => { setIsModalReglist(false); handleClick() } } className='event-modal-reglist-main' style={{ display: isModalReglist ? 'flex' : 'none' }}>
             <div onClick={(e) => { e.stopPropagation(); handleClick()}} className='event-modal-reglist-container'>
@@ -210,7 +243,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                 paddingBottom: '10px'
                             }}
                         >
-                            <li className='event-reglist-contextmenu-li-container' onClick={ null }>
+                            <li className='event-reglist-contextmenu-li-container'>
                                 <div className='event-reglist-contextmenu-icon-container'>
                                     <FontAwesomeIcon icon={faCircleInfo} />
                                 </div>
@@ -228,7 +261,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                 </div>
                                 Отправить уведомление
                             </li>
-                            <li className='event-reglist-contextmenu-li-container' onClick={ null } style={{ color: '#c0392b' }} >
+                            <li className='event-reglist-contextmenu-li-container' onClick={ (e) => {e.preventDefault(); e.stopPropagation(); handleSlotFreeup() } } style={{ color: '#c0392b' }} >
                                 <div className='event-reglist-contextmenu-icon-container'>
                                     <FontAwesomeIcon icon={faUserMinus} />
                                 </div>
@@ -361,6 +394,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                 team={0}
                                 handleLoadChange={handleLoadChange}
                                 handleContextMenu={handleContextMenu}
+                                setContextUserid={setContextUserid}
                             />
                             { slotsRed.map((squadItem, squadIndex ) => (
                                 <ReglistSquad 
@@ -375,6 +409,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                     slots={slotsRed}
                                     handleLoadChange={handleLoadChange}
                                     handleContextMenu={handleContextMenu}
+                                    setContextUserid={setContextUserid}
                                 />
                             )) }
                         </div>
@@ -390,6 +425,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                     team={1}
                                     handleLoadChange={handleLoadChange}
                                     handleContextMenu={handleContextMenu}
+                                    setContextUserid={setContextUserid}
                                 />
                             ) : null}
                             { slotsBlue.map((squadItem, squadIndex ) => (
@@ -405,6 +441,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                     slots={slotsBlue}
                                     handleLoadChange={handleLoadChange}
                                     handleContextMenu={handleContextMenu}
+                                    setContextUserid={setContextUserid}
                                 />
                             )) }
                         </div>

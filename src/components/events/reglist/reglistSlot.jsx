@@ -2,12 +2,13 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, type, team, squad, slot, handleLoadChange, handleContextMenu }) => {
+const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, type, team, squad, slot, handleLoadChange, handleContextMenu, setContextUserid }) => {
     const [slotTitle, setSlotTitle] = useState("")
     const [slots, setSlots] = useState([])
     const [style, setStyle] = useState("open")
     const [user, setUser] = useState({})
     const [slotName, setSlotName] = useState('')
+    const [userId, setUserId] = useState(null)
 
     const [MTL, setMTL] = useState(false)
     const [MSL, setMSL] = useState(false)
@@ -68,6 +69,7 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
             if( slots[team][0].player !== null ) {
                 setIsKitOccupied(true)
                 getUser(slots[team][0].player).then(user => setSlotTitle(user.steam.personaname))
+                setUserId(slots[team][0].player)
                 getMarkers(slots[team][0].player)
                 setStyle('close')
             } else {
@@ -83,6 +85,7 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
             if( slots[team][squad].slots[0].player !== null ) {
                 setIsKitOccupied(true)
                 getUser(slots[team][squad].slots[0].player).then(user => setSlotTitle(user.steam.personaname))
+                setUserId(slots[team][squad].slots[slot].player)
                 getMarkers(slots[team][squad].slots[0].player)
                 setStyle('close')
             } else {
@@ -167,7 +170,7 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
     }
 
     return (
-        <div style={{ position: 'relative' }} onContextMenu={ handleContextMenu }>
+        <div style={{ position: 'relative' }} onContextMenu={ isKitOccupied ? (e) => { setContextUserid(userId); handleContextMenu(e) } : null }>
             <div
                 onMouseEnter={ isKitOccupied ? handleButtonAcceptMouseEnter : null } 
                 onMouseLeave={ handleButtonAcceptMouseLeave } 

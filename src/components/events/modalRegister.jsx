@@ -13,7 +13,7 @@ import RegisterSlot from './register/registerSlot';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserMinus } from '@fortawesome/free-solid-svg-icons';
 
-const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegisterEvent, isModalEventRegister, setErrorMessage }) => {
+const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegisterEvent, setModalRegisterEvent, isModalEventRegister, setErrorMessage }) => {
     const [checkbox1, setCheckbox1] = useState(false)
     const [checkbox2, setCheckbox2] = useState(false)
     const [slotCount, setSlotCount] = useState({
@@ -32,17 +32,23 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
 
     const [loadCount, setLoadCount] = useState(0)
 
-    useEffect(() => {
-        if(modalRegisterEvent.slotsTeam1) {
-            const tempSlots = modalRegisterEvent.slotsTeam1.filter((_, i) => i != 0)
+    const updateSlots = (eventData) => {
+        if(eventData.slotsTeam1) {
+            const tempSlots = eventData.slotsTeam1.filter((_, i) => i != 0)
             setSlots1(tempSlots)
-            setCmdSlotRed(modalRegisterEvent.slotsTeam1[0])
+            setCmdSlotRed(eventData.slotsTeam1[0])
         }
-        if(modalRegisterEvent.slotsTeam2) {
-            const tempSlots = modalRegisterEvent.slotsTeam2.filter((_, i) => i != 0)
+        if(eventData.slotsTeam2) {
+            const tempSlots = eventData.slotsTeam2.filter((_, i) => i != 0)
             setSlots2(tempSlots)
-            setCmdSlotBlue(modalRegisterEvent.slotsTeam2[0])
+            setCmdSlotBlue(eventData.slotsTeam2[0])
         }
+
+        setModalRegisterEvent(eventData)
+    }
+
+    useEffect(() => {
+        updateSlots(modalRegisterEvent)
     }, [modalRegisterEvent])
 
     useEffect(() => {
@@ -106,17 +112,36 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
     };
 
     const handleSlotLeave = async () => {
+        handleClick()
+
+        handleLoadChange(true)
         const res = await axios.patch(`${host}/api/developer/event/edit/squad/slots/freeup/personally`, {
             key: JSON.parse(Cookies.get("userData")).key,
             eventId: modalRegisterEvent.id
         })
 
         if(res.data.status == 200) {
-            window.location.reload()
+            const eventsRes = await axios.get(`${host}/api/developer/event/data/all`)
+
+            if(eventsRes.data.status == 200) {
+                try {
+                    const currentEvent = eventsRes.data.container.filter(item => item.id === modalRegisterEvent.id)
+
+                    updateSlots(currentEvent[0])
+                } catch (e) {
+                    setErrorMessage(e)
+                    setTimeout(() => setErrorMessage(""), 3000)
+                }
+            } else {
+                setErrorMessage(eventsRes.data.err)
+                setTimeout(() => setErrorMessage(""), 3000)
+            }
         } else {
             setErrorMessage(res.data.err)
             setTimeout(() => setErrorMessage(""), 3000)
         }
+
+        handleLoadChange(false)
     } 
 
     const [imgLoading, setImgLoading] = useState(true)
@@ -137,7 +162,7 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
                         paddingBottom: '10px'
                     }}
                 >
-                    <li className='event-reglist-contextmenu-li-container' onClick={ handleSlotLeave } style={{ color: '#c0392b' }}>
+                    <li className='event-reglist-contextmenu-li-container' onClick={ (e) => {e.preventDefault(); e.stopPropagation(); handleSlotLeave() } } style={{ color: '#c0392b' }}>
                         <div className='event-reglist-contextmenu-icon-container'>
                             <FontAwesomeIcon icon={faUserMinus} />
                         </div>

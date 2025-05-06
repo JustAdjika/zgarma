@@ -113,6 +113,7 @@
     flex-direction: column;
     width: 250px;
     padding: 0px;
+    border: solid 1px #505050;
 }
 .event-contextmenu>li {
     width: 100%;
