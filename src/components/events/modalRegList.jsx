@@ -12,7 +12,7 @@ import ReglistReport from './reglist/reglistReport.jsx';
 import ReglistSquad from './reglist/reglistSquad.jsx';
 import ReglistSlot from './reglist/reglistSlot.jsx';
 
-import { faCircleInfo, faUserMinus, faFileInvoice, faShare } from '@fortawesome/free-solid-svg-icons';
+import { faCircleInfo, faUserMinus, faRetweet, faShare } from '@fortawesome/free-solid-svg-icons';
 
 const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event, setErrorMessage }) => {
     const [reqests, setRequests] = useState([])
@@ -345,7 +345,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                         </li>
                         <li className='event-reglist-contextmenu-li-container' onClick={ null }>
                             <div className='event-reglist-contextmenu-icon-container'>
-                                <FontAwesomeIcon icon={faFileInvoice} />
+                                <FontAwesomeIcon icon={faRetweet} />
                             </div>
                             Переназначить
                         </li>
