@@ -114,6 +114,26 @@
     width: 250px;
     padding: 0px;
     border: solid 1px #505050;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none; /* чтобы не ловить клики, когда скрыто */
+}
+.event-contextmenu.visible {
+    background-color: #3b3b3b;
+    border-radius: 7px;
+    color: #aaaaaa;
+    font-family: 'My Open Sans';
+    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.479);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 250px;
+    padding: 0px;
+    border: solid 1px #505050;
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
 }
 .event-contextmenu>li {
     width: 100%;

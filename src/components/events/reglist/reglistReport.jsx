@@ -4,7 +4,7 @@ import { DateTime } from 'luxon'
 import Cookies from 'js-cookie';
 
 
-const ReglistReport = ({ host, currentRequest, setErrorMessage }) => {
+const ReglistReport = ({ host, currentRequest, setErrorMessage, isContextmenu }) => {
     const [steamName, setSteamName] = useState("Undefined")
     const [discordName, setDiscordName] = useState("Undefined")
     const [discordid, setDiscordid] = useState("Undefined")
@@ -59,15 +59,20 @@ const ReglistReport = ({ host, currentRequest, setErrorMessage }) => {
 
                 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-
-
             } else {
                 setErrorMessage(res.data.err)
                 setTimeout(() => { setErrorMessage("") }, 3000)
             }
         }
 
-        getUser()
+
+        if(!isContextmenu) getUser()
+        else {
+            setSteamName(currentRequest.steamName)
+            setDiscordName(currentRequest.discordName)
+            setDiscordid(currentRequest.discordid)
+            setRegDate(currentRequest.regDate)
+        }
 
     }, [currentRequest])
 

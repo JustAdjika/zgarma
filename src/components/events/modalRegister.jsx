@@ -102,9 +102,9 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
     const handleContextMenu = (e) => {
+        setMenuVisible(!menuVisible);
         e.preventDefault();
-        setMenuPosition({ x: e.clientX, y: e.clientY });
-        setMenuVisible(true);
+        if(!menuVisible) setMenuPosition({ x: e.clientX, y: e.clientY });
     };
 
     const handleClick = () => {
@@ -148,28 +148,26 @@ const ModalRegister = ({ host, setIsModalEventRegister, isAccount, modalRegister
 
     return (
         <div onClick={ () => { setIsModalEventRegister(false); handleClick() } } className='event-modal-eventreg-main' style={{ display: isModalEventRegister ? 'flex' : 'none' }}>
-            {menuVisible && (
-                <ul
-                    className='event-contextmenu'
-                    style={{
-                        position: "absolute",
-                        top: menuPosition.y,
-                        left: menuPosition.x,
-                        listStyle: "none",
-                        margin: 0,
-                        zIndex: 40,
-                        paddingTop: '10px',
-                        paddingBottom: '10px'
-                    }}
-                >
-                    <li className='event-reglist-contextmenu-li-container' onClick={ (e) => {e.preventDefault(); e.stopPropagation(); handleSlotLeave() } } style={{ color: '#c0392b' }}>
-                        <div className='event-reglist-contextmenu-icon-container'>
-                            <FontAwesomeIcon icon={faUserMinus} />
-                        </div>
-                        Освободить слот
-                    </li>
+            <ul
+                className={`event-contextmenu ${menuVisible ? 'visible' : ''}`}
+                style={{
+                    position: "absolute",
+                    top: menuPosition.y,
+                    left: menuPosition.x,
+                    listStyle: "none",
+                    margin: 0,
+                    zIndex: 40,
+                    paddingTop: '10px',
+                    paddingBottom: '10px',
+                }}
+            >
+                <li className='event-reglist-contextmenu-li-container' onClick={ (e) => {e.preventDefault(); e.stopPropagation(); handleSlotLeave() } } style={{ color: '#c0392b' }}>
+                    <div className='event-reglist-contextmenu-icon-container'>
+                        <FontAwesomeIcon icon={faUserMinus} />
+                    </div>
+                    Освободить слот
+                </li>
                 </ul>
-            )}
             <div onClick={(e) => { e.stopPropagation(); handleClick()}} className='event-modal-eventreg-container'>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <h2 className='event-modal-eventreg-title' style={{ fontSize: modalRegisterEvent?.title?.length > 23 ? '23px' : '30px' }}>{modalRegisterEvent.title}</h2>

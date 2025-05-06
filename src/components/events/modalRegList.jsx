@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { DateTime } from 'luxon'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -29,9 +30,9 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
     const handleContextMenu = (e) => {
+        setMenuVisible(!menuVisible);
         e.preventDefault();
-        setMenuPosition({ x: e.clientX, y: e.clientY });
-        setMenuVisible(true);
+        if(!menuVisible) setMenuPosition({ x: e.clientX, y: e.clientY });
     };
 
     const handleClick = () => {
@@ -78,6 +79,10 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         setSlotsRed(event.slotsTeam1.filter((item, index) => index != 0))
         setSlotsBlue(event.slotsTeam2.filter((item, index) => index != 0))
     }, [event])
+
+    useEffect(() => {
+        if(selectedRequest !== null) setIsContextmenuReport(false)
+    }, [selectedRequest])
 
     const handleRequestAccept = async () => {
 
@@ -224,51 +229,107 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         handleLoadChange(false)
     } 
 
+
+    const [contextUserInfo, setContextUserInfo] = useState(null)
+    const [isContextmenuReport, setIsContextmenuReport] = useState(false)
+
+    const handleShowInfo = async () => {
+        handleClick()
+        setSelectedRequest(null)
+        setIsContextmenuReport(true)
+
+        const res = await axios.get(`${host}/api/developer/account/data/id?id=${contextUserid}`)
+
+        if(res.data.status == 200) {
+            const preData = {
+                steamName: res.data.container.steam.personaname,
+                discordName: res.data.container.discord.username,
+                discordid: res.data.container.discord.id,
+                regDate: null,
+            }
+
+            setContextUserInfo(preData)
+
+            try {
+                const moscowDate = res.data.container.date
+                const parts = moscowDate.match(/(\d{2})\.(\d{2})\.(\d{2}) \((\d{2}):(\d{2})\)/)
+
+                if(parts) {
+                    const [_, day, month, year, hour, minute] = parts;
+
+                    const fullYear = 2000 + parseInt(year);
+
+                    const ISOmoscowDate = DateTime.fromObject(
+                        {
+                        day: parseInt(day),
+                        month: parseInt(month),
+                        year: fullYear,
+                        hour: parseInt(hour),
+                        minute: parseInt(minute),
+                        },
+                        { zone: 'Europe/Moscow' }
+                    );
+
+                    const localDate = ISOmoscowDate.setZone(DateTime.local().zoneName);
+                    const displayTime = localDate.toFormat('dd.MM.yy (HH:mm)');
+
+                    setContextUserInfo(prev => ({...prev, regDate: displayTime}))
+                }
+            } catch (e) {
+                console.error(e)
+            }
+
+            const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        } else {
+            setErrorMessage(res.data.err)
+            setTimeout(() => { setErrorMessage("") }, 3000)
+        }
+    }
+
     return (
         <div onClick={ () => { setIsModalReglist(false); handleClick() } } className='event-modal-reglist-main' style={{ display: isModalReglist ? 'flex' : 'none' }}>
             <div onClick={(e) => { e.stopPropagation(); handleClick()}} className='event-modal-reglist-container'>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    {menuVisible && (
-                        <ul
-                            className='event-contextmenu'
-                            style={{
-                                position: "absolute",
-                                top: menuPosition.y,
-                                left: menuPosition.x,
-                                listStyle: "none",
-                                margin: 0,
-                                zIndex: 40,
-                                width: '250px',
-                                paddingTop: '10px',
-                                paddingBottom: '10px'
-                            }}
-                        >
-                            <li className='event-reglist-contextmenu-li-container'>
-                                <div className='event-reglist-contextmenu-icon-container'>
-                                    <FontAwesomeIcon icon={faCircleInfo} />
-                                </div>
-                                Показать информацию
-                            </li>
-                            <li className='event-reglist-contextmenu-li-container' onClick={ null }>
-                                <div className='event-reglist-contextmenu-icon-container'>
-                                    <FontAwesomeIcon icon={faFileInvoice} />
-                                </div>
-                                Переназначить
-                            </li>
-                            <li className='event-reglist-contextmenu-li-container' onClick={ null }>
-                                <div className='event-reglist-contextmenu-icon-container'>
-                                    <FontAwesomeIcon icon={faShare} />
-                                </div>
-                                Отправить уведомление
-                            </li>
-                            <li className='event-reglist-contextmenu-li-container' onClick={ (e) => {e.preventDefault(); e.stopPropagation(); handleSlotFreeup() } } style={{ color: '#c0392b' }} >
-                                <div className='event-reglist-contextmenu-icon-container'>
-                                    <FontAwesomeIcon icon={faUserMinus} />
-                                </div>
-                                Убрать со слота
-                            </li>
-                        </ul>
-                    )}
+                    <ul
+                        className={`event-contextmenu ${menuVisible ? 'visible' : ''}`}
+                        style={{
+                            position: "absolute",
+                            top: menuPosition.y,
+                            left: menuPosition.x,
+                            listStyle: "none",
+                            margin: 0,
+                            zIndex: 40,
+                            width: '250px',
+                            paddingTop: '10px',
+                            paddingBottom: '10px'
+                        }}
+                    >
+                        <li className='event-reglist-contextmenu-li-container' onClick={ (e) => {e.preventDefault(); e.stopPropagation(); handleShowInfo() } }>
+                            <div className='event-reglist-contextmenu-icon-container'>
+                                <FontAwesomeIcon icon={faCircleInfo} />
+                            </div>
+                            Показать информацию
+                        </li>
+                        <li className='event-reglist-contextmenu-li-container' onClick={ null }>
+                            <div className='event-reglist-contextmenu-icon-container'>
+                                <FontAwesomeIcon icon={faFileInvoice} />
+                            </div>
+                            Переназначить
+                        </li>
+                        <li className='event-reglist-contextmenu-li-container' onClick={ null }>
+                            <div className='event-reglist-contextmenu-icon-container'>
+                                <FontAwesomeIcon icon={faShare} />
+                            </div>
+                            Отправить уведомление
+                        </li>
+                        <li className='event-reglist-contextmenu-li-container' onClick={ (e) => {e.preventDefault(); e.stopPropagation(); handleSlotFreeup() } } style={{ color: '#c0392b' }} >
+                            <div className='event-reglist-contextmenu-icon-container'>
+                                <FontAwesomeIcon icon={faUserMinus} />
+                            </div>
+                            Убрать со слота
+                        </li>
+                    </ul>
 
                     <h2 className='event-modal-reglist-title' style={{ fontSize: event?.title?.length > 23 ? '23px' : '30px'}}>{event.title}</h2>
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '650px', height: '100%' }}>
@@ -291,8 +352,9 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: '', width: '275px', height: '100%' }}>
                             <ReglistReport 
                                 host={host}
-                                currentRequest={reqests[selectedRequest]}
+                                currentRequest={ !isContextmenuReport ? reqests[selectedRequest] : contextUserInfo}
                                 setErrorMessage={setErrorMessage}
+                                isContextmenu={ isContextmenuReport }
                             />
                             
 
