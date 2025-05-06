@@ -29,14 +29,19 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
     const [menuVisible, setMenuVisible] = useState(false);
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
+    const [isNoticeMenu, setIsNoticeMenu] = useState(false)
+
     const handleContextMenu = (e) => {
         setMenuVisible(!menuVisible);
+        setIsNoticeMenu(false)
         e.preventDefault();
         if(!menuVisible) setMenuPosition({ x: e.clientX, y: e.clientY });
     };
 
     const handleClick = () => {
         if (menuVisible) setMenuVisible(false);
+        if (isNoticeMenu) setIsNoticeMenu(false)
+        setNoticeText('')
     };
 
     const getRequests = async () => {
@@ -287,10 +292,37 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         }
     }
 
+    const [ noticeText, setNoticeText ] = useState('')
+
+    const handleSendNotice = () => {
+        axios.post(`${host}/api/developer/account/notices/add`, {
+            key: JSON.parse(Cookies.get("userData")).key,
+            dest: contextUserid,
+            content: noticeText
+        })
+
+        setNoticeText('')
+        handleClick()
+    }
+
     return (
         <div onClick={ () => { setIsModalReglist(false); handleClick() } } className='event-modal-reglist-main' style={{ display: isModalReglist ? 'flex' : 'none' }}>
             <div onClick={(e) => { e.stopPropagation(); handleClick()}} className='event-modal-reglist-container'>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div className={`event-contextmenu-noticemenu-container ${isNoticeMenu ? 'visible' : ''}`} style={{
+                        position: "absolute",
+                        top: menuPosition.y,
+                        left: menuPosition.x + 50,
+                        listStyle: "none",
+                        margin: 0,
+                        zIndex: 45,
+                        width: '250px',
+                        paddingTop: '10px',
+                        paddingBottom: '10px'
+                    }} onClick={(e) => { e.preventDefault(); e.stopPropagation() }}>
+                        <textarea className='event-contextmenu-noticemenu-textarea' value={ noticeText } onChange={ (e) => setNoticeText(e.target.value) } placeholder='Введите текст оповещения' type="text" />
+                        <button className='event-contextmenu-noticemenu-but' onClick={ handleSendNotice }>Отправить</button>
+                    </div>
                     <ul
                         className={`event-contextmenu ${menuVisible ? 'visible' : ''}`}
                         style={{
@@ -317,7 +349,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                             </div>
                             Переназначить
                         </li>
-                        <li className='event-reglist-contextmenu-li-container' onClick={ null }>
+                        <li className='event-reglist-contextmenu-li-container' onClick={ (e) => {e.preventDefault(); e.stopPropagation(); handleClick(); setIsNoticeMenu(true) } }>
                             <div className='event-reglist-contextmenu-icon-container'>
                                 <FontAwesomeIcon icon={faShare} />
                             </div>
