@@ -12,7 +12,7 @@ import ReglistReport from './reglist/reglistReport.jsx';
 import ReglistSquad from './reglist/reglistSquad.jsx';
 import ReglistSlot from './reglist/reglistSlot.jsx';
 
-import { faCircleInfo, faUserMinus, faRetweet, faShare } from '@fortawesome/free-solid-svg-icons';
+import { faCircleInfo, faUserMinus, faRetweet, faShare, faPeopleGroup, faArrowTurnDown, faCircleLeft } from '@fortawesome/free-solid-svg-icons';
 
 const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event, setErrorMessage }) => {
     const [reqests, setRequests] = useState([])
@@ -30,10 +30,12 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
     const [isNoticeMenu, setIsNoticeMenu] = useState(false)
+    const [isSwapMenu, setIsSwapMenu] = useState(false)
 
     const handleContextMenu = (e) => {
         setMenuVisible(!menuVisible);
         setIsNoticeMenu(false)
+        setIsSwapMenu(false)
         e.preventDefault();
         if(!menuVisible) setMenuPosition({ x: e.clientX, y: e.clientY });
     };
@@ -41,7 +43,12 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
     const handleClick = () => {
         if (menuVisible) setMenuVisible(false);
         if (isNoticeMenu) setIsNoticeMenu(false)
+        if (isSwapMenu) setIsSwapMenu(false)
+        
         setNoticeText('')
+        setSwapSlot(null)
+        setSwapSquad(null)
+        setSwapTeam(null)
     };
 
     const getRequests = async () => {
@@ -305,6 +312,15 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         handleClick()
     }
 
+    const [ swapTeam, setSwapTeam ] = useState(null)
+    const [ swapSquad, setSwapSquad ] = useState(null)
+    const [ swapSlot, setSwapSlot ] = useState(null)
+
+    const handleSwapSlot = (team, squad, slot) => {
+
+        handleClick()
+    }
+
     return (
         <div onClick={ () => { setIsModalReglist(false); handleClick() } } className='event-modal-reglist-main' style={{ display: isModalReglist ? 'flex' : 'none' }}>
             <div onClick={(e) => { e.stopPropagation(); handleClick()}} className='event-modal-reglist-container'>
@@ -322,6 +338,111 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                     }} onClick={(e) => { e.preventDefault(); e.stopPropagation() }}>
                         <textarea className='event-contextmenu-noticemenu-textarea' value={ noticeText } onChange={ (e) => setNoticeText(e.target.value) } placeholder='Введите текст оповещения' type="text" />
                         <button className='event-contextmenu-noticemenu-but' onClick={ handleSendNotice }>Отправить</button>
+                    </div>
+                    <div className={`event-contextmenu-swapmenu-container ${isSwapMenu ? 'visible' : ''}`} style={{
+                        position: "absolute",
+                        top: menuPosition.y,
+                        left: menuPosition.x + 50,
+                        listStyle: "none",
+                        margin: 0,
+                        zIndex: 45,
+                        width: '250px',
+                        paddingTop: '10px',
+                        paddingBottom: '10px'
+                    }} onClick={(e) => { e.preventDefault(); e.stopPropagation() }}>
+                        { swapTeam === null ? ( 
+                            <>
+                                <div className='event-contextmenu-swapmenu-option-container red' onClick={() => setSwapTeam(0)}>
+                                    Красные
+                                    <div className='event-reglist-contextmenu-icon-container'>
+                                        <FontAwesomeIcon icon={faPeopleGroup} />
+                                    </div>
+                                </div>
+                                <div className='event-contextmenu-swapmenu-option-container blue' onClick={() => setSwapTeam(1)} style={{ display: event.type === 'PVP' ? 'flex' : 'none' }}>
+                                    Синие
+                                    <div className='event-reglist-contextmenu-icon-container'>
+                                        <FontAwesomeIcon icon={faPeopleGroup} />
+                                    </div>
+                                </div>
+                            </>
+                        ) : swapSquad === null ? (
+
+                            swapTeam === 0 ? 
+                                event.slotsTeam1.map((item, index) => (
+                                    index === 0 ? (
+                                        <div className='event-contextmenu-swapmenu-option-container default' onClick={() => { setSwapSquad(index); handleSwapSlot(swapTeam, 0, null) }}>
+                                            Командир стороны
+                                            <div className='event-reglist-contextmenu-icon-container' style={{ marginRight: '12px' }}>
+                                                <FontAwesomeIcon icon={faCircleLeft} />
+                                            </div>
+                                        </div>
+                                    )
+                                    : 
+                                    (
+                                        <div className='event-contextmenu-swapmenu-option-container default' onClick={() => setSwapSquad(index) }>
+                                            { item.title }
+                                            <div className='event-reglist-contextmenu-icon-container'>
+                                                <FontAwesomeIcon icon={faArrowTurnDown} />
+                                            </div>
+                                        </div>
+                                    )
+                                )) 
+                            : 
+                                event.slotsTeam2.map((item, index) => (
+                                    index === 0 ? (
+                                        <div className='event-contextmenu-swapmenu-option-container default' onClick={() => { setSwapSquad(index); handleSwapSlot(swapTeam, 0, null) }}>
+                                            Командир стороны
+                                            <div className='event-reglist-contextmenu-icon-container' style={{ marginRight: '12px' }}>
+                                                <FontAwesomeIcon icon={faCircleLeft} />
+                                            </div>
+                                        </div>
+                                    )
+                                    : 
+                                    (
+                                        <div className='event-contextmenu-swapmenu-option-container default' onClick={() => setSwapSquad(index) }>
+                                            { item.title }
+                                            <div className='event-reglist-contextmenu-icon-container'>
+                                                <FontAwesomeIcon icon={faArrowTurnDown} />
+                                            </div>
+                                        </div>
+                                    )
+                                )) 
+
+                        ) : swapSlot === null && swapSquad !== 0 ? (
+                            swapTeam === 0 ? (
+                                event.slotsTeam1[swapSquad].slots.map((item, index) => (
+                                    <div className='event-contextmenu-swapmenu-option-container default' onClick={ () => { setSwapSlot(index); handleSwapSlot(swapTeam, swapSquad, index) } }>
+                                        { item.title }
+                                        <div className='event-reglist-contextmenu-icon-container'>
+                                            <FontAwesomeIcon icon={faCircleLeft} />
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                event.slotsTeam2[swapSquad].slots.map((item, index) => (
+                                    <div className='event-contextmenu-swapmenu-option-container default' onClick={ () => { setSwapSlot(index); handleSwapSlot(swapTeam, swapSquad, index) } }>
+                                        { item.title }
+                                        <div className='event-reglist-contextmenu-icon-container'>
+                                            <FontAwesomeIcon icon={faCircleLeft} />
+                                        </div>
+                                    </div>
+                                ))
+                            )
+                            // <>
+                                // <div className='event-contextmenu-swapmenu-option-container default'>
+                                //     Командир отряда
+                                //     <div className='event-reglist-contextmenu-icon-container'>
+                                //         <FontAwesomeIcon icon={faCircleLeft} />
+                                //     </div>
+                                // </div>
+                                // <div className='event-contextmenu-swapmenu-option-container default'>
+                                //     Стрелок
+                                //     <div className='event-reglist-contextmenu-icon-container'>
+                                //         <FontAwesomeIcon icon={faCircleLeft} />
+                                //     </div>
+                                // </div>
+                            // </>
+                        ) : null}
                     </div>
                     <ul
                         className={`event-contextmenu ${menuVisible ? 'visible' : ''}`}
@@ -343,7 +464,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                             </div>
                             Показать информацию
                         </li>
-                        <li className='event-reglist-contextmenu-li-container' onClick={ null }>
+                        <li className='event-reglist-contextmenu-li-container' onClick={ (e) => {e.preventDefault(); e.stopPropagation(); handleClick(); setIsSwapMenu(true) } }>
                             <div className='event-reglist-contextmenu-icon-container'>
                                 <FontAwesomeIcon icon={faRetweet} />
                             </div>
