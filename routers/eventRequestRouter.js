@@ -299,7 +299,7 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!user) {
-            console.log(`[${GetDateInfo().all}] TEST API принятие заявки прервано. Пользователь не найден`)
+            console.log(`[${GetDateInfo().all}] API принятие заявки прервано. Пользователь не найден`)
 
             res.json({
                 status: 404,
@@ -315,7 +315,7 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!foundRequest) {
-            console.log(`[${GetDateInfo().all}] TEST API принятие заявки прервано. Заявка не найдена`)
+            console.log(`[${GetDateInfo().all}] API принятие заявки прервано. Заявка не найдена`)
 
             res.json({
                 status: 404,
@@ -331,7 +331,7 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!foundDestination) {
-            console.log(`[${GetDateInfo().all}] TEST API принятие заявки прервано. Отправить заявки не найден`)
+            console.log(`[${GetDateInfo().all}] API принятие заявки прервано. Отправить заявки не найден`)
 
             res.json({
                 status: 404,
@@ -458,14 +458,14 @@ router.post('/accept', AccountCheck, PermissionsCheck, async(req, res) => {
 
         await foundRequest.update({status: false})
 
-        console.log(`[${GetDateInfo().all}] TEST API заявка ${foundRequest.id} от игрока ${foundRequest.userId} на игру ${foundRequest.eventId} принята администратором ${user.id}`)
+        console.log(`[${GetDateInfo().all}] API заявка ${foundRequest.id} от игрока ${foundRequest.userId} на игру ${foundRequest.eventId} принята администратором ${user.id}`)
 
         res.json({
             status: 200
         })
 
     }catch(e){
-        console.error(`\x1b[31m[${GetDateInfo().all}] TEST Api developer error: event/request/accept - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] API developer error: event/request/accept - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/request/accept - ${e}`
@@ -487,7 +487,7 @@ router.post('/cancel', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!user) {
-            console.log(`[${GetDateInfo().all}] TEST API отклонение заявки прервано. Пользователь не найден`)
+            console.log(`[${GetDateInfo().all}] API отклонение заявки прервано. Пользователь не найден`)
 
             res.json({
                 status: 404,
@@ -503,7 +503,7 @@ router.post('/cancel', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!foundRequest) {
-            console.log(`[${GetDateInfo().all}] TEST API отклонение заявки прервано. Заявка не найдена`)
+            console.log(`[${GetDateInfo().all}] API отклонение заявки прервано. Заявка не найдена`)
 
             res.json({
                 status: 404,
@@ -519,7 +519,7 @@ router.post('/cancel', AccountCheck, PermissionsCheck, async(req, res) => {
         })
 
         if(!foundDestination) {
-            console.log(`[${GetDateInfo().all}] TEST API отклонение заявки прервано. Отправитель заявки не найден`)
+            console.log(`[${GetDateInfo().all}] API отклонение заявки прервано. Отправитель заявки не найден`)
 
             res.json({
                 status: 404,
@@ -538,14 +538,14 @@ router.post('/cancel', AccountCheck, PermissionsCheck, async(req, res) => {
 
         await foundRequest.update({status: false})
 
-        console.log(`[${GetDateInfo().all}] TEST API заявка ${foundRequest.id} на игру ${foundRequest.eventId} от пользователя ${foundRequest.userId} отклонена администратором ${user.id}`)
+        console.log(`[${GetDateInfo().all}] API заявка ${foundRequest.id} на игру ${foundRequest.eventId} от пользователя ${foundRequest.userId} отклонена администратором ${user.id}`)
 
         res.json({
             status: 200
         })
 
     }catch(e){
-        console.error(`\x1b[31m[${GetDateInfo().all}] TEST Api developer error: event/request/cancel - ${e} \x1b[31m`);
+        console.error(`\x1b[31m[${GetDateInfo().all}] API developer error: event/request/cancel - ${e} \x1b[31m`);
         res.json({
             status: 500,
             err: `Api developer error: event/request/cancel - ${e}`

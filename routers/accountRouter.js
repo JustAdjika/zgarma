@@ -448,6 +448,8 @@ router.post('/notices/add', AccountCheck, PermissionsCheck, async (req, res) => 
             botKey: botKey
         })
 
+        console.log(`[${GetDateInfo().all}] API уведомление ${newNotice.id} успешно отправлено для пользователя ${foundDestination.id} администратором ${user.id}`)
+
         res.json({
             status: 200
         })

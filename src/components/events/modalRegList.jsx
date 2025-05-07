@@ -212,7 +212,6 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
         handleClick()
 
         handleLoadChange(true)
-        console.log(contextUserid)
         const res = await axios.patch(`${host}/api/developer/event/edit/squad/slots/freeup/force`, {
             key: JSON.parse(Cookies.get("userData")).key,
             eventId: event.id,
@@ -301,12 +300,17 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
 
     const [ noticeText, setNoticeText ] = useState('')
 
-    const handleSendNotice = () => {
-        axios.post(`${host}/api/developer/account/notices/add`, {
+    const handleSendNotice = async () => {
+        const res = await axios.post(`${host}/api/developer/account/notices/add`, {
             key: JSON.parse(Cookies.get("userData")).key,
             dest: contextUserid,
             content: noticeText
         })
+
+        if(res.data.status != 200) {
+            setErrorMessage(res.data.err)
+            setTimeout(() => setErrorMessage(''), 3000)
+        }
 
         setNoticeText('')
         handleClick()
@@ -316,7 +320,31 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
     const [ swapSquad, setSwapSquad ] = useState(null)
     const [ swapSlot, setSwapSlot ] = useState(null)
 
-    const handleSwapSlot = (team, squad, slot) => {
+    const handleSwapSlot = async (team, squad, slot) => {
+        handleLoadChange(true)
+
+        const res = await axios.post(`${host}/api/developer/event/playerset`, {
+            key: JSON.parse(Cookies.get("userData")).key,
+            eventId: event.id,
+            userId: contextUserid,
+            team: team === 0 ? 'Red' : 'Blue',
+            squad,
+            slot,
+        })
+
+        if(res.data.status == 200) {
+            try {
+                updateEvent()
+            } catch (e) {
+                setErrorMessage(e)
+                setTimeout(() => setErrorMessage(""), 3000)
+            }
+        } else {
+            setErrorMessage(res.data.err)
+            setTimeout(() => setErrorMessage(''), 3000)
+        }
+
+        handleLoadChange(false)
 
         handleClick()
     }
@@ -370,7 +398,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                             swapTeam === 0 ? 
                                 event.slotsTeam1.map((item, index) => (
                                     index === 0 ? (
-                                        <div className='event-contextmenu-swapmenu-option-container default' onClick={() => { setSwapSquad(index); handleSwapSlot(swapTeam, 0, null) }}>
+                                        <div className='event-contextmenu-swapmenu-option-container default' onClick={() => { setSwapSquad(index); handleSwapSlot(swapTeam, 0, 0) }}>
                                             Командир стороны
                                             <div className='event-reglist-contextmenu-icon-container' style={{ marginRight: '12px' }}>
                                                 <FontAwesomeIcon icon={faCircleLeft} />
@@ -390,7 +418,7 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                             : 
                                 event.slotsTeam2.map((item, index) => (
                                     index === 0 ? (
-                                        <div className='event-contextmenu-swapmenu-option-container default' onClick={() => { setSwapSquad(index); handleSwapSlot(swapTeam, 0, null) }}>
+                                        <div className='event-contextmenu-swapmenu-option-container default' onClick={() => { setSwapSquad(index); handleSwapSlot(swapTeam, 0, 0) }}>
                                             Командир стороны
                                             <div className='event-reglist-contextmenu-icon-container' style={{ marginRight: '12px' }}>
                                                 <FontAwesomeIcon icon={faCircleLeft} />
@@ -428,20 +456,6 @@ const ModalRegList = ({ host, setIsModalReglist, isModalReglist, setEvent, event
                                     </div>
                                 ))
                             )
-                            // <>
-                                // <div className='event-contextmenu-swapmenu-option-container default'>
-                                //     Командир отряда
-                                //     <div className='event-reglist-contextmenu-icon-container'>
-                                //         <FontAwesomeIcon icon={faCircleLeft} />
-                                //     </div>
-                                // </div>
-                                // <div className='event-contextmenu-swapmenu-option-container default'>
-                                //     Стрелок
-                                //     <div className='event-reglist-contextmenu-icon-container'>
-                                //         <FontAwesomeIcon icon={faCircleLeft} />
-                                //     </div>
-                                // </div>
-                            // </>
                         ) : null}
                     </div>
                     <ul

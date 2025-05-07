@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -58,9 +58,11 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
 
         const slots1 = event.slotsTeam1
         const slots2 = event.slotsTeam2
-        
+
         setSlots([slots1, slots2])
     }, [event])
+
+    const useridRef = useRef(null)
 
     useEffect(() => {
         if(slots.length < 1) return
@@ -72,6 +74,8 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
                 setUserId(slots[team][0].player)
                 getMarkers(slots[team][0].player)
                 setStyle('close')
+
+                useridRef.current = slots[team][0].player
             } else {
                 setIsKitOccupied(false)
                 setSlotTitle("Командир стороны")
@@ -88,6 +92,8 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
                 setUserId(slots[team][squad].slots[slot].player)
                 getMarkers(slots[team][squad].slots[0].player)
                 setStyle('close')
+
+                useridRef.current = slots[team][squad].slots[slot].player
             } else {
                 setIsKitOccupied(false)
                 setSlotTitle(slots[team][squad].slots[0].title)
@@ -103,6 +109,8 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
                 getUser(slots[team][squad].slots[slot].player).then(user => setSlotTitle(user.steam.personaname))
                 getMarkers(slots[team][squad].slots[slot].player)
                 setStyle('close')
+
+                useridRef.current = slots[team][squad].slots[slot].player
             } else {
                 setIsKitOccupied(false)
                 setSlotTitle(slots[team][squad].slots[slot].title)
@@ -169,8 +177,19 @@ const ReglistSlot = ({ host, setErrorMessage, event, currentRequest, reqests, ty
         setKitTooltip(false);
     }
 
+    const handleContextClick = useCallback((e) => {
+        if (userId !== null) {
+            setContextUserid(userId);
+            handleContextMenu(e);
+        }
+    }, [userId, setContextUserid, handleContextMenu]);
+
+    useEffect(() => {
+        setUserId(useridRef.current)
+    }, [useridRef.current])
+
     return (
-        <div style={{ position: 'relative' }} onContextMenu={ isKitOccupied ? (e) => { setContextUserid(userId); handleContextMenu(e) } : null }>
+        <div style={{ position: 'relative' }} onContextMenu={ isKitOccupied ? (e) => { handleContextClick(e) } : null }>
             <div
                 onMouseEnter={ isKitOccupied ? handleButtonAcceptMouseEnter : null } 
                 onMouseLeave={ handleButtonAcceptMouseLeave } 

@@ -8,6 +8,7 @@ import ACCOUNTS_TAB from '../database/accounts.js';
 import GetDateInfo from '../modules/dateInfo.js'
 import PermissionsCheck from '../modules/permissions.js'
 import AccountCheck from '../modules/accountCheck.js'
+import EVENT_REQUESTS_TAB from '../database/eventRequests.js';
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -182,6 +183,174 @@ router.get('/data/download/modpack/:eventId', async (req, res) => {
             err: `Api developer error: /data/download/modpack/ - ${e}`
         });
     }
+})
+
+
+// FORCE SLOT PLAYER SET
+router.post('/playerset', AccountCheck, PermissionsCheck, async(req, res) => {
+    try{
+        const data = req.body
+
+        if ([data.userId, data.eventId, data.team, data.squad, data.slot, data.key].some(v => v === null)) {
+            console.log(`[${GetDateInfo().all}] API назначение игрока на слот прервано. Параметр не указан`)
+
+            res.json({
+                status: 404,
+                err: 'One of the params is not specified'
+            })
+            return
+        }
+
+        const user = await ACCOUNTS_TAB.findOne({
+            where: {
+                key: data.key 
+            }
+        })
+
+        if(!user) {
+            console.log(`[${GetDateInfo().all}] API назначение игрока на слот прервано. Пользователь не найден`)
+
+            res.json({
+                status: 404,
+                err: 'User undefined'
+            })
+            return
+        }
+
+        const event = await EVENTS_TAB.findOne({
+            where: {
+                id: data.eventId
+            }
+        })
+
+        const oldRequests = await EVENT_REQUESTS_TAB.findAll({
+            where: {
+                eventId: data.eventId,
+                userId: data.userId,
+            }
+        })
+
+        for (const oldRequest of oldRequests) {
+            await oldRequest.destroy();
+        }
+
+
+        // Убрать пользователя с зарегестрированной позиции, если она есть
+        event.slotsTeam1.forEach((squadItem, squadIndex) => {
+            if(squadIndex === 0) {
+                if(squadItem.player === data.userId) {
+                    event.slotsTeam1[squadIndex].player = null
+                }
+            } else {
+                squadItem.slots.forEach((slotItem, slotIndex) => {
+                    if(slotItem.player === data.userId) {
+                        event.slotsTeam1[squadIndex].slots[slotIndex].player = null
+                    }
+                })
+            }
+        });
+
+        event.slotsTeam2.forEach((squadItem, squadIndex) => {
+            if(squadIndex === 0) {
+                if(squadItem.player === data.userId) {
+                    event.slotsTeam2[squadIndex].player = null
+                }
+            } else {
+                squadItem.slots.forEach((slotItem, slotIndex) => {
+                    if(slotItem.player === data.userId) {
+                        event.slotsTeam2[squadIndex].slots[slotIndex].player = null
+                    }
+                })
+            }
+        });
+
+
+        let slots = data.team == 'Red'
+            ? event.dataValues.slotsTeam1
+            : event.dataValues.slotsTeam2
+
+
+        const newRequest = await EVENT_REQUESTS_TAB.create({
+            userId: data.userId,
+            eventId: data.eventId,
+            team: data.team,
+            squad: data.squad,
+            slot: data.slot,
+            maybeSL: false,
+            maybeTL: false,
+            date: GetDateInfo().all,
+            status: false
+        })
+
+        if(data.squad === 0) {
+            slots[data.squad].player = data.userId
+
+            let HQsquadIndex = null
+
+            slots.forEach((item, index) => {
+                if(slots[index].hq) {
+                    slots[index].slots[0].player = data.userId
+                    HQsquadIndex = index
+                }
+            })
+
+            if(HQsquadIndex) {
+                await EVENT_REQUESTS_TAB.create({
+                    userId: data.userId,
+                    eventId: data.eventId,
+                    team: data.team,
+                    squad: HQsquadIndex,
+                    slot: 0,
+                    maybeSL: false,
+                    maybeTL: false,
+                    date: GetDateInfo().all,
+                    status: false
+                })
+            }
+        } else {
+            slots[data.squad].slots[data.slot].player = data.userId
+
+            if(data.slot === 0 && data.squad !== 0 && slots[data.squad].hq) {
+                slots[0].player = data.userId
+
+                await EVENT_REQUESTS_TAB.create({
+                    userId: data.userId,
+                    eventId: data.eventId,
+                    team: data.team,
+                    squad: 0,
+                    slot: 0,
+                    maybeSL: false,
+                    maybeTL: false,
+                    date: GetDateInfo().all,
+                    status: false
+                })
+            }
+        }
+
+
+        if(data.team === 'Red') {
+            event.setDataValue('slotsTeam1', slots)
+        } else {
+            event.setDataValue('slotsTeam2', slots)
+        }
+
+        event.changed('slotsTeam1', true);
+        event.changed('slotsTeam2', true);
+        await event.save();
+
+        console.log(`[${GetDateInfo().all}] API пользователь ${data.userId} принудительно помещен в слот: ${data.team}; ${data.squad}; ${data.slot || 0}; в событии ${data.eventId} администратором ${user.id}`)
+
+        res.json({
+            status: 200
+        })
+
+    }catch(e){
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/playerset - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: event/playerset - ${e}`
+        });
+    };
 })
 
 export default router;
