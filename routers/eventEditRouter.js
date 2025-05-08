@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import fs from 'fs'
+import { promises as fs } from 'fs'
+import { readFile } from 'fs/promises';
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { v4 as uuidv4 } from 'uuid'
@@ -483,5 +484,160 @@ router.post('/modsupload', AccountCheck, PermissionsCheck, async(req,res) => {
         });
     }
 })
+
+
+
+// Экспорт сохранения отрядов
+router.get('/data/download/save/:eventId', async (req, res) => {
+    try {
+        const eventId = req.params.eventId
+
+        const currentEvent = await EVENTS_TAB.findOne({
+            where: {
+                id: eventId
+            }
+        })
+
+        if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API выдача модпака прервана. Событие не найдено`)
+
+            res.json({
+                status: 404,
+                err: 'Current event undefined'
+            })
+            return
+        }
+
+        const saveData = [
+            currentEvent.slotsTeam1,
+            currentEvent.slotsTeam2,
+            currentEvent.vehTeam1,
+            currentEvent.vehTeam2
+        ]
+
+        const cacheName = `save_${uuidv4()}.json`;
+        const cachePath = __dirname + "/../cache/" + cacheName
+
+        await fs.writeFile(cachePath, JSON.stringify(saveData, null, 2))
+
+        console.log(`[${GetDateInfo().all}] API выдано сохранение события ${currentEvent.id}`)
+
+        res.download(cachePath, async (err) => {
+            if (err) {
+                console.error("Ошибка при скачивании:", err);
+            }
+
+            await fs.unlink(cachePath)
+        });
+    } catch(e) {
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/data/download/save - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: event/edit/data/download/save - ${e}`
+        });
+    }
+})
+
+
+
+// Импорт сохранения
+router.post('/saveUpload', AccountCheck, PermissionsCheck, async(req,res) => {
+    try {
+        const userKey = req.body.key
+        const eventId = Number(req.body.eventId)
+
+        const user = await ACCOUNTS_TAB.findOne({
+            where: {
+                key: userKey
+            }
+        })
+
+        if(!user){
+            console.log(`[${GetDateInfo().all}] API загрузка сохранения прервана. Пользователь не найден`)
+
+            res.json({
+                status: 404,
+                err: 'User undefined'
+            })
+            return
+        }
+
+        const currentEvent = await EVENTS_TAB.findOne({
+            where: {
+                id: eventId
+            }
+        })
+
+        if(!currentEvent){
+            console.log(`[${GetDateInfo().all}] API загрузка сохранения прервана. Событие не найдено`)
+
+            res.json({
+                status: 404,
+                err: 'Current event undefined'
+            })
+            return
+        }
+
+        if(!req.files || !req.files.file) {
+            console.log(`[${GetDateInfo().all}] API загрузка сохранения прервана. Файл не загружен`)
+
+            res.json({
+                status: 400,
+                err: 'File is not uploaded'
+            })
+            return
+        }
+
+        if(Array.isArray(req.files.file)) {
+            console.log(`[${GetDateInfo().all}] API загрузка сохранения прервана. Больше одного файла`)
+
+            res.json({
+                status: 400,
+                err: 'More than one file has been uploaded'
+            })
+            return
+        }
+
+        const file = req.files.file
+        const newFileName = `uploadSave_${uuidv4()}.json`;
+        const cacheUploadPath = __dirname + "/../cache/" + newFileName
+
+        file.mv(cacheUploadPath, async (err) => {
+            if(err) {
+                console.log(`[${GetDateInfo().all}] API непредвиденная ошибка загрузки сохранения на событие: ${err}`)
+
+                res.json({
+                    status: 500,
+                    err
+                })
+                return 
+            } else {
+                const cacheContent = JSON.parse(await readFile(cacheUploadPath, 'utf-8'))
+
+                await currentEvent.update({
+                    slotsTeam1: cacheContent[0],
+                    slotsTeam2: cacheContent[1],
+                    vehTeam1: cacheContent[2],
+                    vehTeam2: cacheContent[3],
+                })
+
+                await fs.unlink(cacheUploadPath)
+            }
+        })
+
+        console.log(`[${GetDateInfo().all}] API сохранение на событие ${currentEvent.id} успешно загружен администратором ${user.id}`)
+
+        res.json({
+            status: 200
+        })
+    } catch(e) {
+        console.error(`\x1b[31m[${GetDateInfo().all}] Api developer error: event/edit/saveUpload - ${e} \x1b[31m`);
+        res.json({
+            status: 500,
+            err: `Api developer error: event/edit/saveUpload - ${e}`
+        });
+    }
+})
+
 
 export default router;

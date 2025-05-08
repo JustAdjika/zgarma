@@ -33,6 +33,11 @@ const Events = ({isDevBranch}) => {
     
     const [errorMessage, setErrorMessage] = useState("");
 
+    const getEvents = async () => {
+        const res = await axios.get(`${host}/api/developer/event/data/all`)
+        setEvents(res.data.container.filter(event => event.devBranch == isDevBranch))
+    }
+
     useEffect(() => {
         const accountCheck = async () => {
             if(!JSON.parse(Cookies.get("userData"))) {
@@ -42,10 +47,9 @@ const Events = ({isDevBranch}) => {
                 else { setIsAccount(true) } 
             }
         }
-        const getEvents = async () => {
-            const res = await axios.get(`${host}/api/developer/event/data/all`)
-            setEvents(res.data.container.filter(event => event.devBranch == isDevBranch))
-        }
+
+        getEvents()
+
         const adminCheck = async () => {
             if(!JSON.parse(Cookies.get("userData"))) return
             const res = await axios.get(`${host}/api/developer/adminlist/remote/isAdmin?id=${JSON.parse(Cookies.get('userData')).id}`)

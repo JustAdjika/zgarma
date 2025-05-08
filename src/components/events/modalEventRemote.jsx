@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Cookies from 'js-cookie';
 
 import Vehicle from './eventRemote/vehicle';
 import Squad from './eventRemote/squad';
 
 import './Style/modalEventRemote.css'
+import { faDownload, faFileArrowUp } from '@fortawesome/free-solid-svg-icons';
 
-const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, modalRemoteEvent, setErrorMessage, isDevBranch }) => {
+const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, modalRemoteEvent, setErrorMessage, isDevBranch, setModalRemoteEvent }) => {
     const [eventRemoteIsImg, setEventRemoteIsImg] = useState(false)
     const [eventRemoteIsMod, setEventRemoteIsMod] = useState(false)
 
@@ -151,8 +153,6 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
         const file = e.target.files[0]
 
         if(file) {
-            setEventRemoteIsImg(true)
-
             const formData = new FormData()
             formData.append("file", file)
             formData.append("key", JSON.parse(Cookies.get("userData")).key)
@@ -165,6 +165,8 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
             if(res.data.status != 200) {
                 setErrorMessage(res.data.err)
                 setTimeout(() => {setErrorMessage("")}, 3000)
+            } else {
+                setEventRemoteIsImg(true)
             }
         }
     }
@@ -174,8 +176,6 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
         const file = e.target.files[0]
 
         if(file) {
-            setEventRemoteIsMod(true)
-
             const formData = new FormData()
             formData.append("file", file)
             formData.append("key", JSON.parse(Cookies.get("userData")).key)
@@ -189,6 +189,8 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                 setErrorMessage(res.data.err)
                 setTimeout(() => {setErrorMessage("")}, 3000)
                 console.log(res.data.err)
+            } else {
+                setEventRemoteIsMod(true)
             }
         }
     }
@@ -243,6 +245,59 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
             setTimeout(() => setErrorMessage(""), 3000)
         }
     };
+
+    const handleSaveImport = async (e) => {
+        const file = e.target.files[0]
+
+        if(file) {
+            const formData = new FormData()
+            formData.append("file", file)
+            formData.append("key", JSON.parse(Cookies.get("userData")).key)
+            formData.append("eventId", modalRemoteEvent.id)
+
+            const res = await axios.post(`${host}/api/developer/event/edit/saveUpload`, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            })
+
+            if(res.data.status != 200) {
+                setErrorMessage(res.data.err)
+                setTimeout(() => {setErrorMessage("")}, 3000)
+            } else {
+                const res = await axios.get(`${host}/api/developer/event/data/all`)
+
+                const event = res.data.container.filter(event => event.id === modalRemoteEvent.id)[0]
+
+                // Veh team 1 array check
+                if (event.vehTeam1 && typeof event.vehTeam1 === "string") {
+                    const parsedData = JSON.parse(event.vehTeam1);
+                    if (Array.isArray(parsedData) && parsedData.length > 0) {
+                        settingsKitsChange('vehicle', 0, parsedData)
+                    }
+                } else if(event.vehTeam1 && Array.isArray(event.vehTeam1)) {
+                    settingsKitsChange('vehicle', 0, event.vehTeam1)
+                }
+                
+                // Veh team 2 array check
+                if (event.vehTeam2 && typeof event.vehTeam2 === "string") {
+                    const parsedData = JSON.parse(event.vehTeam2);
+                    if (Array.isArray(parsedData) && parsedData.length > 0) {
+                        settingsKitsChange('vehicle', 1, parsedData)
+                    }
+                } else if(event.vehTeam2 && Array.isArray(event.vehTeam2)) {
+                    settingsKitsChange('vehicle', 1, event.vehTeam2)
+                }
+
+                if(event.slotsTeam1) {
+                    const tempSlots = event.slotsTeam1.filter((_, i) => i != 0)
+                    settingsKitsChange('slots', 0, tempSlots)
+                }
+                if(event.slotsTeam2) {
+                    const tempSlots = event.slotsTeam2.filter((_, i) => i != 0)
+                    settingsKitsChange('slots', 1, tempSlots)
+                }
+            }
+        }
+    }
 
     return (
         <div onClick={ () => { setIsModalEventRemote(false) } } className='event-modal-eventremote-main' style={{ display: isModalEventRemote ? 'flex' : 'none' }}>
@@ -427,9 +482,32 @@ const ModalEventRemote = ({ host, setIsModalEventRemote, isModalEventRemote, mod
                         Открыть миссию
                     </button>
                     <p style={{ color: '#ffffff50', width: '400px', margin: '0px' }}>Отменить действие будет нельзя, придется удалять миссию и создавать заново.</p>
-                    <button className='event-modal-eventremote-button-deleteEvent' onClick={ handleDeleteEvent }>
-                        Удалить миссию
-                    </button>
+                    <div style={{ display: 'flex', marginTop: '40px' }}>
+                        <button className='event-modal-eventremote-button-deleteEvent' onClick={ handleDeleteEvent }>
+                            Удалить миссию
+                        </button>
+
+                        <input 
+                            type="file" 
+                            accept=".json" 
+                            className='event-modal-eventremote-inputfile' 
+                            id='event-modal-eventremote-inputfile-saveimport' 
+                            onChange={ (e) => handleSaveImport(e) } 
+                            style={{ display: 'none' }}
+                        />
+                        <a style={{ textDecoration: 'none' }} htmlFor='event-modal-eventremote-inputfile-saveexport' className='event-modal-eventremote-button-save' href={ `${host}/api/developer/event/edit/data/download/save/${modalRemoteEvent.id}` }>
+                            <div className='event-reglist-contextmenu-icon-container'>
+                                <FontAwesomeIcon icon={faDownload} />
+                            </div>
+                            Экспорт
+                        </a>
+                        <label htmlFor='event-modal-eventremote-inputfile-saveimport' className='event-modal-eventremote-button-save'>
+                            <div className='event-reglist-contextmenu-icon-container'>
+                            <FontAwesomeIcon icon={faFileArrowUp} />
+                            </div>
+                            Импорт
+                        </label>
+                    </div>
                 </div>
 
 
