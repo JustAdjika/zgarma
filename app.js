@@ -3,9 +3,15 @@ import express from 'express'
 import fileUpload from 'express-fileupload'
 import cors from 'cors'
 import bodyParser from 'body-parser'
+import cron from 'node-cron'
+import { REST } from '@discordjs/rest'
+import { Routes } from 'discord-api-types/v10'
 
 // MODULES
 import sequelize from './database/pool.js'
+import GetDateInfo from './modules/dateInfo.js'
+import PermissionsCheck from './modules/permissions.js'
+import AccountCheck from './modules/accountCheck.js'
 
 // DATABASE
 import ACCOUNTS_TAB from './database/accounts.js'
@@ -36,6 +42,8 @@ import faqRouter from './routers/faqRouter.js'
 const app = express()
 app.use(bodyParser.json())
 
+const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN
+const rest = new REST({ version: 10 }).setToken(BOT_TOKEN)
 
 app.use(cors({
     origin: ["http://zgarma.ru", "https://zgarma.ru", "http://dev.zgarma.ru", "https://dev.zgarma.ru"], // Разрешаем запросы с этого домена
@@ -47,12 +55,12 @@ app.use(fileUpload())
 
 const startServer = async () => {
     try {
-        console.log("⏳ Ожидание создания всех таблиц...");
+        console.log("Ожидание создания всех таблиц...");
 
         // Ждем, пока все таблицы создадутся
         await sequelize.sync({ alter: true });
 
-        console.log("✅ Все таблицы созданы!");
+        console.log("Все таблицы созданы!");
 
         // Запуск сервера после успешного создания всех таблиц
         app.listen(3000, '0.0.0.0', () => {
@@ -77,10 +85,79 @@ const startServer = async () => {
             return res.json({ status: 200 })
         })
 
+        const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
+        const updateUsersInfo = async(cron = false) => {
+            console.log(`[${GetDateInfo().all}] ${cron ? 'CRON Process' : 'Ручное обновление'}: Запуск обновления пользователей...`);
+
+            const users = await ACCOUNTS_TAB.findAll(); 
+
+            for (const user of users) {
+                try {
+                    const updated = await rest.get(Routes.user(user.discord.id)); // запрос к Discord API
+
+                    const userDB = await ACCOUNTS_TAB.findOne({
+                        where: {
+                            id: user.id
+                        } 
+                    })
+
+                    await userDB.update({
+                        discord: updated
+                    })
+
+                    console.log(`[${GetDateInfo().all}] ${cron ? 'CRON Process' : 'Ручное обновление'}: Обновлен пользователь ${user.id}`);
+                } catch (err) {
+                    console.error(`[${GetDateInfo().all}] ${cron ? 'CRON Process' : 'Ручное обновление'}: Ошибка обновления пользователя ${user.id}:`, err?.message || err);
+                }
+                await delay(200); // 5 запросов/сек
+            }
+
+            console.log(`[${GetDateInfo().all}] ${cron ? 'CRON Process' : 'Ручное обновление'}: Обновление завершено.`);
+        } 
+
+
+
+
+        cron.schedule('0 */3 * * *', async () => {
+            await updateUsersInfo(true)
+        });
+
+        app.post('/api/developer/updateUsersInfo', AccountCheck, PermissionsCheck, async (req, res) => {
+            await updateUsersInfo(false)
+            res.json({status: 200})
+        })
+
+        app.post('/me', AccountCheck, async (req,res) => {
+            const key = req.body.key
+
+            try {
+                const actualData = await ACCOUNTS_TAB.findOne({
+                    where: {
+                        key: key
+                    }
+                })
+
+                res.json({
+                    status: 200,
+                    container: actualData
+                })
+
+
+                console.log(`[${GetDateInfo().all}] Успешное получение актуальной информации`)
+
+                return
+            } catch (e) {
+                res.json({status: 500, err: e})
+                console.log(`[${GetDateInfo().all}] Непредвиденная ошибка при получении актуальной информации: ${e}`)
+                return
+            }
+        })
+
     } catch (error) {
-        console.error("❌ Ошибка при создании таблиц:", error);
+        console.error("Ошибка при создании таблиц:", error);
     }
 };
 
-startServer(); // Запускаем сервер только после успешного создания БД
+startServer(); 
 

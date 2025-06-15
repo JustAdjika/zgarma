@@ -58,6 +58,28 @@ function App() {
     setIsDevBranch(devBranch)
   }, [])
 
+  useEffect(() => {
+    if(!Cookies.get('userData')) return
+
+    const currentUser = JSON.parse(Cookies.get('userData'))
+
+    const getActualInfo = async () => {
+      const res = await axios.post(`https://api.zgarma.ru/me`, { key: currentUser.key })
+
+      if(res.data.status == 200) {
+        console.log(res.data.container)
+        Cookies.set("userData", JSON.stringify(res.data.container), {
+          domain: '.zgarma.ru'
+        })
+      } else {
+        console.error(res.err)
+        return
+      }
+    }
+
+    getActualInfo()
+  }, [])
+
   const getDevBranchStatus = () => {
     return window.location.hostname === 'dev.zgarma.ru'
   }

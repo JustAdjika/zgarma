@@ -11,6 +11,7 @@
     "start": "nohup node app.js 2>&1 | tee output.log &"
   },
   "dependencies": {
+    "@discordjs/rest": "^2.5.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
@@ -20,6 +21,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "discord-api-types": "^0.38.11",
     "discord.js": "^14.18.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
