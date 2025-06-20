@@ -12,7 +12,7 @@ server {
     ssl_certificate /etc/letsencrypt/live/dev.zgarma.ru-0001/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/dev.zgarma.ru-0001/privkey.pem;
 
-    allow 5.251.205.175;  # Разрешённый IP (замени на свой)
+    allow 2.133.11.161;  # Разрешённый IP (замени на свой)
     allow 2.133.178.62;
     deny all;               # Запрещаем всем остальным
 
