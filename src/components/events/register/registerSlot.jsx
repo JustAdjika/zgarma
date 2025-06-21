@@ -80,8 +80,12 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
                 getRegUser(slotsOriginal[mapData.team][0].player)
                 getMarkers(slotsOriginal[mapData.team][0].player)
 
-                setIsCurrentUser(slotsOriginal[mapData.team][0].player === JSON.parse(Cookies.get('userData')).id)
-                    
+                if(Cookies.get('userData')) {
+                    setIsCurrentUser(slotsOriginal[mapData.team][0].player === JSON.parse(Cookies.get('userData')).id)
+                } else {
+                    setIsCurrentUser(false)
+                }
+
                 setIsKitOccupied(true)
             } else {
                 setTitle(slotsOriginal[mapData.team][0].title)
@@ -92,7 +96,11 @@ const RegisterSlot = ({ slotItem, mapData, setTeam, setSquad, setSlot, team, squ
                 getRegUser(slotsOriginal[mapData.team][mapData.squadIndex].slots[mapData.slotIndex].player)
                 getMarkers(slotsOriginal[mapData.team][mapData.squadIndex].slots[mapData.slotIndex].player)
 
-                setIsCurrentUser(slotsOriginal[mapData.team][mapData.squadIndex].slots[mapData.slotIndex].player === JSON.parse(Cookies.get('userData')).id)
+                if(Cookies.get('userData')) {
+                    setIsCurrentUser(slotsOriginal[mapData.team][mapData.squadIndex].slots[mapData.slotIndex].player === JSON.parse(Cookies.get('userData')).id)
+                } else {
+                    setIsCurrentUser(false)
+                }
 
                 setIsKitOccupied(true)
             } else {
